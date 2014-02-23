@@ -1,0 +1,127 @@
+<html>
+
+<head>
+	<title>Demo</title>
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.1.0/tabletop.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jsnetworkx.js"></script>
+	<script type="text/javascript" src="js/display.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/typeahead.js"></script>
+	<script type="text/javascript" src="js/pace.min.js"></script>
+</head>
+
+<body>
+	<header>Six Degrees of Francis Bacon</header>
+	<figure></figure>
+	<aside>
+		<img src="img/net.png">
+		<div id="navigation">
+			<ul>
+				<li>Search
+					<ul>
+						<li id='onenode'>1 node</li>
+						<li id='twonode'>2 nodes</li>
+						<li id='onegroup'>1 group</li>
+						<li id='twogroup'>2 groups</li>
+					</ul>
+				</li>
+				<li>Add
+					<ul>
+						<li id='addnode'>Node</li>
+						<li id='addedge'>Edge</li>
+						<li id='addgroup'>Group</li>
+					</ul>
+				</li>
+				<li>Edit
+					<ul>
+						<li id='editedge'>Edge</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+
+		<!-- NODE FORMS -->
+
+		<section id="onenodeform">
+			<input type="text" id="one" placeholder="Name">
+			<button type="button" id="findonenode">Find</button>
+		</section>
+
+		<section id="twonodeform">
+			<article>
+				<input type="text" id="two" placeholder="Name 1">
+				<div id='and'>&</div>
+				<input type="text" id="three" placeholder="Name 2">
+			</article>
+			<button type="button" id="findtwonode">Find</button>
+		</section>
+
+
+		<!-- GROUP FORMS -->
+
+		<section id="onegroupform">
+			<input type="text" id="four" placeholder="Group">
+			<button type="button" id="findonegroup">Find</button>
+		</section>
+
+		<section id="twogroupform">
+			<article>
+				<input type="text" id="five" placeholder="Group 1">
+				<div id='and'>&</div>
+				<input type="text" id="six" placeholder="Group 2">
+			</article>
+			<button type="button" id="findtwogroup">Find</button>
+		</section>
+		
+
+		<!-- GOOGLE FORMS -->
+
+		<section id="addnodeform">
+			<script type="text/javascript">
+				var submitted = false;
+			</script>
+			<iframe name="hidden_iframe1" id="hidden_iframe1" style="display:none;" onload="if(submitted)
+		{document.getElementById('googleaddnode').reset();}"></iframe>
+			<form action="https://docs.google.com/forms/d/151VLJDd62rmg_elgMLsiRjwmN0ecuZZbWdFz1QazhtA/formResponse" id="googleaddnode" method="post" target="hidden_iframe1" onsubmit="submitted=true;">
+				<input type="text" name="entry.1051066799" id="entry_1051066799" placeholder="ID">
+				<input type="text" name="entry.1804360896" id="entry_1804360896" placeholder="First Name">
+				<input type="text" name="entry.754797571" id="entry_754797571" placeholder="Last Name">
+				<input type="text" name="entry.524366257" id="entry_524366257" placeholder="Birth Date">
+				<input type="text" name="entry.1810714929" id="entry_1810714929" placeholder="Death Date">
+				<button type="submit" name="submit" id="ss-submit">Submit</button>
+			</form>
+		</section>
+		<section id="addedgeform">
+			<script type="text/javascript">
+				var submitted = false;
+			</script>
+			<iframe name="hidden_iframe2" id="hidden_iframe2" style="display:none;" onload="if(submitted)
+		{document.getElementById('googleaddedge').reset();}"></iframe>
+			<form action="https://docs.google.com/forms/d/10Gfo4lX_iEArcffCxd5SqP9b-lEttdW5ymOTwX5-t5A/formResponse" id="googleaddedge" method="post" target="hidden_iframe2" onsubmit="submitted=true;">
+				<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Source">
+				<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Target">
+				<select name="entry.875203595" id="entry_875203595">
+					<option value="">Confidence</option>
+					<option value="0.1">0.1</option>
+					<option value="0.2">0.2</option>
+					<option value="0.3">0.3</option>
+					<option value="0.4">0.4</option>
+					<option value="0.5">0.5</option>
+					<option value="0.6">0.6</option>
+					<option value="0.7">0.7</option>
+					<option value="0.8">0.8</option>
+					<option value="0.9">0.9</option>
+					<option value="1.0">1.0</option>
+				</select>
+				<input type="text" name="entry.948502783" id="entry_948502783" placeholder="Annotation">
+				<button type="submit" name="submit" id="ss-submit">Submit</button>
+			</form>
+		</section>
+	</aside>
+</body>
+
+</html>

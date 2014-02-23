@@ -1,0 +1,308 @@
+@charset "UTF-8";
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+article,aside,details,figcaption,figure,footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol,ul {
+    list-style: none;
+}
+
+blockquote,q {
+    quotes: none;
+}
+
+blockquote:before,blockquote:after,q:before,q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+html {
+    height: 100%;
+}
+
+/*MY STYLE*/
+
+body {
+    margin: 0;
+    color: #323236;
+    background-color: #ecebe9;
+    font-family: 'Open Sans',sans-serif;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    height: 4%;
+    line-height: 20px;
+    color: #CAE4E1;
+    background: #555 repeat-x top left;
+    margin-left: 260px;
+    text-align: center;
+    font-weight: lighter;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    padding-top: 1%;
+}
+
+figure {
+    margin-left: 260px;
+    height: 93%;
+}
+
+aside {
+    position: absolute;
+    width: 260px;
+    top: 0;
+    bottom: 0;
+    background: #94A2A3;
+    height: 100%;
+}
+
+aside img {
+    display: block;
+    width: 80%;
+    margin: 16% auto;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+canvas {
+    margin-left: 260px;
+}
+
+section {
+    margin: 10%;
+    width: 80%;
+    margin-top: 20px;
+    display: none;
+}
+
+#navigation {
+    margin: 10%;
+    width: 80%;
+}
+
+input, select {
+    display: inline-block;
+    margin-bottom: 10%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 6px 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    height: 35px;
+    width: 200px;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+}
+
+select {
+    cursor: pointer;
+}
+
+article input {
+    width: 90px;
+    float: left;
+}
+
+#and {
+    display: inline-block;
+    margin-bottom: 10%;
+    height: 35px;
+    text-align: center;
+    float: left;
+    line-height: 35px;
+    width: 20px;
+}
+
+.tt-hint {
+    color: #999;
+    padding: 6px 10px;
+    height: 35px;
+    width: 200px;
+}
+
+article .tt-hint {
+    width: 90px;
+}
+
+.tt-suggestion {
+    padding: 6px 10px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    color: #0097cf;
+    background-color: #ccc;
+}
+
+.tt-dropdown-menu {
+    width: 198px;
+    margin-top: -7%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+article .tt-dropdown-menu {
+    width: 88px;
+    margin-top: -5%;
+}
+
+button {
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+    height: 35px;
+    width: 200px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #CAE4E1;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#1a000000', GradientType=0);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(40%,rgba(0,0,0,.05)),to(rgba(0,0,0,.1)));
+    background-image: -webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+    background-image: -moz-linear-gradient(top,rgba(0,0,0,.05) 0,rgba(0,0,0,.1));
+    background-image: -ms-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+    background-image: -o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+    background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+}
+
+#navigation ul {
+    text-align: left;
+    display: inline;
+    margin: 0;
+    padding: 15px 4px 17px 0;
+    list-style: none;
+}
+
+#navigation ul li {
+    z-index: 100;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+    display: inline-block;
+    margin-right: -4px;
+    position: relative;
+    padding: 15px 20px;
+    background: #fff;
+    cursor: pointer;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+#navigation ul li:hover {
+    background: #555;
+    color: #fff;
+}
+
+#navigation ul li ul {
+    padding: 0;
+    position: absolute;
+    top: 42px;
+    left: 0;
+    width: 85px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transiton: opacity 0.2s;
+    -moz-transition: opacity 0.2s;
+    -ms-transition: opacity 0.2s;
+    -o-transition: opacity 0.2s;
+    -transition: opacity 0.2s;
+}
+
+#navigation ul li ul li {
+    background: #555;
+    display: block;
+    color: #fff;
+    text-shadow: 0 -1px 0 #000;
+}
+
+#navigation ul li ul li:hover {
+    background: #666;
+}
+
+#navigation ul li:hover ul {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+.pace {
+    -webkit-pointer-events: none;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.pace.pace-inactive .pace-progress {
+    display: none;
+}
+
+.pace .pace-progress {
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    right: 0;
+    height: 5rem;
+    width: 5rem;
+}
+
+.pace .pace-progress:after {
+    display: block;
+    position: absolute;
+    top: 30%;
+    right: .5rem;
+    content: attr(data-progress-text);
+    font-family: "Open Sans", sans-serif;
+    font-weight: 100;
+    font-size: 5rem;
+    line-height: 1;
+    text-align: right;
+    color: rgba(0, 0, 0, 0.5);
+}
