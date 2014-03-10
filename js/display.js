@@ -1,34 +1,9 @@
 var keys = {
-	0: 		"0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	250: 	"0AhtG6Yl2-hiRdG1hQVBPejQxb3BVUktMeVp1ZUQ2d0E",
-	500: 	"0AhtG6Yl2-hiRdE5raE8wRHlXR2ZqRXpzVExlMWQwa0E",
-	750: 	"0AhtG6Yl2-hiRdEI1V3RqNy1iVEdtMm90blJhZ1J1R2c",
-	1000: 	"0AhtG6Yl2-hiRdFdhaWJ5b1lQQzVEOENuZHV0d09QVXc",
-	1250: 	"0AhtG6Yl2-hiRdFVwd2FWWTF2cENkTjV6cXpvLV9kaGc",
-	1500: 	"0AhtG6Yl2-hiRdFcxN3ZpVmVsX0x5ZXNoOVNiam15dXc",
-	1750: 	"0AhtG6Yl2-hiRdDZub0ZmdEZhRHN1bktTYlVFa19oZXc",
-	2000: 	"0AhtG6Yl2-hiRdEEtX0E2N0lvRk1FQWlTZjBwQ3Vnc1E",
-	2250: 	"",
-	2500: 	"",
-	2750: 	"",
-	3000: 	"",
-	3250: 	"",
-	3500: 	"",
-	3750: 	"",
-	4000: 	"",
-	4250: 	"",
-	4500: 	"",
-	4750: 	"",
-	5000: 	"",
-	5250: 	"",
-	5500: 	"",
-	5750: 	"",
-	6000: 	"",
-	6250: 	"",
-	6500: 	"",
-	6750: 	"",
-	7000: 	""
+	0: 	"0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
+	1: 	"0AhtG6Yl2-hiRdG1hQVBPejQxb3BVUktMeVp1ZUQ2d0E"
 }
+
+var rand = true;
 
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
@@ -106,9 +81,6 @@ function initGraph(data){
 			charge: -400,
 			linkDistance: 120
 		},
-		pan_zoom: {
-			enabled: false
-		},
 		node_attr: {
 			r: 5,
 			title: function (d) {
@@ -133,6 +105,7 @@ function initGraph(data){
 
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
+			rand = false;
 			Pace.restart();
 			showOneNode($("#one").val(), data, options);
 		}
@@ -140,19 +113,32 @@ function initGraph(data){
 
 	$("#findtwonode").click(function () {
 		if ($("#two").val() && $("#three").val()) {
+			rand = false;
 			Pace.restart();
 			showTwoNodes($("#two").val(), $("#three").val(), data, options);
 		}
 	});
+
+	showRandomNode(data, options);
 }
 
-function showOneNode(parent, data, options) {
+function showRandomNode(data, options){
+	var parent = data.nodes[Math.floor((Math.random()*9999))].label;
+	showOneNode(parent, data, options, true);
+	if (rand) {
+		setTimeout(function(){
+			showRandomNode(data, options)
+		}, 10000);
+	}
+}
+
+function showOneNode(parent, data, options, random) {
 	var G = jsnx.Graph();
 	var p = data.labels[parent];
 	var edges = [];
 	var fnodes = [];
 	// var key = keys[Math.ceil((p.id + 1) / 1000)];
-	var key = keys[250];
+	var key = keys[1];
 	Tabletop.init({
 		key: key,
 		simpleSheet: true,
@@ -170,14 +156,20 @@ function showOneNode(parent, data, options) {
 				group: 0
 			});
 			G.add_edges_from(edges);
-			jsnx.draw(G, options);
-		}
-	});
-	$("#one").val('');
-	$("#one").typeahead('setQuery', '');
-	d3.selectAll('.node').on('click', function (d) {
-		if (d3.event.ctrlKey) {
-			showOneNode(d.node, data, options);
+			if (random) {
+				if (rand) {
+					jsnx.draw(G, options);
+				}
+			} else {
+				jsnx.draw(G, options);
+				$("#one").val('');
+				$("#one").typeahead('setQuery', '');
+			}
+			d3.selectAll('.node').on('click', function (d) {
+				if (d3.event.ctrlKey) {
+					showOneNode(d.node, data, options);
+				}
+			});
 		}
 	});
 }
@@ -189,8 +181,8 @@ function showTwoNodes(person1, person2, data, options) {
 	var p2 = data.labels[person2];
 	var n1 = [];
 	var n2 = [];
-	var key1 = keys[250];
-	var key2 = keys[250];
+	var key1 = keys[1];
+	var key2 = keys[1];
 	Tabletop.init({
 		key: key1,
 		simpleSheet: true,
