@@ -4,6 +4,7 @@ var keys = {
 }
 
 var rand = true;
+var Gtemp;
 
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
@@ -20,7 +21,7 @@ function node() {
 }
 
 // TODO
-function initGroups(nodes, groups) {
+function initGroups(nodes) {
 
 }
 
@@ -57,7 +58,7 @@ function init(result) {
 	});
 
 	initGraph(data);
-	initGroups(data.nodes, result.groups.elements);
+	initGroups(data.nodes);
 }
 
 // Populate the suggested drop-down menus
@@ -70,6 +71,12 @@ function initGraph(data){
 		local: Object.keys(data.labels).sort()
 	});
 	$('#three').typeahead({
+		local: Object.keys(data.labels).sort()
+	});
+	$('#entry_768090773').typeahead({
+		local: Object.keys(data.labels).sort()
+	});
+	$('#entry_1321382891').typeahead({
 		local: Object.keys(data.labels).sort()
 	});
 
@@ -103,6 +110,8 @@ function initGraph(data){
 		}
 	}
 
+	showRandomNode(data, options);
+
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
 			rand = false;
@@ -119,7 +128,30 @@ function initGraph(data){
 		}
 	});
 
-	showRandomNode(data, options);
+	$('#submitnode').click(function(){
+		rand = false;
+		var node = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val() + ' (' + $('#entry_524366257').val() + ')';
+		$('section').css('display','none');
+		$('#addedgeform').css('display','block');
+		$('#entry_768090773').val(node);
+		Gtemp = jsnx.Graph();
+		Gtemp.add_nodes_from([node], {
+			group: 0
+		});
+		jsnx.draw(Gtemp, options, true);	
+	});
+
+	$('#submitedge').click(function(){
+		rand = false;
+		var source = $('#entry_768090773').val();
+		var target = $('#entry_1321382891').val();
+		Gtemp.add_nodes_from([target], {
+			group: 1
+		});
+		Gtemp.add_edges_from([[source, target]]);
+	});
+
+
 }
 
 function showRandomNode(data, options){
