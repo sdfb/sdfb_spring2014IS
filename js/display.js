@@ -84,6 +84,7 @@ function initGraph(data){
 	var options = {
 		element: 'figure',
 		with_labels: true,
+		weighted: true,
 		layout_attr: {
 			charge: -400,
 			linkDistance: 120
@@ -101,7 +102,8 @@ function initGraph(data){
 			stroke: 'none'
 		},
 		edge_style: {
-			fill: '#999'
+			fill: '#999',
+			'stroke-width': 5
 		},
 		label_style: {
 			fill: '#222',
@@ -179,7 +181,7 @@ function showOneNode(parent, data, options, random) {
 			result.forEach(function (edge){
 				var f = data.nodes[edge.target];
 				fnodes.push(f.label);
-				edges.push([p.label, f.label]);
+				edges.push([p.label, f.label, {weight: edge.confidence}]);
 			});
 			G.add_nodes_from(fnodes, {
 				group: 1
