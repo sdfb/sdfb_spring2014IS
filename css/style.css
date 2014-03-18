@@ -308,16 +308,47 @@ button:hover {
     color: rgba(0, 0, 0, 0.5);
 }
 
-/*table { float: left; margin: 20px; border: 1px yellow red;}*/
-#data-table-container_wrapper{
+#data-table-container_wrapper {
     margin: 40px 10px;
 }
-tr.odd {background-color: #e8e8e8;}
-tr.even {background-color: white;}
-tr.odd td.sorting_1 {background-color: #D3D6FF;}
-select { width: 75px }
-.dataTables_length { padding-left: 10px }
-.dataTables_filter { padding-right: 10px }
-.table-striped tbody>tr:nth-child(odd)>th>td.sorting_1 { background-color: #D3D6FF }
-#data-table-container_info { margin: 20px 0; padding-top: 5px;}
-#findtwonodetable { margin-top: 10px; }
+
+tr.odd {
+    background-color: #e8e8e8;
+}
+
+tr.even {
+    background-color: white;
+}
+
+tr.odd td.sorting_1 {
+    background-color: #D3D6FF;
+}
+
+select {
+    width: 75px;
+}
+
+.dataTables_length {
+    padding-left: 10px;
+}
+
+.dataTables_filter {
+    padding-right: 10px;
+}
+
+.table-striped tbody>tr:nth-child(odd)>th>td.sorting_1 {
+    background-color: #D3D6FF;
+}
+
+#data-table-container_info {
+    margin: 20px 0;
+    padding-top: 5px;
+}
+
+#findtwonodetable {
+    margin-top: 10px;
+}
+
+#data-table-container_filter {
+    display: none;
+}

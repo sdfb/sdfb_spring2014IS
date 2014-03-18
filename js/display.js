@@ -65,87 +65,6 @@ function init(result) {
 	initGroups(data.nodes);
 }
 
-function showTable(person1, person2, data, options) {
-	var p1 = data.labels[person1];
-	var p2 = data.labels[person2];
-	var n1 = [];
-	var n2 = [];
-	var common = [];
-	p1.edges.forEach(function (edge) {
-		var key = keys[1];
-		Tabletop.init({
-			key: key,
-			simpleSheet: true,
-			query: 'id = ' + edge,
-			callback: function(result) {
-				if (result) {
-					var id = result[0].source;
-					if (id == p1.id) {
-						id = result[0].target;
-					}
-					n1.push(id);
-				}
-				if (p1.edges.length == n1.length){
-					p2.edges.forEach(function (edge) {
-						var key = keys[1];
-						Tabletop.init({
-							key: key,
-							simpleSheet: true,
-							query: 'id = ' + edge,
-							callback: function(result) {
-								if (result) {
-									var id = result[0].source;
-									if (id == p2.id) {
-										id = result[0].target;
-									}
-									n2.push(id);
-									if (n1.indexOf(id) >= 0) {
-										common.push(data.nodes[id]);
-									}
-								}
-								if (p2.edges.length == n2.length){
-									writeTableWith(common);
-								}
-							}
-						});
-					});
-				}
-			}
-		});
-	});
-	$("#two").val('');
-	$("#two").typeahead('setQuery', '');
-	$("#three").val('');
-	$("#three").typeahead('setQuery', '');
-}
-
-// create the table container and object
-function writeTableWith(dataSource){
-    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
-    $('#data-table-container').dataTable({
-		'sPaginationType': 'bootstrap',
-		'iDisplayLength': 10,
-        'aaData': dataSource,
-        'aoColumns': [
-            {'mDataProp': 'first', 'sTitle': 'First Name'},
-            {'mDataProp': 'last', 'sTitle': 'Last Name'},
-            {'mDataProp': 'birth', 'sTitle': 'Birth Date'}
-        ],
-        'oLanguage': {
-            'sLengthMenu': '_MENU_ records per page'
-        }
-    });
-};
-
-//define two custom functions (asc and desc) for string sorting
-jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
-	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
-};
-
-jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
-	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
-};
-
 // Populate the suggested drop-down menus
 // Make the buttons in the search panel functional
 function initGraph(data){
@@ -219,7 +138,7 @@ function initGraph(data){
 		if ($("#two").val() && $("#three").val()) {
 			rand = false;
 			Pace.restart();
-			showTable($("#two").val(), $("#three").val(), data, options);
+			showTable($("#two").val(), $("#three").val(), data);
 		}
 	});
 
@@ -308,49 +227,136 @@ function showTwoNodes(person1, person2, data, options) {
 	var p2 = data.labels[person2];
 	var n1 = [];
 	var n2 = [];
-	var key1 = keys[1];
-	var key2 = keys[1];
-	Tabletop.init({
-		key: key1,
-		simpleSheet: true,
-		query: 'source = ' + p1.id,
-		callback: function(result) {
-			result.forEach(function (edge){
-				var c = data.nodes[edge.target];
-				n1.push(c.label);
-			});
-			Tabletop.init({
-				key: key2,
-				simpleSheet: true,
-				query: 'source = ' + p2.id,
-				callback: function(result) {
-					result.forEach(function (edge){
-						var c = data.nodes[edge.target];
-						n2.push(c.label);
-					});
-					n1.forEach(function (node) {
-						if (n2.indexOf(node) != -1) {
-							G.add_nodes_from([node], {
-								group: 0
-							});
-							edges.push([p1.label, node]);
-							edges.push([p2.label, node]);
-						}
-						if (node == p2.label) {
-							edges.push([p1.label, p2.label]);
-						}
-					});
-					G.add_nodes_from([p1.label, p2.label], {
-						group: 1
-					});
-					G.add_edges_from(edges);
-					jsnx.draw(G, options);
+	p1.edges.forEach(function (edge) {
+		var key = keys[1];
+		Tabletop.init({
+			key: key,
+			simpleSheet: true,
+			query: 'id = ' + edge,
+			callback: function(result) {
+				if (result) {
+					var id = result[0].source;
+					if (id == p1.id) {
+						id = result[0].target;
+					}
+					n1.push(id);
 				}
-			});
-		}
+				if (p1.edges.length == n1.length){
+					p2.edges.forEach(function (edge) {
+						var key = keys[1];
+						Tabletop.init({
+							key: key,
+							simpleSheet: true,
+							query: 'id = ' + edge,
+							callback: function(result) {
+								if (result) {
+									var id = result[0].source;
+									if (id == p2.id) {
+										id = result[0].target;
+									}
+									n2.push(id);
+									if (n1.indexOf(id) >= 0) {
+										var label = data.nodes[id].label;
+										G.add_nodes_from([label], { group: 0 });
+										edges.push([p1.label, label]);
+										edges.push([p2.label, label]);
+									}
+								}
+								if (p2.edges.length == n2.length){
+									G.add_nodes_from([p1.label, p2.label], { group: 1 });
+									G.add_edges_from(edges);
+									jsnx.draw(G, options);
+								}
+							}
+						});
+					});
+				}
+			}
+		});
 	});
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
 	$("#three").val('');
 	$("#three").typeahead('setQuery', '');
 }
+
+function showTable(person1, person2, data) {
+	var p1 = data.labels[person1];
+	var p2 = data.labels[person2];
+	var n1 = [];
+	var n2 = [];
+	var common = [];
+	p1.edges.forEach(function (edge) {
+		var key = keys[1];
+		Tabletop.init({
+			key: key,
+			simpleSheet: true,
+			query: 'id = ' + edge,
+			callback: function(result) {
+				if (result) {
+					var id = result[0].source;
+					if (id == p1.id) {
+						id = result[0].target;
+					}
+					n1.push(id);
+				}
+				if (p1.edges.length == n1.length){
+					p2.edges.forEach(function (edge) {
+						var key = keys[1];
+						Tabletop.init({
+							key: key,
+							simpleSheet: true,
+							query: 'id = ' + edge,
+							callback: function(result) {
+								if (result) {
+									var id = result[0].source;
+									if (id == p2.id) {
+										id = result[0].target;
+									}
+									n2.push(id);
+									if (n1.indexOf(id) >= 0) {
+										common.push(data.nodes[id]);
+									}
+								}
+								if (p2.edges.length == n2.length){
+									writeTableWith(common);
+								}
+							}
+						});
+					});
+				}
+			}
+		});
+	});
+	$("#two").val('');
+	$("#two").typeahead('setQuery', '');
+	$("#three").val('');
+	$("#three").typeahead('setQuery', '');
+}
+
+// create the table container and object
+function writeTableWith(dataSource){
+    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+    $('#data-table-container').dataTable({
+		'sPaginationType': 'bootstrap',
+		'iDisplayLength': 10,
+        'aaData': dataSource,
+        'aoColumns': [
+            {'mDataProp': 'first', 'sTitle': 'First Name'},
+            {'mDataProp': 'last', 'sTitle': 'Last Name'},
+            {'mDataProp': 'birth', 'sTitle': 'Birth Date'}
+        ],
+        'oLanguage': {
+            'sLengthMenu': '_MENU_ records per page'
+        }
+    });
+};
+
+//define two custom functions (asc and desc) for string sorting
+jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
+	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
+};
+
+jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
+	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
+};
