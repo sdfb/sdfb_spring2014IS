@@ -17,7 +17,8 @@ function node() {
 	this.id = null;
 	this.label = null;
 	this.name = null;	
-	this.life = null; 	
+	this.life = null;
+	this.edges = [];
 }
 
 // TODO
@@ -46,20 +47,104 @@ function init(result) {
 	result.nodes.elements.forEach(function (row) {
 		var n = new node();
 		n.id = row.id;
+		n.first = row.first;
+		n.last = row.last;
 		n.name = row.first + ' ' + row.last;
+		n.birth = row.birth; 
 		n.life = row.birth + '-' + row.death;
 		if (row.birth < 10) {
 			n.label = n.name + ' (160' + row.birth + ')';
 		} else {
 			n.label = n.name + ' (16' + row.birth + ')';
 		}
+		n.edges = row.edges.split(',');
 		data.nodes[n.id] = n;
 		data.labels[n.label] = n;
 	});
-
 	initGraph(data);
 	initGroups(data.nodes);
 }
+
+function showTable(person1, person2, data, options) {
+	var p1 = data.labels[person1];
+	var p2 = data.labels[person2];
+	var n1 = [];
+	var n2 = [];
+	var common = [];
+	p1.edges.forEach(function (edge) {
+		var key = keys[1];
+		Tabletop.init({
+			key: key,
+			simpleSheet: true,
+			query: 'id = ' + edge,
+			callback: function(result) {
+				if (result) {
+					var id = result[0].source;
+					if (id == p1.id) {
+						id = result[0].target;
+					}
+					n1.push(id);
+				}
+				if (p1.edges.length == n1.length){
+					p2.edges.forEach(function (edge) {
+						var key = keys[1];
+						Tabletop.init({
+							key: key,
+							simpleSheet: true,
+							query: 'id = ' + edge,
+							callback: function(result) {
+								if (result) {
+									var id = result[0].source;
+									if (id == p2.id) {
+										id = result[0].target;
+									}
+									n2.push(id);
+									if (n1.indexOf(id) >= 0) {
+										common.push(data.nodes[id]);
+									}
+								}
+								if (p2.edges.length == n2.length){
+									writeTableWith(common);
+								}
+							}
+						});
+					});
+				}
+			}
+		});
+	});
+	$("#two").val('');
+	$("#two").typeahead('setQuery', '');
+	$("#three").val('');
+	$("#three").typeahead('setQuery', '');
+}
+
+// create the table container and object
+function writeTableWith(dataSource){
+    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+    $('#data-table-container').dataTable({
+		'sPaginationType': 'bootstrap',
+		'iDisplayLength': 10,
+        'aaData': dataSource,
+        'aoColumns': [
+            {'mDataProp': 'first', 'sTitle': 'First Name'},
+            {'mDataProp': 'last', 'sTitle': 'Last Name'},
+            {'mDataProp': 'birth', 'sTitle': 'Birth Date'}
+        ],
+        'oLanguage': {
+            'sLengthMenu': '_MENU_ records per page'
+        }
+    });
+};
+
+//define two custom functions (asc and desc) for string sorting
+jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
+	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
+};
+
+jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
+	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
+};
 
 // Populate the suggested drop-down menus
 // Make the buttons in the search panel functional
@@ -127,6 +212,14 @@ function initGraph(data){
 			rand = false;
 			Pace.restart();
 			showTwoNodes($("#two").val(), $("#three").val(), data, options);
+		}
+	});
+
+	$("#findtwonodetable").click(function () {
+		if ($("#two").val() && $("#three").val()) {
+			rand = false;
+			Pace.restart();
+			showTable($("#two").val(), $("#three").val(), data, options);
 		}
 	});
 

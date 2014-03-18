@@ -3,10 +3,17 @@
 <head>
 	<title>Demo</title>
 	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+	
+	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/demo_table.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
 	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.1.0/tabletop.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.1.0/tabletop.min.js"></script>
+	<script type="text/javascript" src="js/data-tables-bootstrap.js"></script>
+	<script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="js/pace.min.js"></script>
 	<script type="text/javascript" src="js/jsnetworkx.js"></script>
 	<script type="text/javascript" src="js/display.js"></script>
@@ -57,7 +64,8 @@
 				<div id='and'>&</div>
 				<input type="text" id="three" placeholder="Name 2">
 			</article>
-			<button type="button" id="findtwonode">Find</button>
+			<button type="button" id="findtwonode">Find (graph)</button>
+			<button type="button" id="findtwonodetable">Find (table)</button>
 		</section>
 
 
