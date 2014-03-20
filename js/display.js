@@ -1,6 +1,6 @@
 var keys = {
 	0: 	"0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	1: 	"0AhtG6Yl2-hiRdG1hQVBPejQxb3BVUktMeVp1ZUQ2d0E"
+	1: 	"0AhtG6Yl2-hiRdGo5b2JsOTZVWkRlVlVfVmtOUGlfc1E"
 }
 
 var rand = true;
@@ -83,30 +83,28 @@ function initGraph(data){
 		local: Object.keys(data.labels).sort()
 	});
 
-	var color = d3.scale.category20();
 	var options = {
 		element: 'figure',
 		with_labels: true,
-		weighted: true,
 		layout_attr: {
-			charge: -400,
-			linkDistance: 120
+			charge: -500,
+			linkDistance: 200
 		},
 		node_attr: {
-			r: 5,
+			r: 10,
 			title: function (d) {
 				return d.label;
 			}
 		},
 		node_style: {
 			fill: function (d) {
-				return color(d.data.group);
+				return d.data.color;
 			},
 			stroke: 'none'
 		},
 		edge_style: {
 			fill: '#999',
-			'stroke-width': 5
+			'stroke-width': 2
 		},
 		label_style: {
 			fill: '#222',
@@ -149,7 +147,7 @@ function initGraph(data){
 		$('#entry_768090773').val(node);
 		Gtemp = jsnx.Graph();
 		Gtemp.add_nodes_from([node], {
-			group: 0
+			color: '#aac'
 		});
 		jsnx.draw(Gtemp, options, true);	
 	});
@@ -159,7 +157,7 @@ function initGraph(data){
 		var source = $('#entry_768090773').val();
 		var target = $('#entry_1321382891').val();
 		Gtemp.add_nodes_from([target], {
-			group: 1
+			color: '#CAE4E1'
 		});
 		Gtemp.add_edges_from([[source, target]]);
 	});
@@ -173,7 +171,7 @@ function showRandomNode(data, options){
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
-		}, 20000);
+		}, 15000);
 	}
 }
 
@@ -192,13 +190,14 @@ function showOneNode(parent, data, options, random) {
 			result.forEach(function (edge){
 				var f = data.nodes[edge.target];
 				fnodes.push(f.label);
-				edges.push([p.label, f.label, {weight: edge.confidence}]);
+				// edges.push([p.label, f.label, {weight: edge.confidence}]);
+				edges.push([p.label, f.label]);
 			});
 			G.add_nodes_from(fnodes, {
-				group: 1
+				color: '#CAE4E1'
 			});
 			G.add_nodes_from([p.label], {
-				group: 0
+				color: '#aac'
 			});
 			G.add_edges_from(edges);
 			if (random) {
@@ -246,12 +245,12 @@ function showTwoNodes(person1, person2, data, options) {
 					result.forEach(function (row){
 						if (n1.indexOf(row.target) >= 0) {
 							var label = data.nodes[row.target].label;
-							G.add_nodes_from([label], { group: 0 });
+							G.add_nodes_from([label], { color: '#CAE4E1' });
 							edges.push([p1.label, label]);
 							edges.push([p2.label, label]);
 						}
 					});
-					G.add_nodes_from([p1.label, p2.label], { group: 1 });
+					G.add_nodes_from([p1.label, p2.label], { color: '#aac' });
 					G.add_edges_from(edges);
 					jsnx.draw(G, options);
 				}
