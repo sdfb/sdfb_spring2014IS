@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function node() {
 	this.id = null;
-	this.label = null;
-	this.name = null;	
+	this.first = null;
+	this.last = null;
+	this.birth = null;
 	this.life = null;
-	this.edges = [];
+	this.label = null;
 }
 
 // TODO
@@ -49,15 +50,13 @@ function init(result) {
 		n.id = row.id;
 		n.first = row.first;
 		n.last = row.last;
-		n.name = row.first + ' ' + row.last;
 		n.birth = row.birth; 
 		n.life = row.birth + '-' + row.death;
 		if (row.birth < 10) {
-			n.label = n.name + ' (160' + row.birth + ')';
+			n.label = row.first + ' ' + row.last + ' (160' + row.birth + ')';
 		} else {
-			n.label = n.name + ' (16' + row.birth + ')';
+			n.label = row.first + ' ' + row.last + ' (16' + row.birth + ')';
 		}
-		n.edges = row.edges.split(',');
 		data.nodes[n.id] = n;
 		data.labels[n.label] = n;
 	});
@@ -174,7 +173,7 @@ function showRandomNode(data, options){
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
-		}, 10000);
+		}, 20000);
 	}
 }
 
@@ -207,6 +206,7 @@ function showOneNode(parent, data, options, random) {
 					jsnx.draw(G, options);
 				}
 			} else {
+				$('figure').html('');
 				jsnx.draw(G, options);
 				$("#one").val('');
 				$("#one").typeahead('setQuery', '');
@@ -221,58 +221,42 @@ function showOneNode(parent, data, options, random) {
 }
 
 function showTwoNodes(person1, person2, data, options) {
+	$('figure').html('');
 	var G = jsnx.Graph();
 	var edges = [];
 	var p1 = data.labels[person1];
 	var p2 = data.labels[person2];
 	var n1 = [];
-	var n2 = [];
-	p1.edges.forEach(function (edge) {
-		var key = keys[1];
-		Tabletop.init({
-			key: key,
-			simpleSheet: true,
-			query: 'id = ' + edge,
-			callback: function(result) {
-				if (result) {
-					var id = result[0].source;
-					if (id == p1.id) {
-						id = result[0].target;
-					}
-					n1.push(id);
-				}
-				if (p1.edges.length == n1.length){
-					p2.edges.forEach(function (edge) {
-						var key = keys[1];
-						Tabletop.init({
-							key: key,
-							simpleSheet: true,
-							query: 'id = ' + edge,
-							callback: function(result) {
-								if (result) {
-									var id = result[0].source;
-									if (id == p2.id) {
-										id = result[0].target;
-									}
-									n2.push(id);
-									if (n1.indexOf(id) >= 0) {
-										var label = data.nodes[id].label;
-										G.add_nodes_from([label], { group: 0 });
-										edges.push([p1.label, label]);
-										edges.push([p2.label, label]);
-									}
-								}
-								if (p2.edges.length == n2.length){
-									G.add_nodes_from([p1.label, p2.label], { group: 1 });
-									G.add_edges_from(edges);
-									jsnx.draw(G, options);
-								}
-							}
-						});
+	var key1 = keys[1];
+	var key2 = keys[1];
+
+	Tabletop.init({
+		key: key1,
+		simpleSheet: true,
+		query: 'source = ' + p1.id,
+		callback: function(result) {
+			result.forEach(function (row){
+				n1.push(row.target);
+			});
+			Tabletop.init({
+				key: key2,
+				simpleSheet: true,
+				query: 'source = ' + p2.id,
+				callback: function(result) {
+					result.forEach(function (row){
+						if (n1.indexOf(row.target) >= 0) {
+							var label = data.nodes[row.target].label;
+							G.add_nodes_from([label], { group: 0 });
+							edges.push([p1.label, label]);
+							edges.push([p2.label, label]);
+						}
 					});
+					G.add_nodes_from([p1.label, p2.label], { group: 1 });
+					G.add_edges_from(edges);
+					jsnx.draw(G, options);
 				}
-			}
-		});
+			});
+		}
 	});
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
@@ -281,52 +265,36 @@ function showTwoNodes(person1, person2, data, options) {
 }
 
 function showTable(person1, person2, data) {
+	$('figure').html('');
 	var p1 = data.labels[person1];
 	var p2 = data.labels[person2];
 	var n1 = [];
-	var n2 = [];
 	var common = [];
-	p1.edges.forEach(function (edge) {
-		var key = keys[1];
-		Tabletop.init({
-			key: key,
-			simpleSheet: true,
-			query: 'id = ' + edge,
-			callback: function(result) {
-				if (result) {
-					var id = result[0].source;
-					if (id == p1.id) {
-						id = result[0].target;
-					}
-					n1.push(id);
-				}
-				if (p1.edges.length == n1.length){
-					p2.edges.forEach(function (edge) {
-						var key = keys[1];
-						Tabletop.init({
-							key: key,
-							simpleSheet: true,
-							query: 'id = ' + edge,
-							callback: function(result) {
-								if (result) {
-									var id = result[0].source;
-									if (id == p2.id) {
-										id = result[0].target;
-									}
-									n2.push(id);
-									if (n1.indexOf(id) >= 0) {
-										common.push(data.nodes[id]);
-									}
-								}
-								if (p2.edges.length == n2.length){
-									writeTableWith(common);
-								}
-							}
-						});
+	var key1 = keys[1];
+	var key2 = keys[1];
+
+	Tabletop.init({
+		key: key1,
+		simpleSheet: true,
+		query: 'source = ' + p1.id,
+		callback: function(result) {
+			result.forEach(function (row){
+				n1.push(row.target);
+			});
+			Tabletop.init({
+				key: key2,
+				simpleSheet: true,
+				query: 'source = ' + p2.id,
+				callback: function(result) {
+					result.forEach(function (row){
+						if (n1.indexOf(row.target) >= 0) {
+							common.push(data.nodes[row.target]);
+						}
 					});
+					writeTableWith(common);
 				}
-			}
-		});
+			});
+		}
 	});
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
