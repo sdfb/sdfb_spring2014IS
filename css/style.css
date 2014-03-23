@@ -60,19 +60,19 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    overflow: hidden;
 }
 
-header {
+#results {
     height: 4%;
     line-height: 20px;
-    color: #CAE4E1;
-    background: #555 repeat-x top left;
+    color: #555;
+    /*background: #555 repeat-x top left;*/
+    background: none;
     margin-left: 260px;
     text-align: center;
     font-weight: lighter;
     text-transform: uppercase;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     padding-top: 1%;
 }
 
@@ -297,7 +297,7 @@ button:hover {
 .pace .pace-progress:after {
     display: block;
     position: absolute;
-    top: 30%;
+    top: -10%;
     right: .5rem;
     content: attr(data-progress-text);
     font-family: "Open Sans", sans-serif;

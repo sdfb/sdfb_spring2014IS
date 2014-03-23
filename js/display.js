@@ -1,6 +1,6 @@
 var keys = {
 	0: 	"0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	1: 	"0AhtG6Yl2-hiRdGo5b2JsOTZVWkRlVlVfVmtOUGlfc1E"
+	1: 	"0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE"
 }
 
 var rand = true;
@@ -88,10 +88,15 @@ function initGraph(data){
 		with_labels: true,
 		layout_attr: {
 			charge: -500,
-			linkDistance: 200
+			linkDistance: Math.random() * 200 + 50
 		},
 		node_attr: {
-			r: 10,
+			r: function (d) {
+				if (!d.data.radius) {
+					return 10;
+				}
+				return d.data.radius;
+			},
 			title: function (d) {
 				return d.label;
 			}
@@ -147,7 +152,7 @@ function initGraph(data){
 		$('#entry_768090773').val(node);
 		Gtemp = jsnx.Graph();
 		Gtemp.add_nodes_from([node], {
-			color: '#aac'
+			color: '#aac', radius: 20
 		});
 		jsnx.draw(Gtemp, options, true);	
 	});
@@ -197,7 +202,7 @@ function showOneNode(parent, data, options, random) {
 				color: '#CAE4E1'
 			});
 			G.add_nodes_from([p.label], {
-				color: '#aac'
+				color: '#aac', radius: 20
 			});
 			G.add_edges_from(edges);
 			if (random) {
@@ -207,13 +212,12 @@ function showOneNode(parent, data, options, random) {
 			} else {
 				$('figure').html('');
 				jsnx.draw(G, options);
+				$("#results").html("Network of " + parent);
 				$("#one").val('');
 				$("#one").typeahead('setQuery', '');
 			}
-			d3.selectAll('.node').on('click', function (d) {
-				if (d3.event.ctrlKey) {
-					showOneNode(d.node, data, options);
-				}
+			d3.selectAll('.node').on('dblclick', function (d) {
+				showOneNode(d.node, data, options);
 			});
 		}
 	});
@@ -250,13 +254,17 @@ function showTwoNodes(person1, person2, data, options) {
 							edges.push([p2.label, label]);
 						}
 					});
-					G.add_nodes_from([p1.label, p2.label], { color: '#aac' });
+					G.add_nodes_from([p1.label, p2.label], { color: '#aac', radius: 20 });
 					G.add_edges_from(edges);
 					jsnx.draw(G, options);
+					d3.selectAll('.node').on('dblclick', function (d) {
+						showOneNode(d.node, data, options);
+					});
 				}
 			});
 		}
 	});
+	$("#results").html("Common network between " + person1 + " and " + person2);
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
 	$("#three").val('');
@@ -295,6 +303,7 @@ function showTable(person1, person2, data) {
 			});
 		}
 	});
+	$("#results").html("Common network between " + person1 + " and " + person2);
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
 	$("#three").val('');
