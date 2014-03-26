@@ -36,7 +36,7 @@ function showOneGroup(group, data) {
 		query: 'group = ' + id,
 		callback: function(result) {
 			result.forEach(function (row){
-				// this should be the id of each node
+				// row.node is the id of each node
 				// results.push(data.nodes[row.node]);
 			});
 			// writeTableWith(results);
