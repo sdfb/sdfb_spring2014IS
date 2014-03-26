@@ -1,6 +1,7 @@
 var keys = {
-	0: 	"0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	1: 	"0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE"
+	0: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
+	1: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
+	2: "0AhtG6Yl2-hiRdHdITFhtZEFudkFtVk9LQmhobUhCb3c"
 }
 
 var rand = true;
@@ -23,13 +24,24 @@ function node() {
 }
 
 // TODO
-function initGroups(nodes) {
-
-}
-
-// TODO
 function showOneGroup(group, data) {
+	// group is the name of the group. Example: Nexgene
+	// data.groups_names[group] returns the ID of the group. Example: data.groups_names[Nexgene] returns 1
 
+	// Search for the nodes that belong to a group where id = 1
+	var key = keys[2];
+	var results = [];
+	Tabletop.init({
+		key: key,
+		query: 'group = ' + id,
+		callback: function(result) {
+			result.forEach(function (row){
+				// this should be the id of each node
+				// results.push(data.nodes[row.node]);
+			});
+			// writeTableWith(results);
+		}
+	});
 }
 
 // TODO
@@ -42,7 +54,10 @@ function showTwoGroups(group1, group2, data) {
 function init(result) {
 	var data = {
 		nodes: {},
-		labels: {}
+		nodes_names: {},
+		groups: {},
+		groups_names: {}
+
 	};
 	
 	result.nodes.elements.forEach(function (row) {
@@ -58,29 +73,43 @@ function init(result) {
 			n.label = row.first + ' ' + row.last + ' (16' + row.birth + ')';
 		}
 		data.nodes[n.id] = n;
-		data.labels[n.label] = n;
+		data.nodes_names[n.label] = n;
 	});
+
+	result.groups.elements.forEach(function (row) {
+		data.groups[row.id] = row.name;
+		data.groups_names[row.name] = row.id;
+	});
+
 	initGraph(data);
-	initGroups(data.nodes);
 }
 
 // Populate the suggested drop-down menus
 // Make the buttons in the search panel functional
 function initGraph(data){
 	$('#one').typeahead({
-		local: Object.keys(data.labels).sort()
+		local: Object.keys(data.nodes_names).sort()
 	});
 	$('#two').typeahead({
-		local: Object.keys(data.labels).sort()
+		local: Object.keys(data.nodes_names).sort()
 	});
 	$('#three').typeahead({
-		local: Object.keys(data.labels).sort()
+		local: Object.keys(data.nodes_names).sort()
 	});
 	$('#entry_768090773').typeahead({
-		local: Object.keys(data.labels).sort()
+		local: Object.keys(data.nodes_names).sort()
 	});
 	$('#entry_1321382891').typeahead({
-		local: Object.keys(data.labels).sort()
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#four').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#five').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#six').typeahead({
+		local: Object.keys(data.groups_names).sort()
 	});
 
 	var options = {
@@ -182,7 +211,7 @@ function showRandomNode(data, options){
 
 function showOneNode(parent, data, options, random) {
 	var G = jsnx.Graph();
-	var p = data.labels[parent];
+	var p = data.nodes_names[parent];
 	var edges = [];
 	var fnodes = [];
 	// var key = keys[Math.ceil((p.id + 1) / 1000)];
@@ -227,8 +256,8 @@ function showTwoNodes(person1, person2, data, options) {
 	$('figure').html('');
 	var G = jsnx.Graph();
 	var edges = [];
-	var p1 = data.labels[person1];
-	var p2 = data.labels[person2];
+	var p1 = data.nodes_names[person1];
+	var p2 = data.nodes_names[person2];
 	var n1 = [];
 	var key1 = keys[1];
 	var key2 = keys[1];
@@ -273,8 +302,8 @@ function showTwoNodes(person1, person2, data, options) {
 
 function showTable(person1, person2, data) {
 	$('figure').html('');
-	var p1 = data.labels[person1];
-	var p2 = data.labels[person2];
+	var p1 = data.nodes_names[person1];
+	var p2 = data.nodes_names[person2];
 	var n1 = [];
 	var common = [];
 	var key1 = keys[1];
