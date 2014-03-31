@@ -1,7 +1,8 @@
 var keys = {
-	0: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	1: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
-	2: "0AhtG6Yl2-hiRdHdITFhtZEFudkFtVk9LQmhobUhCb3c"
+	nodes: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
+	edges1: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
+	edges2: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
+	groups: "0AhtG6Yl2-hiRdHdITFhtZEFudkFtVk9LQmhobUhCb3c"
 }
 
 var rand = true;
@@ -9,7 +10,7 @@ var Gtemp;
 
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
-		key: keys[0],
+		key: keys.nodes,
 		callback: init
 	});
 });
@@ -30,7 +31,7 @@ function showOneGroup(group, data) {
 	// data.groups_names[group] returns the ID of the group. Example: data.groups_names[Nexgene] returns 1
 
 	// Search for the nodes that belong to a group where id = 1
-	var key = keys[2];
+	var key = keys.groups;
 	var results = [];
 	Tabletop.init({
 		key: key,
@@ -115,7 +116,7 @@ function initGraph(data){
 		with_labels: true,
 		layout_attr: {
 			charge: -500,
-			linkDistance: Math.random() * 200 + 50
+			linkDistance: Math.random() * 40 + 40
 		},
 		node_attr: {
 			r: function (d) {
@@ -197,7 +198,7 @@ function initGraph(data){
 
 }
 
-function showRandomNode(data, options){
+function showRandomNode(data, options) {
 	var parent = data.nodes[Math.floor((Math.random()*500))].label;
 	showOneNode(parent, data, options, true);
 	if (rand) {
@@ -213,7 +214,7 @@ function showOneNode(parent, data, options, random) {
 	var edges = [];
 	var fnodes = [];
 	// var key = keys[Math.ceil((p.id + 1) / 1000)];
-	var key = keys[1];
+	var key = keys.edges1;
 	Tabletop.init({
 		key: key,
 		simpleSheet: true,
@@ -256,8 +257,8 @@ function showTwoNodes(person1, person2, data, options) {
 	var p1 = data.nodes_names[person1];
 	var p2 = data.nodes_names[person2];
 	var n1 = [];
-	var key1 = keys[1];
-	var key2 = keys[1];
+	var key1 = keys.edges1;
+	var key2 = keys.edges1;
 
 	Tabletop.init({
 		key: key1,
@@ -303,8 +304,8 @@ function showTable(person1, person2, data) {
 	var p2 = data.nodes_names[person2];
 	var n1 = [];
 	var common = [];
-	var key1 = keys[1];
-	var key2 = keys[1];
+	var key1 = keys.edges1;
+	var key2 = keys.edges1;
 
 	Tabletop.init({
 		key: key1,
