@@ -21,6 +21,7 @@ function node() {
 	this.birth = null;
 	this.life = null;
 	this.label = null;
+	this.occupation = null;
 }
 
 // TODO
@@ -67,11 +68,8 @@ function init(result) {
 		n.last = row.last;
 		n.birth = row.birth; 
 		n.life = row.birth + '-' + row.death;
-		if (row.birth < 10) {
-			n.label = row.first + ' ' + row.last + ' (160' + row.birth + ')';
-		} else {
-			n.label = row.first + ' ' + row.last + ' (16' + row.birth + ')';
-		}
+		n.occupation = row.occupation;
+		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
 		data.nodes[n.id] = n;
 		data.nodes_names[n.label] = n;
 	});
@@ -200,7 +198,7 @@ function initGraph(data){
 }
 
 function showRandomNode(data, options){
-	var parent = data.nodes[Math.floor((Math.random()*9999))].label;
+	var parent = data.nodes[Math.floor((Math.random()*500))].label;
 	showOneNode(parent, data, options, true);
 	if (rand) {
 		setTimeout(function(){
@@ -224,7 +222,6 @@ function showOneNode(parent, data, options, random) {
 			result.forEach(function (edge){
 				var f = data.nodes[edge.target];
 				fnodes.push(f.label);
-				// edges.push([p.label, f.label, {weight: edge.confidence}]);
 				edges.push([p.label, f.label]);
 			});
 			G.add_nodes_from(fnodes, {
@@ -349,7 +346,7 @@ function writeTableWith(dataSource){
         'aoColumns': [
             {'mDataProp': 'first', 'sTitle': 'First Name'},
             {'mDataProp': 'last', 'sTitle': 'Last Name'},
-            {'mDataProp': 'birth', 'sTitle': 'Birth Date'}
+            {'mDataProp': 'occupation', 'sTitle': 'Occupation'}
         ],
         'oLanguage': {
             'sLengthMenu': '_MENU_ records per page'
