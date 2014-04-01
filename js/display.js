@@ -22,6 +22,7 @@ function node() {
 	this.birth = null;
 	this.label = null;
 	this.occupation = null;
+	this.edges = null;
 }
 
 // TODO
@@ -69,6 +70,7 @@ function init(result) {
 		n.birth = row.birth; 
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
+		n.edges = row.edges.split(',');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.label] = n;
 	});
@@ -210,42 +212,35 @@ function showOneNode(parent, data, options, random) {
 	var G = jsnx.Graph();
 	var p = data.nodes_names[parent];
 	var edges = [];
-	var fnodes = [];
-	var k = Math.ceil((p.id + 1) / 250) / 10;
-	var key = keys['edges' + Math.ceil(k)];	
-	Tabletop.init({
-		key: key,
-		simpleSheet: true,
-		query: 'source = ' + p.id,
-		callback: function(result) {
-			result.forEach(function (edge){
-				var f = data.nodes[edge.target];
-				fnodes.push(f.label);
-				edges.push([p.label, f.label]);
-			});
-			G.add_nodes_from(fnodes, {
-				color: '#CAE4E1'
-			});
-			G.add_nodes_from([p.label], {
-				color: '#aac', radius: 20
-			});
-			G.add_edges_from(edges);
-			if (random) {
-				if (rand) {
-					jsnx.draw(G, options);
-				}
-			} else {
-				$('figure').html('');
-				jsnx.draw(G, options);
-				$("#results").html("Network of " + parent);
-				$("#one").val('');
-				$("#one").typeahead('setQuery', '');
-			}
-			d3.selectAll('.node').on('dblclick', function (d) {
-				showOneNode(d.node, data, options);
-			});
-		}
+	var nodes = [];
+	// var k = Math.ceil((p.id + 1) / 250) / 10;
+	// var key = keys['edges' + Math.ceil(k)];
+	p.edges.forEach(function (edge){
+		var f = data.nodes[edge];
+		nodes.push(f.label);
+		edges.push([p.label, f.label]);
 	});
+	G.add_nodes_from(nodes, {
+		color: '#CAE4E1'
+	});
+	G.add_nodes_from([p.label], {
+		color: '#aac', radius: 20
+	});
+	G.add_edges_from(edges);
+	if (random) {
+		if (rand) {
+			jsnx.draw(G, options);
+		}
+	} else {
+		$('figure').html('');
+		jsnx.draw(G, options);
+		$("#results").html("Network of " + parent);
+		$("#one").val('');
+		$("#one").typeahead('setQuery', '');
+		d3.selectAll('.node').on('dblclick', function (d) {
+			showOneNode(d.node, data, options);
+		});
+	}
 }
 
 function showTwoNodes(person1, person2, data, options) {
@@ -254,40 +249,19 @@ function showTwoNodes(person1, person2, data, options) {
 	var edges = [];
 	var p1 = data.nodes_names[person1];
 	var p2 = data.nodes_names[person2];
-	var n1 = [];
-	var key1 = keys.edges1;
-	var key2 = keys.edges1;
-
-	Tabletop.init({
-		key: key1,
-		simpleSheet: true,
-		query: 'source = ' + p1.id,
-		callback: function(result) {
-			result.forEach(function (row){
-				n1.push(row.target);
-			});
-			Tabletop.init({
-				key: key2,
-				simpleSheet: true,
-				query: 'source = ' + p2.id,
-				callback: function(result) {
-					result.forEach(function (row){
-						if (n1.indexOf(row.target) >= 0) {
-							var label = data.nodes[row.target].label;
-							G.add_nodes_from([label], { color: '#CAE4E1' });
-							edges.push([p1.label, label]);
-							edges.push([p2.label, label]);
-						}
-					});
-					G.add_nodes_from([p1.label, p2.label], { color: '#aac', radius: 20 });
-					G.add_edges_from(edges);
-					jsnx.draw(G, options);
-					d3.selectAll('.node').on('dblclick', function (d) {
-						showOneNode(d.node, data, options);
-					});
-				}
-			});
+	p1.edges.forEach(function (edge){
+		if (p2.edges.indexOf(edge) >= 0) {
+			var label = data.nodes[edge].label;
+			G.add_nodes_from([label], { color: '#CAE4E1' });
+			edges.push([p1.label, label]);
+			edges.push([p2.label, label]);
 		}
+	});
+	G.add_nodes_from([p1.label, p2.label], { color: '#aac', radius: 20 });
+	G.add_edges_from(edges);
+	jsnx.draw(G, options);
+	d3.selectAll('.node').on('dblclick', function (d) {
+		showOneNode(d.node, data, options);
 	});
 	$("#results").html("Common network between " + person1 + " and " + person2);
 	$("#two").val('');
@@ -300,34 +274,14 @@ function showTable(person1, person2, data) {
 	$('figure').html('');
 	var p1 = data.nodes_names[person1];
 	var p2 = data.nodes_names[person2];
-	var n1 = [];
 	var common = [];
-	var key1 = keys.edges1;
-	var key2 = keys.edges1;
-
-	Tabletop.init({
-		key: key1,
-		simpleSheet: true,
-		query: 'source = ' + p1.id,
-		callback: function(result) {
-			result.forEach(function (row){
-				n1.push(row.target);
-			});
-			Tabletop.init({
-				key: key2,
-				simpleSheet: true,
-				query: 'source = ' + p2.id,
-				callback: function(result) {
-					result.forEach(function (row){
-						if (n1.indexOf(row.target) >= 0) {
-							common.push(data.nodes[row.target]);
-						}
-					});
-					writeTableWith(common);
-				}
-			});
+	p1.edges.forEach(function (edge){
+		if (p2.edges.indexOf(edge) >= 0) {
+			common.push(data.nodes[edge]);
 		}
 	});
+	writeTableWith(common);
+
 	$("#results").html("Common network between " + person1 + " and " + person2);
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
@@ -335,7 +289,7 @@ function showTable(person1, person2, data) {
 	$("#three").typeahead('setQuery', '');
 }
 
-// create the table container and object
+// Create the table container
 function writeTableWith(dataSource){
     $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
@@ -353,7 +307,7 @@ function writeTableWith(dataSource){
     });
 };
 
-//define two custom functions (asc and desc) for string sorting
+// Define two custom functions (asc and desc) for string sorting
 jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
 	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
 };
