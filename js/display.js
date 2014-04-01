@@ -1,7 +1,7 @@
 var keys = {
 	nodes: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
 	edges1: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
-	edges2: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
+	edges2: "0AhtG6Yl2-hiRdHI5dmQwcTNuX2tJRUdua2tldjdlYXc",
 	groups: "0AhtG6Yl2-hiRdHdITFhtZEFudkFtVk9LQmhobUhCb3c"
 }
 
@@ -20,7 +20,6 @@ function node() {
 	this.first = null;
 	this.last = null;
 	this.birth = null;
-	this.life = null;
 	this.label = null;
 	this.occupation = null;
 }
@@ -68,7 +67,6 @@ function init(result) {
 		n.first = row.first;
 		n.last = row.last;
 		n.birth = row.birth; 
-		n.life = row.birth + '-' + row.death;
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
 		data.nodes[n.id] = n;
@@ -199,7 +197,7 @@ function initGraph(data){
 }
 
 function showRandomNode(data, options) {
-	var parent = data.nodes[Math.floor((Math.random()*500))].label;
+	var parent = data.nodes[Math.floor((Math.random()*Object.keys(data.nodes).length - 1))].label;
 	showOneNode(parent, data, options, true);
 	if (rand) {
 		setTimeout(function(){
@@ -213,8 +211,8 @@ function showOneNode(parent, data, options, random) {
 	var p = data.nodes_names[parent];
 	var edges = [];
 	var fnodes = [];
-	// var key = keys[Math.ceil((p.id + 1) / 1000)];
-	var key = keys.edges1;
+	var k = Math.ceil((p.id + 1) / 250) / 10;
+	var key = keys['edges' + Math.ceil(k)];	
 	Tabletop.init({
 		key: key,
 		simpleSheet: true,
