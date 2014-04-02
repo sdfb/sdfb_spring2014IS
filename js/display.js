@@ -1,7 +1,6 @@
 var keys = {
 	nodes: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	edges1: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
-	edges2: "0AhtG6Yl2-hiRdHI5dmQwcTNuX2tJRUdua2tldjdlYXc",
+	annot: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
 	groups: "0AhtG6Yl2-hiRdHdITFhtZEFudkFtVk9LQmhobUhCb3c"
 }
 
@@ -23,6 +22,12 @@ function node() {
 	this.label = null;
 	this.occupation = null;
 	this.edges = null;
+}
+
+function group(){
+	this.id = null;
+	this.name = null;
+	this.nodes = null;
 }
 
 // TODO
@@ -59,7 +64,6 @@ function init(result) {
 		nodes_names: {},
 		groups: {},
 		groups_names: {}
-
 	};
 	
 	result.nodes.elements.forEach(function (row) {
@@ -70,7 +74,12 @@ function init(result) {
 		n.birth = row.birth; 
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
-		n.edges = row.edges.split(',');
+		n.edges = {};
+		n.edges[0] = row.certain.split(',');
+		n.edges[1] = row.likely.split(',');
+		n.edges[2] = row.possible.split(',');
+		n.edges[3] = row.unlikely.split(',');
+		n.edges[4] = row.impossible.split(',');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.label] = n;
 	});
@@ -211,13 +220,14 @@ function showOneNode(parent, data, options, random) {
 	var p = data.nodes_names[parent];
 	var edges = [];
 	var nodes = [];
+	var confi = 4;
 	// var k = Math.ceil((p.id + 1) / 250) / 10;
 	// var key = keys['edges' + Math.ceil(k)];
-	p.edges.forEach(function (edge){
+	p.edges[confi].forEach(function (edge){
 		var f = data.nodes[edge];
 		nodes.push(f.label);
 		edges.push([p.label, f.label]);
-		f.edges.forEach(function (e){
+		f.edges[confi].forEach(function (e){
 			var s = data.nodes[e];
 			if (nodes.indexOf(s.label) >= 0) {
 				edges.push([f.label, s.label]);
