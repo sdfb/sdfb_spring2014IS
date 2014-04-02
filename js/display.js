@@ -116,7 +116,7 @@ function initGraph(data){
 		with_labels: true,
 		layout_attr: {
 			charge: -500,
-			linkDistance: Math.random() * 40 + 40
+			linkDistance: Math.random() * 250 + 100
 		},
 		node_attr: {
 			r: function (d) {
@@ -137,7 +137,7 @@ function initGraph(data){
 		},
 		edge_style: {
 			fill: '#999',
-			'stroke-width': 2
+			'stroke-width': 1
 		},
 		label_style: {
 			fill: '#222',
@@ -194,8 +194,6 @@ function initGraph(data){
 		});
 		Gtemp.add_edges_from([[source, target]]);
 	});
-
-
 }
 
 function showRandomNode(data, options) {
@@ -219,6 +217,12 @@ function showOneNode(parent, data, options, random) {
 		var f = data.nodes[edge];
 		nodes.push(f.label);
 		edges.push([p.label, f.label]);
+		f.edges.forEach(function (e){
+			var s = data.nodes[e];
+			if (nodes.indexOf(s.label) >= 0) {
+				edges.push([f.label, s.label]);
+			}
+		});
 	});
 	G.add_nodes_from(nodes, {
 		color: '#CAE4E1'
@@ -281,7 +285,6 @@ function showTable(person1, person2, data) {
 		}
 	});
 	writeTableWith(common);
-
 	$("#results").html("Common network between " + person1 + " and " + person2);
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
