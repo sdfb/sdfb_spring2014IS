@@ -1,7 +1,6 @@
 var keys = {
 	nodes: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	annot: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE",
-	groups: "0AhtG6Yl2-hiRdHdITFhtZEFudkFtVk9LQmhobUhCb3c"
+	annot: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE"
 }
 
 var rand = true;
@@ -30,39 +29,13 @@ function group(){
 	this.nodes = null;
 }
 
-// TODO
-function showOneGroup(group, data) {
-	// group is the name of the group. Example: Nexgene
-	// data.groups_names[group] returns the ID of the group. Example: data.groups_names[Nexgene] returns 1
-
-	// Search for the nodes that belong to a group where id = 1
-	var key = keys.groups;
-	var results = [];
-	Tabletop.init({
-		key: key,
-		query: 'group = ' + id,
-		callback: function(result) {
-			result.forEach(function (row){
-				// row.node is the id of each node
-				// results.push(data.nodes[row.node]);
-			});
-			// writeTableWith(results);
-		}
-	});
-}
-
-// TODO
-function showTwoGroups(group1, group2, data) {
-
-}
-
-
-// Create a dictionnary of nodes
+// Create a dictionnary of nodes and groups
 function init(result) {
+	
 	var data = {
 		nodes: {},
-		nodes_names: {},
 		groups: {},
+		nodes_names: {},
 		groups_names: {}
 	};
 	
@@ -75,18 +48,22 @@ function init(result) {
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
 		n.edges = {};
-		n.edges[0] = row.certain.split(',');
-		n.edges[1] = row.likely.split(',');
-		n.edges[2] = row.possible.split(',');
-		n.edges[3] = row.unlikely.split(',');
-		n.edges[4] = row.impossible.split(',');
+		n.edges[0] = row.certain.split(', ');
+		n.edges[1] = row.likely.split(', ');
+		n.edges[2] = row.possible.split(', ');
+		n.edges[3] = row.unlikely.split(', ');
+		n.edges[4] = row.impossible.split(', ');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.label] = n;
 	});
 
 	result.groups.elements.forEach(function (row) {
-		data.groups[row.id] = row.name;
-		data.groups_names[row.name] = row.id;
+		var g = new group();
+		g.id  = row.id;
+		g.name = row.name;
+		g.nodes = row.nodes.split(', ');
+		data.groups[g.id] = g;
+		data.groups_names[g.name] = g;
 	});
 
 	initGraph(data);
@@ -161,7 +138,7 @@ function initGraph(data){
 		if ($("#one").val()) {
 			rand = false;
 			Pace.restart();
-			showOneNode($("#one").val(), data, options);
+			showOneNode($("#one").val(), data, options, 0);
 		}
 	});
 
@@ -180,6 +157,25 @@ function initGraph(data){
 			showTable($("#two").val(), $("#three").val(), data);
 		}
 	});
+
+	$("#findonegroup").click(function () {
+		if ($("#four").val()) {
+			rand = false;
+			Pace.restart();
+			showOneGroup($("#four").val(), data);
+		}
+	});
+
+	$("#findtwogroup").click(function () {
+		if ($("#five").val() && $("#six").val()) {
+			rand = false;
+			Pace.restart();
+			$('#group1').html($("#five").val());
+			$('#group2').html($("#six").val());
+			showOneGroup($("#five").val(), data);
+		}
+	});
+
 
 	$('#submitnode').click(function(){
 		rand = false;
@@ -207,7 +203,7 @@ function initGraph(data){
 
 function showRandomNode(data, options) {
 	var parent = data.nodes[Math.floor((Math.random()*Object.keys(data.nodes).length - 1))].label;
-	showOneNode(parent, data, options, true);
+	showOneNode(parent, data, options, 0, true);
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
@@ -215,19 +211,18 @@ function showRandomNode(data, options) {
 	}
 }
 
-function showOneNode(parent, data, options, random) {
+function showOneNode(parent, data, options, confidence, random) {
 	var G = jsnx.Graph();
 	var p = data.nodes_names[parent];
 	var edges = [];
 	var nodes = [];
-	var confi = 4;
 	// var k = Math.ceil((p.id + 1) / 250) / 10;
 	// var key = keys['edges' + Math.ceil(k)];
-	p.edges[confi].forEach(function (edge){
+	p.edges[confidence].forEach(function (edge){
 		var f = data.nodes[edge];
 		nodes.push(f.label);
 		edges.push([p.label, f.label]);
-		f.edges[confi].forEach(function (e){
+		f.edges[confidence].forEach(function (e){
 			var s = data.nodes[e];
 			if (nodes.indexOf(s.label) >= 0) {
 				edges.push([f.label, s.label]);
@@ -252,7 +247,7 @@ function showOneNode(parent, data, options, random) {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.node').on('dblclick', function (d) {
-			showOneNode(d.node, data, options);
+			showOneNode(d.node, data, options, 0);
 		});
 	}
 }
@@ -263,8 +258,14 @@ function showTwoNodes(person1, person2, data, options) {
 	var edges = [];
 	var p1 = data.nodes_names[person1];
 	var p2 = data.nodes_names[person2];
-	p1.edges.forEach(function (edge){
-		if (p2.edges.indexOf(edge) >= 0) {
+	var e1 = [];
+	var e2 = [];
+	for (var i = 0; i < 5; i ++) {
+		e1.push.apply(e1, p1.edges[i]);
+		e2.push.apply(e2, p2.edges[i]);
+	}
+	e1.forEach(function (edge){
+		if (e2.indexOf(edge) >= 0) {
 			var label = data.nodes[edge].label;
 			G.add_nodes_from([label], { color: '#CAE4E1' });
 			edges.push([p1.label, label]);
@@ -275,7 +276,7 @@ function showTwoNodes(person1, person2, data, options) {
 	G.add_edges_from(edges);
 	jsnx.draw(G, options);
 	d3.selectAll('.node').on('dblclick', function (d) {
-		showOneNode(d.node, data, options);
+		showOneNode(d.node, data, options, 0);
 	});
 	$("#results").html("Common network between " + person1 + " and " + person2);
 	$("#two").val('');
@@ -289,8 +290,14 @@ function showTable(person1, person2, data) {
 	var p1 = data.nodes_names[person1];
 	var p2 = data.nodes_names[person2];
 	var common = [];
-	p1.edges.forEach(function (edge){
-		if (p2.edges.indexOf(edge) >= 0) {
+	var e1 = [];
+	var e2 = [];
+	for (var i = 0; i < 5; i ++) {
+		e1.push.apply(e1, p1.edges[i]);
+		e2.push.apply(e2, p2.edges[i]);
+	}
+	e1.forEach(function (edge){
+		if (e2.indexOf(edge) >= 0) {
 			common.push(data.nodes[edge]);
 		}
 	});
@@ -300,6 +307,15 @@ function showTable(person1, person2, data) {
 	$("#two").typeahead('setQuery', '');
 	$("#three").val('');
 	$("#three").typeahead('setQuery', '');
+}
+
+function showOneGroup(group, data) {
+	var g = data.groups_names[group];
+	var results = [];
+	g.nodes.forEach(function (node){	
+		results.push(data.nodes[node]);
+	});
+	writeTableWith(results);
 }
 
 // Create the table container
