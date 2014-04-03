@@ -176,6 +176,14 @@ function initGraph(data){
 		}
 	});
 
+	$("#group1").click(function () {
+		showOneGroup($("#group1").html(), data);
+	});
+
+	$("#group2").click(function () {
+		showOneGroup($("#group2").html(), data);
+	});
+
 
 	$('#submitnode').click(function(){
 		rand = false;
@@ -316,6 +324,7 @@ function showOneGroup(group, data) {
 		results.push(data.nodes[node]);
 	});
 	writeTableWith(results);
+	$("#results").html("People who belong to the " + group + " group");
 }
 
 // Create the table container

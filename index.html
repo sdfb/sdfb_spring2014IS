@@ -67,15 +67,11 @@
 		</section>
 
 		<section id="twonodeform">
-			<article>
-				<input type="text" id="two" placeholder="Name 1">
-				<div id='and'>&</div>
-				<input type="text" id="three" placeholder="Name 2">
-			</article>
+			<input type="text" id="two" placeholder="Name 1">
+			<input type="text" id="three" placeholder="Name 2">
 			<button type="button" id="findtwonode">Find (graph)</button>
 			<button type="button" id="findtwonodetable">Find (table)</button>
 		</section>
-
 
 		<!-- GROUP FORMS -->
 
@@ -85,11 +81,8 @@
 		</section>
 
 		<section id="twogroupform">
-			<article>
-				<input type="text" id="five" placeholder="Group 1">
-				<div id='and'>&</div>
-				<input type="text" id="six" placeholder="Group 2">
-			</article>
+			<input type="text" id="five" placeholder="Group 1">
+			<input type="text" id="six" placeholder="Group 2">
 			<button type="button" id="findtwogroup">Find</button>
 		</section>
 		
@@ -102,7 +95,7 @@
 			</script>
 			<iframe name="hidden_iframe1" id="hidden_iframe1" style="display:none;" onload=""></iframe>
 			<form action="https://docs.google.com/forms/d/151VLJDd62rmg_elgMLsiRjwmN0ecuZZbWdFz1QazhtA/formResponse" id="googleaddnode" method="post" target="hidden_iframe1" onsubmit="submitted=true;">
-				<input type="text" name="entry.1051066799" id="entry_1051066799" placeholder="ID">
+<!-- 				<input type="text" name="entry.1051066799" id="entry_1051066799" placeholder="ID"> -->
 				<input type="text" name="entry.1804360896" id="entry_1804360896" placeholder="First Name">
 				<input type="text" name="entry.754797571" id="entry_754797571" placeholder="Last Name">
 				<input type="text" name="entry.524366257" id="entry_524366257" placeholder="Birth Date">
@@ -120,16 +113,11 @@
 				<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Target">
 				<select name="entry.875203595" id="entry_875203595">
 					<option value="">Confidence</option>
-					<option value="0.1">0.1</option>
-					<option value="0.2">0.2</option>
-					<option value="0.3">0.3</option>
-					<option value="0.4">0.4</option>
-					<option value="0.5">0.5</option>
-					<option value="0.6">0.6</option>
-					<option value="0.7">0.7</option>
-					<option value="0.8">0.8</option>
-					<option value="0.9">0.9</option>
-					<option value="1.0">1.0</option>
+					<option value="0.2">Very unlikely</option>
+					<option value="0.4">Unlikely</option>
+					<option value="0.6">Possible</option>
+					<option value="0.8">Likely</option>
+					<option value="1.0">Certain</option>
 				</select>
 				<input type="text" name="entry.948502783" id="entry_948502783" placeholder="Annotation">
 				<button type="submit" name="submit" id="submitedge">Submit</button>
