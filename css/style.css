@@ -206,7 +206,7 @@ button:hover, button.active {
 }
 
 #twogroupsmenu {
-    position: fixed;
+    position: absolute;
     display: none;
     right: 10px;
     top: 80px;
