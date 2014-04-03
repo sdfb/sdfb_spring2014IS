@@ -124,9 +124,12 @@ input, select {
     border-radius: 5px;
     height: 35px;
     width: 200px;
-    min-width: 200px;
     font-family: 'Open Sans',sans-serif;
     font-size: 12px;
+}
+
+form select {
+    min-width: 200px;
 }
 
 .tt-hint {

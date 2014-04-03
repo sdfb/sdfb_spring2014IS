@@ -139,6 +139,7 @@ function initGraph(data){
 			rand = false;
 			Pace.restart();
 			showOneNode($("#one").val(), data, options, 0);
+			$('#twogroupsmenu').css('display','none');
 		}
 	});
 
@@ -147,6 +148,7 @@ function initGraph(data){
 			rand = false;
 			Pace.restart();
 			showTwoNodes($("#two").val(), $("#three").val(), data, options);
+			$('#twogroupsmenu').css('display','none');
 		}
 	});
 
@@ -155,6 +157,7 @@ function initGraph(data){
 			rand = false;
 			Pace.restart();
 			showTable($("#two").val(), $("#three").val(), data);
+			$('#twogroupsmenu').css('display','none');
 		}
 	});
 
@@ -163,6 +166,7 @@ function initGraph(data){
 			rand = false;
 			Pace.restart();
 			showOneGroup($("#four").val(), data);
+			$('#twogroupsmenu').css('display','none');
 		}
 	});
 
@@ -184,6 +188,9 @@ function initGraph(data){
 		showOneGroup($("#group2").html(), data);
 	});
 
+	$("#group3").click(function () {
+		findInterGroup($("#group1").html(), $("#group2").html(), data);
+	});
 
 	$('#submitnode').click(function(){
 		rand = false;
@@ -320,11 +327,25 @@ function showTable(person1, person2, data) {
 function showOneGroup(group, data) {
 	var g = data.groups_names[group];
 	var results = [];
-	g.nodes.forEach(function (node){	
+	g.nodes.forEach(function (node) {	
 		results.push(data.nodes[node]);
 	});
 	writeTableWith(results);
 	$("#results").html("People who belong to the " + group + " group");
+}
+
+// Display the intersections between group1 and group2
+function findInterGroup(group1, group2, data) {
+	var g1 = data.groups_names[group1];
+	var g2 = data.groups_names[group2];
+	var common = [];
+	g1.nodes.forEach(function (node) {
+		if (g2.nodes.indexOf(node) >= 0) {
+			common.push(data.nodes[node]);
+		}
+	});
+	writeTableWith(common);
+	$("#results").html("Intersection between " + group1 + " and " + group2);
 }
 
 // Create the table container
