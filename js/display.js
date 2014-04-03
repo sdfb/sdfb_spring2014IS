@@ -4,7 +4,7 @@ var keys = {
 }
 
 var rand = true;
-var Gtemp;
+var addGraph;
 
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
@@ -102,7 +102,7 @@ function initGraph(data){
 		with_labels: true,
 		layout_attr: {
 			charge: -500,
-			linkDistance: Math.random() * 250 + 100
+			linkDistance: 100
 		},
 		node_attr: {
 			r: function (d) {
@@ -117,7 +117,10 @@ function initGraph(data){
 		},
 		node_style: {
 			fill: function (d) {
-				return d.data.color;
+				if (!d.data.radius) {
+					return '#CAE4E1';
+				}
+				return '#aac';
 			},
 			stroke: 'none'
 		},
@@ -198,27 +201,24 @@ function initGraph(data){
 		$('section').css('display','none');
 		$('#addedgeform').css('display','block');
 		$('#entry_768090773').val(node);
-		Gtemp = jsnx.Graph();
-		Gtemp.add_nodes_from([node], {
-			color: '#aac', radius: 20
-		});
-		jsnx.draw(Gtemp, options, true);	
+		addGraph = new jsnx.Graph();
+		addGraph.add_nodes_from([node], { radius: 20 });
+		jsnx.draw(addGraph, options, true);	
 	});
 
 	$('#submitedge').click(function(){
 		rand = false;
 		var source = $('#entry_768090773').val();
 		var target = $('#entry_1321382891').val();
-		Gtemp.add_nodes_from([target], {
-			color: '#CAE4E1'
-		});
-		Gtemp.add_edges_from([[source, target]]);
+		addGraph.add_nodes_from([target]);
+		addGraph.add_edges_from([[source, target]]);
 	});
 }
 
 function showRandomNode(data, options) {
+	if (!rand) return;
 	var parent = data.nodes[Math.floor((Math.random()*Object.keys(data.nodes).length - 1))].label;
-	showOneNode(parent, data, options, 0, true);
+	showOneNode(parent, data, options, 0, null, true);
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
@@ -226,8 +226,12 @@ function showRandomNode(data, options) {
 	}
 }
 
-function showOneNode(parent, data, options, confidence, random) {
-	var G = jsnx.Graph();
+function showOneNode(parent, data, options, confidence, graph, random) {
+	var isNew = false;
+	if (!graph) {
+		graph = new jsnx.Graph();
+		isNew = true;
+	}
 	var p = data.nodes_names[parent];
 	var edges = [];
 	var nodes = [];
@@ -244,25 +248,25 @@ function showOneNode(parent, data, options, confidence, random) {
 			}
 		});
 	});
-	G.add_nodes_from(nodes, {
-		color: '#CAE4E1'
-	});
-	G.add_nodes_from([p.label], {
-		color: '#aac', radius: 20
-	});
-	G.add_edges_from(edges);
+	graph.add_nodes_from(nodes);
+	if (isNew) {
+		$('figure').html('');
+		$("#results").html("Network of " + parent);
+		graph.add_nodes_from([p.label], { radius: 20 });
+		jsnx.draw(graph, options, true);
+	}
+	graph.add_edges_from(edges);
 	if (random) {
 		if (rand) {
-			jsnx.draw(G, options);
+			jsnx.draw(graph, options);
+			console.log('YES');
 		}
 	} else {
-		$('figure').html('');
-		jsnx.draw(G, options);
-		$("#results").html("Network of " + parent);
+		console.log('NO');
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
-		d3.selectAll('.node').on('dblclick', function (d) {
-			showOneNode(d.node, data, options, 0);
+		d3.selectAll('.node').on('click', function (d) {
+			showOneNode(d.node, data, options, 0, graph);
 		});
 	}
 }
@@ -282,15 +286,15 @@ function showTwoNodes(person1, person2, data, options) {
 	e1.forEach(function (edge){
 		if (e2.indexOf(edge) >= 0) {
 			var label = data.nodes[edge].label;
-			G.add_nodes_from([label], { color: '#CAE4E1' });
+			G.add_nodes_from([label]);
 			edges.push([p1.label, label]);
 			edges.push([p2.label, label]);
 		}
 	});
-	G.add_nodes_from([p1.label, p2.label], { color: '#aac', radius: 20 });
+	G.add_nodes_from([p1.label, p2.label], { radius: 20 });
 	G.add_edges_from(edges);
 	jsnx.draw(G, options);
-	d3.selectAll('.node').on('dblclick', function (d) {
+	d3.selectAll('.node').on('click', function (d) {
 		showOneNode(d.node, data, options, 0);
 	});
 	$("#results").html("Common network between " + person1 + " and " + person2);
