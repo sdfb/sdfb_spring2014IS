@@ -13,21 +13,17 @@ $(document).ready(function() {
 	$('#prev').click(function(e){
 		var c = $('.active')[0].id.slice(5);
 		if (c == '2') {
-			$('.toggle').removeClass('active');
-			$('#group1').addClass('active');
+			$('#group1').click();
 		} else if (c == '3') {
-			$('.toggle').removeClass('active');
-			$('#group2').addClass('active');
+			$('#group2').click();
 		}
 	});
 	$('#next').click(function(e){
 		var c = $('.active')[0].id.slice(5);
 		if (c == '1') {
-			$('.toggle').removeClass('active');
-			$('#group2').addClass('active');
+			$('#group2').click();
 		} else if (c == '2') {
-			$('.toggle').removeClass('active');
-			$('#group3').addClass('active');
+			$('#group3').click();
 		}
 	});
 	$('#findtwogroup').click(function(e){
