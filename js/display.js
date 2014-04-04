@@ -202,7 +202,7 @@ function initGraph(data){
 		$('#addedgeform').css('display','block');
 		$('#entry_768090773').val(node);
 		addGraph = new jsnx.Graph();
-		addGraph.add_nodes_from([node], { radius: 20 });
+		addGraph.add_node(node, { radius: 20 });
 		jsnx.draw(addGraph, options, true);	
 	});
 
@@ -210,8 +210,8 @@ function initGraph(data){
 		rand = false;
 		var source = $('#entry_768090773').val();
 		var target = $('#entry_1321382891').val();
-		addGraph.add_nodes_from([target]);
-		addGraph.add_edges_from([[source, target]]);
+		addGraph.add_node(target);
+		addGraph.add_edge(source, target);
 	});
 }
 
@@ -232,6 +232,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		graph = new jsnx.Graph();
 		isNew = true;
 	}
+	console.log(graph.nodes());
 	var p = data.nodes_names[parent];
 	var edges = [];
 	var nodes = [];
@@ -243,7 +244,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		edges.push([p.label, f.label]);
 		f.edges[confidence].forEach(function (e){
 			var s = data.nodes[e];
-			if (nodes.indexOf(s.label) >= 0) {
+			if (nodes.indexOf(s.label) >= 0 || graph.nodes().indexOf(s.label) >= 0) {
 				edges.push([f.label, s.label]);
 			}
 		});
@@ -252,17 +253,15 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 	if (isNew) {
 		$('figure').html('');
 		$("#results").html("Network of " + parent);
-		graph.add_nodes_from([p.label], { radius: 20 });
+		graph.add_node(p.label, { radius: 20 });
 		jsnx.draw(graph, options, true);
 	}
 	graph.add_edges_from(edges);
 	if (random) {
 		if (rand) {
 			jsnx.draw(graph, options);
-			console.log('YES');
 		}
 	} else {
-		console.log('NO');
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.node').on('click', function (d) {
@@ -281,12 +280,12 @@ function showTwoNodes(person1, person2, data, options) {
 	var e2 = [];
 	for (var i = 0; i < 5; i ++) {
 		e1.push.apply(e1, p1.edges[i]);
-		e2.push.apply(e2, p2.edges[i]);
+		e2.push.apply(e2, p2.edges[i]);	
 	}
 	e1.forEach(function (edge){
 		if (e2.indexOf(edge) >= 0) {
 			var label = data.nodes[edge].label;
-			G.add_nodes_from([label]);
+			G.add_node(label);
 			edges.push([p1.label, label]);
 			edges.push([p2.label, label]);
 		}
@@ -294,9 +293,6 @@ function showTwoNodes(person1, person2, data, options) {
 	G.add_nodes_from([p1.label, p2.label], { radius: 20 });
 	G.add_edges_from(edges);
 	jsnx.draw(G, options);
-	d3.selectAll('.node').on('click', function (d) {
-		showOneNode(d.node, data, options, 0);
-	});
 	$("#results").html("Common network between " + person1 + " and " + person2);
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
