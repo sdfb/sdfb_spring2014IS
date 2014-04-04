@@ -150,16 +150,12 @@ function initGraph(data){
 		if ($("#two").val() && $("#three").val()) {
 			rand = false;
 			Pace.restart();
-			showTwoNodes($("#two").val(), $("#three").val(), data, options);
-			$('#twogroupsmenu').css('display','none');
-		}
-	});
-
-	$("#findtwonodetable").click(function () {
-		if ($("#two").val() && $("#three").val()) {
-			rand = false;
-			Pace.restart();
-			showTable($("#two").val(), $("#three").val(), data);
+			if ($('#squaredThree')[0].checked) {
+				showTable($("#two").val(), $("#three").val(), data);
+				$('#squaredThree')[0].checked = false;
+			} else {
+				showTwoNodes($("#two").val(), $("#three").val(), data, options);
+			}			
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
@@ -232,7 +228,6 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		graph = new jsnx.Graph();
 		isNew = true;
 	}
-	console.log(graph.nodes());
 	var p = data.nodes_names[parent];
 	var edges = [];
 	var nodes = [];
