@@ -289,12 +289,12 @@ select {
     display: none;
 }
 
-
 .squaredThree {
     width: 20px;
     display: inline-block;
     position: relative;
 }
+
 .squaredThree label {
   width: 20px;
   height: 20px;
@@ -312,6 +312,7 @@ select {
   -webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.4);
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.4);
 }
+
 .squaredThree label:after {
   content: '';
   width: 9px;
@@ -330,25 +331,41 @@ select {
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
+
 .squaredThree label:hover::after {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   opacity: 0.3;
 }
+
 .squaredThree input[type=checkbox] {
   visibility: hidden;
 }
+
 .squaredThree input[type=checkbox]:checked + label:after {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
+
 #tableLable {
     float: right;
     font-size: 12px;
     padding-right: 110px;
     padding-top: 4px;
 }
+
 #checkTable {
     height: 35px;
     width: 200px;
     margin-bottom: 10%;
+}
+
+#download {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-image: url(../img/dwn.png);
+    background-repeat: no-repeat;
+    width: 25px;
+    height: 25px;
+    opacity: .6;
 }

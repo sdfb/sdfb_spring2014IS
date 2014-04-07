@@ -274,7 +274,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 					}
 				});
 				graph.nodes().forEach(function (e){
-					if (Object.keys(graph.adj.get(e).F).length == 0 && graph.node.get(e).radius != 20) {
+					if (Object.keys(graph.adj.get(e).F).length == 0 && !(graph.node.get(e).first)) {
 						graph.remove_node(e);
 					}
 				});
@@ -331,8 +331,9 @@ function showTable(person1, person2, data) {
 			common.push(data.nodes[edge]);
 		}
 	});
-	writeTableWith(common);
-	$("#results").html("Common network between " + person1 + " and " + person2);
+	var title = "Common network between " + person1 + " and " + person2;
+	writeTableWith(common, title);
+	$("#results").html(title);
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
 	$("#three").val('');
@@ -345,8 +346,15 @@ function showOneGroup(group, data) {
 	g.nodes.forEach(function (node) {	
 		results.push(data.nodes[node]);
 	});
-	writeTableWith(results);
-	$("#results").html("People who belong to the " + group + " group");
+	var title = "People who belong to the " + group + " group";
+	writeTableWith(results, title);
+	$("#results").html(title);
+	$("#four").val('');
+	$("#four").typeahead('setQuery', '');
+	$("#five").val('');
+	$("#five").typeahead('setQuery', '');
+	$("#six").val('');
+	$("#six").typeahead('setQuery', '');
 }
 
 // Display the intersections between group1 and group2
@@ -359,12 +367,13 @@ function findInterGroup(group1, group2, data) {
 			common.push(data.nodes[node]);
 		}
 	});
-	writeTableWith(common);
-	$("#results").html("Intersection between " + group1 + " and " + group2);
+	var title = "Intersection between " + group1 + " and " + group2;
+	writeTableWith(common, title);
+	$("#results").html(title);
 }
 
 // Create the table container
-function writeTableWith(dataSource){
+function writeTableWith(dataSource, title){
     $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
@@ -379,6 +388,7 @@ function writeTableWith(dataSource){
             'sLengthMenu': '_MENU_ records per page'
         }
     });
+    downloadData(dataSource, title);
 };
 
 // Define two custom functions (asc and desc) for string sorting
@@ -389,3 +399,12 @@ jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
 jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
 	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
 };
+
+function downloadData(data, title) {
+	var result = title + " \n" + 'First Name,Last Name,Occupation  ' + "\n";
+	data.forEach(function (cell) {
+		result += cell["first"] + ',' + cell["last"] + ',' + cell["occupation"] + "\n";
+	});
+	var dwnbtn = $('<a href="data:text/csv;charset=utf-8,' + encodeURIComponent(result) + ' "download="' + title + '.csv"><div id="download"></div></a>');
+	$(dwnbtn).appendTo('figure');
+}
