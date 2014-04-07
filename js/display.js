@@ -21,6 +21,7 @@ function node() {
 	this.label = null;
 	this.occupation = null;
 	this.edges = null;
+	this.explored = false;
 }
 
 function group(){
@@ -229,6 +230,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		isNew = true;
 	}
 	var p = data.nodes_names[parent];
+	p.explored = true;
 	var edges = [];
 	var nodes = [];
 	// var k = Math.ceil((p.id + 1) / 250) / 10;
@@ -244,12 +246,15 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 			}
 		});
 	});
-	graph.add_nodes_from(nodes);
+	
 	if (isNew) {
 		$('figure').html('');
 		$("#results").html("Network of " + parent);
-		graph.add_node(p.label, { radius: 20 });
+		graph.add_nodes_from(nodes, { first: true });
+		graph.add_node(p.label, { radius: 20, first: true });
 		jsnx.draw(graph, options, true);
+	} else {
+		graph.add_nodes_from(nodes);
 	}
 	graph.add_edges_from(edges);
 	if (random) {
@@ -260,7 +265,22 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.node').on('click', function (d) {
-			showOneNode(d.node, data, options, 0, graph);
+			if(data.nodes_names[d.node].explored) {
+				var n = data.nodes_names[d.node];
+				n.explored = false;
+				n.edges[confidence].forEach(function (e){
+					if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
+						graph.remove_node(data.nodes[e].label);
+					}
+				});
+				graph.nodes().forEach(function (e){
+					if (Object.keys(graph.adj.get(e).F).length == 0 && graph.node.get(e).radius != 20) {
+						graph.remove_node(e);
+					}
+				});
+			} else {
+				showOneNode(d.node, data, options, 0, graph);
+			}
 		});
 	}
 }
