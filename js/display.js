@@ -365,6 +365,8 @@ function findInterGroup(group1, group2, data) {
 
 // Create the table container
 function writeTableWith(dataSource){
+
+
     $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
@@ -379,7 +381,22 @@ function writeTableWith(dataSource){
             'sLengthMenu': '_MENU_ records per page'
         }
     });
+
+    download(dataSource)
 };
+
+function download(data, groupname){
+
+	groupname ="test";
+	var result="Members of "+ groupname +" \n"+'First Name,Last Name,Occupation  '+"\n";
+
+    data.forEach( function (cell){
+    	result += cell["first"] +','+ cell["last"]+','+ cell["occupation"]+"\n";
+    });
+    var dwnbtn = $('<a href="data:text/csv;charset=utf-8,'+ encodeURIComponent(result)+' "download="The members of '+groupname+'.csv"  id ="download" > Download</a>');
+    $(dwnbtn).appendTo('figure');
+
+}
 
 // Define two custom functions (asc and desc) for string sorting
 jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
