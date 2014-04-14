@@ -175,7 +175,7 @@ function initGraph(data){
 			rand = false;
 			Pace.restart();
 			$('#group1').html($("#five").val());
-			$('#group2').html($("#six").val());
+			$('#group3').html($("#six").val());
 			showOneGroup($("#five").val(), data);
 		}
 	});
@@ -184,12 +184,12 @@ function initGraph(data){
 		showOneGroup($("#group1").html(), data);
 	});
 
-	$("#group2").click(function () {
-		showOneGroup($("#group2").html(), data);
+	$("#group3").click(function () {
+		showOneGroup($("#group3").html(), data);
 	});
 
-	$("#group3").click(function () {
-		findInterGroup($("#group1").html(), $("#group2").html(), data);
+	$("#group2").click(function () {
+		findInterGroup($("#group1").html(), $("#group3").html(), data);
 	});
 
 	$('#submitnode').click(function(){
@@ -249,7 +249,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 	
 	if (isNew) {
 		$('figure').html('');
-		$("#results").html("Network of " + parent);
+		$("#results").html("Network of <b>" + parent +"</b>");
 		graph.add_nodes_from(nodes, { first: true });
 		graph.add_node(p.label, { radius: 20, first: true });
 		jsnx.draw(graph, options, true);
@@ -308,7 +308,7 @@ function showTwoNodes(person1, person2, data, options) {
 	G.add_nodes_from([p1.label, p2.label], { radius: 20 });
 	G.add_edges_from(edges);
 	jsnx.draw(G, options);
-	$("#results").html("Common network between " + person1 + " and " + person2);
+	$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
 	$("#two").val('');
 	$("#two").typeahead('setQuery', '');
 	$("#three").val('');
@@ -331,7 +331,7 @@ function showTable(person1, person2, data) {
 			common.push(data.nodes[edge]);
 		}
 	});
-	var title = "Common network between " + person1 + " and " + person2;
+	var title = "Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>";
 	writeTableWith(common, title);
 	$("#results").html(title);
 	$("#two").val('');
@@ -346,7 +346,7 @@ function showOneGroup(group, data) {
 	g.nodes.forEach(function (node) {	
 		results.push(data.nodes[node]);
 	});
-	var title = "People who belong to the " + group + " group";
+	var title = "People who belong to the <b>" + group + "</b> group";
 	writeTableWith(results, title);
 	$("#results").html(title);
 	$("#four").val('');
@@ -367,7 +367,7 @@ function findInterGroup(group1, group2, data) {
 			common.push(data.nodes[node]);
 		}
 	});
-	var title = "Intersection between " + group1 + " and " + group2;
+	var title = "Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>";
 	writeTableWith(common, title);
 	$("#results").html(title);
 }
@@ -377,12 +377,12 @@ function writeTableWith(dataSource, title){
     $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
-		'iDisplayLength': 10,
+		'iDisplayLength': 100,
         'aaData': dataSource,
         'aoColumns': [
             {'mDataProp': 'first', 'sTitle': 'First Name'},
             {'mDataProp': 'last', 'sTitle': 'Last Name'},
-            {'mDataProp': 'occupation', 'sTitle': 'Occupation'}
+            {'mDataProp': 'occupation', 'sTitle': 'Historical Significance'}
         ],
         'oLanguage': {
             'sLengthMenu': '_MENU_ records per page'
@@ -401,7 +401,7 @@ jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
 };
 
 function downloadData(data, title) {
-	var result = title + " \n" + 'First Name,Last Name,Occupation  ' + "\n";
+	var result = title + " \n" + 'First Name,Last Name,Historical Significance' + "\n";
 	data.forEach(function (cell) {
 		result += cell["first"] + ',' + cell["last"] + ',' + cell["occupation"] + "\n";
 	});

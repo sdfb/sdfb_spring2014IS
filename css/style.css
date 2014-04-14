@@ -23,6 +23,10 @@ body {
     padding-top: 1%;
 }
 
+b {
+    font-weight: 700;
+}
+
 figure {
     margin-left: 260px;
     height: 93%;
