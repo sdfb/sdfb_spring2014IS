@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/demo_table.css" />
+	<link rel="stylesheet" type="text/css" href="css/accordion.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -20,10 +21,11 @@
 	<script type="text/javascript" src="js/display.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/typeahead.js"></script>
+	<script type="text/javascript" src="js/accordion.js"></script>
 </head>
 
 <body>
-	<!-- <header>Six Degrees of Francis Bacon</header> -->
+	<header>Six Degrees of Francis Bacon</header>
 	<div id="results"></div>
 	<div id="twogroupsmenu">
 		<button type="button" id="prev">&#171;</button>
@@ -32,66 +34,96 @@
 		<button type="button" class="toggle" 		id="group3"	>Intersection</button>
 		<button type="button" id="next">&#187;</button>
 	</div>
-	<figure></figure>
+	<figure>
+		<!-- CONFIDENCE INTERVAL SLIDER -->
+		<div id="confidence">
+			<div id="confidNum">
+				Confidence Interval <br>
+			</div> <!-- closing confidNum -->
+			<div id="slider">
+			<table id="confidIntNum">
+				<tr><td>0.2</td></tr>
+				<tr><td>0.4</td></tr>
+				<tr><td>0.6</td></tr>
+				<tr><td>0.8</td></tr>
+				<tr><td>1.0</td></tr>
+			</table> <!--closing confidint-->
+			<table id="confidInt">
+				<tr><td id="CI0"></td></tr>
+				<tr><td id="CI1"></td></tr>
+				<tr><td id="CI2"></td></tr>
+				<tr><td id="CI3"></td></tr>
+				<tr><td id="CI4"></td></tr>
+			</table> <!--closing confidint-->
+			<table id="confidIntLabel">
+				<tr><td id="CIid">Certain</td></tr>
+				<tr><td id="CIid">Likely</td></tr>
+				<tr><td id="CIid">Possible</td></tr>
+				<tr><td id="CIid">Unlikely</td></tr>
+				<tr><td id="CIid">Very Unlikely</td></tr>
+			</table> <!--closing confidintlabel -->
+			</div> <!-- closing slider div -->
+		</div> <!-- closing confidence -->
+	</figure>
 	<aside>
-		<img src="img/net.png">
-		<div id="navigation">
-			<ul>
-				<li>Search
-					<ul>
-						<li id='onenode'>1 node</li>
-						<li id='twonode'>2 nodes</li>
-						<li id='onegroup'>1 group</li>
-						<li id='twogroup'>2 groups</li>
-					</ul>
-				</li>
-				<li>Add
-					<ul>
-						<li id='addnode'>Node</li>
-						<li id='addedge'>Edge</li>
-						<li id='addgroup'>Group</li>
-					</ul>
-				</li>
-				<li>Edit
-					<ul>
-						<li id='editedge'>Edge</li>
-					</ul>
-				</li>
-			</ul>
-		</div>
+		<div id="accordion">
+			<h3 class="on"><span class="icon-dashboard"></span>Search</h3>
+			<div id="navigation" class="active">
+				<ul>
+					<li id="onenode">1 network</li>
+					<div id="onenodeD">The connections of one individual</div>
+					<li id="twonode">2-person shared</li>
+					<div id="twonodeD">The mutual connections between two individuals</div>
+					<br><br>
+					<li id="onegroup">1 group</li>
+					<div id="onegroupD">The members of one group</div>
+					<li id="twogroup">2 group shared</li>
+					<div id="twogroupD">The mutual members of two groups</div>
+				</ul>
 
-		<!-- NODE FORMS -->
+				<!-- NODE FORMS -->
+				<section id="onenodeform">
+					<input type="text" id="one" placeholder="Name">
+					<button type="button" id="findonenode">Find</button>
+				</section>
 
-		<section id="onenodeform">
-			<input type="text" id="one" placeholder="Name">
-			<button type="button" id="findonenode">Find</button>
-		</section>
+				<section id="twonodeform">
+					<input type="text" id="two" placeholder="Name 1"><br>
+					
+					<input type="text" id="three" placeholder="Name 2"><br>
+					<button type="button" id="findtwonode">Find</button>
+					<!--button type="button" id="findtwonodetable">Find (table)</button-->
+				</section>
 
-		<section id="twonodeform">
-			<input type="text" id="two" placeholder="First name">
-			<input type="text" id="three" placeholder="Second name">
-			<div class="checkTable">
-				<div class="squaredThree">
-					<input type="checkbox" value="None" id="squaredThree" name="check"/>
-					<label for="squaredThree"></label>
-				</div>
-				<label id="tableLable">Table format</label>
+
+				<!-- GROUP FORMS -->
+				<section id="onegroupform">
+					<input type="text" id="four" placeholder="Group">
+					<button type="button" id="findonegroup">Find</button>
+				</section>
+
+				<section id="twogroupform">
+					<input type="text" id="five" placeholder="Group 1"><br>
+					
+					<input type="text" id="six" placeholder="Group 2"><br>
+					<button type="button" id="findtwogroup">Find</button>
+				</section>
 			</div>
-			<button type="button" id="findtwonode">Find</button>
-		</section>
 
-		<!-- GROUP FORMS -->
+			<h3><span class="icon-tasks"></span>Relationship</h3>
+			<div id="relationship">
+				Please click on an edge between two nodes to see relationship information.
+				<br>PSYCH.
+			</div>
 
-		<section id="onegroupform">
-			<input type="text" id="four" placeholder="Group name">
-			<button type="button" id="findonegroup">Find</button>
-		</section>
-
-		<section id="twogroupform">
-			<input type="text" id="five" placeholder="First group name">
-			<input type="text" id="six" placeholder="Second group name">
-			<button type="button" id="findtwogroup">Find</button>
-		</section>
+			<h3><span class="icon-calendar"></span>Node Info</h3>
+			<div id="nodeinfo">
+				First Name: <br>
+				Last Name: <br>
+				Birth Date: <br>
+				Death Date: <br>
+			</div>
+		</div> <!-- closing accordian -->
 		
 
 		<!-- GOOGLE FORMS -->
