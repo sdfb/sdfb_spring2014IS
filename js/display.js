@@ -18,13 +18,14 @@ function node() {
 	this.first = null;
 	this.last = null;
 	this.birth = null;
+	this.death = null;
 	this.label = null;
 	this.occupation = null;
 	this.edges = null;
 	this.explored = false;
 }
 
-function group(){
+function group() {
 	this.id = null;
 	this.name = null;
 	this.nodes = null;
@@ -45,7 +46,8 @@ function init(result) {
 		n.id = row.id;
 		n.first = row.first;
 		n.last = row.last;
-		n.birth = row.birth; 
+		n.birth = row.birth;
+		n.death = row.death; 
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
 		n.edges = {};
@@ -382,6 +384,8 @@ function writeTableWith(dataSource, title){
         'aoColumns': [
             {'mDataProp': 'first', 'sTitle': 'First Name'},
             {'mDataProp': 'last', 'sTitle': 'Last Name'},
+            {'mDataProp': 'birth', 'sTitle': 'Birth Date'},
+            {'mDataProp': 'death', 'sTitle': 'Death Date'},
             {'mDataProp': 'occupation', 'sTitle': 'Historical Significance'}
         ],
         'oLanguage': {
@@ -401,9 +405,9 @@ jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
 };
 
 function downloadData(data, title) {
-	var result = title + " \n" + 'First Name,Last Name,Historical Significance' + "\n";
+	var result = title + " \n" + 'First Name,Last Name,Birth Date,Death Date,Historical Significance' + "\n";
 	data.forEach(function (cell) {
-		result += cell["first"] + ',' + cell["last"] + ',' + cell["occupation"] + "\n";
+		result += cell["first"] + ',' + cell["last"] + ',' + cell["birth"] + ',' + cell["death"] + ',' + cell["occupation"] + "\n";
 	});
 	var dwnbtn = $('<a href="data:text/csv;charset=utf-8,' + encodeURIComponent(result) + ' "download="' + title + '.csv"><div id="download"></div></a>');
 	$(dwnbtn).appendTo('figure');
