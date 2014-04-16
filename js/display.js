@@ -153,12 +153,12 @@ function initGraph(data){
 		if ($("#two").val() && $("#three").val()) {
 			rand = false;
 			Pace.restart();
-			if ($('#squaredThree')[0].checked) {
-				showTable($("#two").val(), $("#three").val(), data);
-				$('#squaredThree')[0].checked = false;
-			} else {
+			// if ($('#squaredThree')[0].checked) {
+			// 	showTable($("#two").val(), $("#three").val(), data);
+			// 	$('#squaredThree')[0].checked = false;
+			// } else {
 				showTwoNodes($("#two").val(), $("#three").val(), data, options);
-			}			
+			// }			
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
