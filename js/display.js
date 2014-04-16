@@ -2,10 +2,8 @@ var keys = {
 	nodes: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
 	annot: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE"
 }
-
 var rand = true;
 var addGraph;
-
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
 		key: keys.nodes,
@@ -30,24 +28,21 @@ function group() {
 	this.name = null;
 	this.nodes = null;
 }
-
 // Create a dictionnary of nodes and groups
 function init(result) {
-	
 	var data = {
 		nodes: {},
 		groups: {},
 		nodes_names: {},
 		groups_names: {}
 	};
-	
 	result.nodes.elements.forEach(function (row) {
 		var n = new node();
 		n.id = row.id;
 		n.first = row.first;
 		n.last = row.last;
 		n.birth = row.birth;
-		n.death = row.death; 
+		n.death = row.death;
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
 		n.edges = {};
@@ -59,22 +54,19 @@ function init(result) {
 		data.nodes[n.id] = n;
 		data.nodes_names[n.label] = n;
 	});
-
 	result.groups.elements.forEach(function (row) {
 		var g = new group();
-		g.id  = row.id;
+		g.id = row.id;
 		g.name = row.name;
 		g.nodes = row.nodes.split(', ');
 		data.groups[g.id] = g;
 		data.groups_names[g.name] = g;
 	});
-
 	initGraph(data);
 }
-
 // Populate the suggested drop-down menus
 // Make the buttons in the search panel functional
-function initGraph(data){
+function initGraph(data) {
 	$('#one').typeahead({
 		local: Object.keys(data.nodes_names).sort()
 	});
@@ -99,7 +91,6 @@ function initGraph(data){
 	$('#six').typeahead({
 		local: Object.keys(data.groups_names).sort()
 	});
-
 	var options = {
 		element: 'figure',
 		with_labels: true,
@@ -108,9 +99,9 @@ function initGraph(data){
 			linkDistance: 100
 		},
 		node_attr: {
-			id: function(d) {
-            	return 'node-' + data.nodes_names[d.node].id;
-        	},
+			id: function (d) {
+				return 'node-' + data.nodes_names[d.node].id;
+			},
 			r: function (d) {
 				if (!d.data.radius) {
 					return 10;
@@ -141,18 +132,15 @@ function initGraph(data){
 			'font-size': '0.7em'
 		}
 	}
-
 	showRandomNode(data, options);
-
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
 			rand = false;
 			Pace.restart();
 			showOneNode($("#one").val(), data, options, 0);
-			$('#twogroupsmenu').css('display','none');
+			$('#twogroupsmenu').css('display', 'none');
 		}
 	});
-
 	$("#findtwonode").click(function () {
 		if ($("#two").val() && $("#three").val()) {
 			rand = false;
@@ -162,20 +150,18 @@ function initGraph(data){
 				$('#squaredThree')[0].checked = false;
 			} else {
 				showTwoNodes($("#two").val(), $("#three").val(), data, options);
-			}			
-			$('#twogroupsmenu').css('display','none');
+			}
+			$('#twogroupsmenu').css('display', 'none');
 		}
 	});
-
 	$("#findonegroup").click(function () {
 		if ($("#four").val()) {
 			rand = false;
 			Pace.restart();
 			showOneGroup($("#four").val(), data);
-			$('#twogroupsmenu').css('display','none');
+			$('#twogroupsmenu').css('display', 'none');
 		}
 	});
-
 	$("#findtwogroup").click(function () {
 		if ($("#five").val() && $("#six").val()) {
 			rand = false;
@@ -185,31 +171,28 @@ function initGraph(data){
 			showOneGroup($("#five").val(), data);
 		}
 	});
-
 	$("#group1").click(function () {
 		showOneGroup($("#group1").html(), data);
 	});
-
 	$("#group3").click(function () {
 		showOneGroup($("#group3").html(), data);
 	});
-
 	$("#group2").click(function () {
 		findInterGroup($("#group1").html(), $("#group3").html(), data);
 	});
-
-	$('#submitnode').click(function(){
+	$('#submitnode').click(function () {
 		rand = false;
 		var node = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val() + ' (' + $('#entry_524366257').val() + ')';
-		$('section').css('display','none');
-		$('#addedgeform').css('display','block');
+		$('section').css('display', 'none');
+		$('#addedgeform').css('display', 'block');
 		$('#entry_768090773').val(node);
 		addGraph = new jsnx.Graph();
-		addGraph.add_node(node, { radius: 20 });
-		jsnx.draw(addGraph, options, true);	
+		addGraph.add_node(node, {
+			radius: 20
+		});
+		jsnx.draw(addGraph, options, true);
 	});
-
-	$('#submitedge').click(function(){
+	$('#submitedge').click(function () {
 		rand = false;
 		var source = $('#entry_768090773').val();
 		var target = $('#entry_1321382891').val();
@@ -220,10 +203,10 @@ function initGraph(data){
 
 function showRandomNode(data, options) {
 	if (!rand) return;
-	var parent = data.nodes[Math.floor((Math.random()*Object.keys(data.nodes).length - 1))].label;
+	var parent = data.nodes[Math.floor((Math.random() * Object.keys(data.nodes).length - 1))].label;
 	showOneNode(parent, data, options, 0, null, true);
 	if (rand) {
-		setTimeout(function(){
+		setTimeout(function () {
 			showRandomNode(data, options)
 		}, 15000);
 	}
@@ -239,25 +222,27 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 	p.explored = true;
 	var edges = [];
 	var nodes = [];
-	// var k = Math.ceil((p.id + 1) / 250) / 10;
-	// var key = keys['edges' + Math.ceil(k)];
-	p.edges[confidence].forEach(function (edge){
+	p.edges[confidence].forEach(function (edge) {
 		var f = data.nodes[edge];
 		nodes.push(f.label);
 		edges.push([p.label, f.label]);
-		f.edges[confidence].forEach(function (e){
+		f.edges[confidence].forEach(function (e) {
 			var s = data.nodes[e];
 			if (nodes.indexOf(s.label) >= 0 || graph.nodes().indexOf(s.label) >= 0) {
 				edges.push([f.label, s.label]);
 			}
 		});
 	});
-	
 	if (isNew) {
 		$('figure').html('');
-		$("#results").html("Network of <b>" + parent +"</b>");
-		graph.add_nodes_from(nodes, { first: true });
-		graph.add_node(p.label, { radius: 20, first: true });
+		$("#results").html("Network of <b>" + parent + "</b>");
+		graph.add_nodes_from(nodes, {
+			first: true
+		});
+		graph.add_node(p.label, {
+			radius: 20,
+			first: true
+		});
 		jsnx.draw(graph, options, true);
 	} else {
 		graph.add_nodes_from(nodes);
@@ -271,18 +256,18 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.node').on('click', function (d) {
-			$("#node-info").html(	"Birth: " + data.nodes_names[d.node].birth + '<br>' +
-									"Death: " + data.nodes_names[d.node].death + '<br>' +
-									"Historical Significance: " + data.nodes_names[d.node].occupation);
-			if(data.nodes_names[d.node].explored) {
+			$("#node-info").html("Birth: " + data.nodes_names[d.node].birth + '<br>' +
+				"Death: " + data.nodes_names[d.node].death + '<br>' +
+				"Historical Significance: " + data.nodes_names[d.node].occupation);
+			if (data.nodes_names[d.node].explored) {
 				var n = data.nodes_names[d.node];
 				n.explored = false;
-				n.edges[confidence].forEach(function (e){
+				n.edges[confidence].forEach(function (e) {
 					if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
 						graph.remove_node(data.nodes[e].label);
 					}
 				});
-				graph.nodes().forEach(function (e){
+				graph.nodes().forEach(function (e) {
 					if (Object.keys(graph.adj.get(e).F).length == 0 && !(graph.node.get(e).first)) {
 						graph.remove_node(e);
 					}
@@ -291,21 +276,24 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 				showOneNode(d.node, data, options, 0, graph);
 			}
 		});
-
 		d3.selectAll('.edge').on('click', function (d) {
-			//TODO			
+			var id1 = data.nodes_names[d.edge[0]].id;
+			var id2 = data.nodes_names[d.edge[1]].id;
+			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2);			
 		});
-
 		d3.selectAll('.edge').on('mouseover', function (d) {
 			d3.select(this.firstChild).style('fill', '#7FB2E6');
 			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', '#7FB2E6');
 			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
 		});
-
 		d3.selectAll('.edge').on('mouseout', function (d) {
 			d3.select(this.firstChild).style('fill', '#999');
-			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function(n) { return parent != d.edge[0] ? '#CAE4E1' : '#aac'; });
-			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function(n) { return parent != d.edge[1] ? '#CAE4E1' : '#aac'; });
+			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
+				return parent != d.edge[0] ? '#CAE4E1' : '#aac';
+			});
+			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
+				return parent != d.edge[1] ? '#CAE4E1' : '#aac';
+			});
 		});
 	}
 }
@@ -318,11 +306,11 @@ function showTwoNodes(person1, person2, data, options) {
 	var p2 = data.nodes_names[person2];
 	var e1 = [];
 	var e2 = [];
-	for (var i = 0; i < 5; i ++) {
+	for (var i = 0; i < 5; i++) {
 		e1.push.apply(e1, p1.edges[i]);
-		e2.push.apply(e2, p2.edges[i]);	
+		e2.push.apply(e2, p2.edges[i]);
 	}
-	e1.forEach(function (edge){
+	e1.forEach(function (edge) {
 		if (e2.indexOf(edge) >= 0) {
 			var label = data.nodes[edge].label;
 			G.add_node(label);
@@ -330,7 +318,9 @@ function showTwoNodes(person1, person2, data, options) {
 			edges.push([p2.label, label]);
 		}
 	});
-	G.add_nodes_from([p1.label, p2.label], { radius: 20 });
+	G.add_nodes_from([p1.label, p2.label], {
+		radius: 20
+	});
 	G.add_edges_from(edges);
 	jsnx.draw(G, options);
 	$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
@@ -347,11 +337,11 @@ function showTable(person1, person2, data) {
 	var common = [];
 	var e1 = [];
 	var e2 = [];
-	for (var i = 0; i < 5; i ++) {
+	for (var i = 0; i < 5; i++) {
 		e1.push.apply(e1, p1.edges[i]);
 		e2.push.apply(e2, p2.edges[i]);
 	}
-	e1.forEach(function (edge){
+	e1.forEach(function (edge) {
 		if (e2.indexOf(edge) >= 0) {
 			common.push(data.nodes[edge]);
 		}
@@ -368,7 +358,7 @@ function showTable(person1, person2, data) {
 function showOneGroup(group, data) {
 	var g = data.groups_names[group];
 	var results = [];
-	g.nodes.forEach(function (node) {	
+	g.nodes.forEach(function (node) {
 		results.push(data.nodes[node]);
 	});
 	var title = "People who belong to the <b>" + group + "</b> group";
@@ -381,7 +371,6 @@ function showOneGroup(group, data) {
 	$("#six").val('');
 	$("#six").typeahead('setQuery', '');
 }
-
 // Display the intersections between group1 and group2
 function findInterGroup(group1, group2, data) {
 	var g1 = data.groups_names[group1];
@@ -396,35 +385,41 @@ function findInterGroup(group1, group2, data) {
 	writeTableWith(common, title);
 	$("#results").html(title);
 }
-
 // Create the table container
-function writeTableWith(dataSource, title){
-    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
-    $('#data-table-container').dataTable({
+function writeTableWith(dataSource, title) {
+	$('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+	$('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
 		'iDisplayLength': 100,
-        'aaData': dataSource,
-        'aoColumns': [
-            {'mDataProp': 'first', 'sTitle': 'First Name'},
-            {'mDataProp': 'last', 'sTitle': 'Last Name'},
-            {'mDataProp': 'birth', 'sTitle': 'Birth Date'},
-            {'mDataProp': 'death', 'sTitle': 'Death Date'},
-            {'mDataProp': 'occupation', 'sTitle': 'Historical Significance'}
-        ],
-        'oLanguage': {
-            'sLengthMenu': '_MENU_ records per page'
-        }
-    });
-    downloadData(dataSource, title);
+		'aaData': dataSource,
+		'aoColumns': [{
+			'mDataProp': 'first',
+			'sTitle': 'First Name'
+		}, {
+			'mDataProp': 'last',
+			'sTitle': 'Last Name'
+		}, {
+			'mDataProp': 'birth',
+			'sTitle': 'Birth Date'
+		}, {
+			'mDataProp': 'death',
+			'sTitle': 'Death Date'
+		}, {
+			'mDataProp': 'occupation',
+			'sTitle': 'Historical Significance'
+		}],
+		'oLanguage': {
+			'sLengthMenu': '_MENU_ records per page'
+		}
+	});
+	downloadData(dataSource, title);
 };
-
 // Define two custom functions (asc and desc) for string sorting
-jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
-	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
+jQuery.fn.dataTableExt.oSort['string-case-asc'] = function (x, y) {
+	return ((x < y) ? -1 : ((x > y) ? 0 : 0));
 };
-
-jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
-	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
+jQuery.fn.dataTableExt.oSort['string-case-desc'] = function (x, y) {
+	return ((x < y) ? 1 : ((x > y) ? -1 : 0));
 };
 
 function downloadData(data, title) {
@@ -434,4 +429,20 @@ function downloadData(data, title) {
 	});
 	var dwnbtn = $('<a href="data:text/csv;charset=utf-8,' + encodeURIComponent(result) + ' "download="' + title + '.csv"><div id="download"></div></a>');
 	$(dwnbtn).appendTo('figure');
+}
+
+function getAnnotation(id1, id2) {
+	// var k = Math.ceil((p.id + 1) / 250) / 10;
+	// var key = keys['edges' + Math.ceil(k)];
+	Tabletop.init({
+		key: keys.annot,
+		query: 'source= ' + id1 + ' and target= ' + id2,
+		simpleSheet: true,
+		callback: function(result) {
+			result.forEach(function (row){
+				$("#edge-info").html("Annotation: " + row.annotation + "<br>Confidence: " + row.confidence);
+				return true;
+			});
+		}
+	});
 }
