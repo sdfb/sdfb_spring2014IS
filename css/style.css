@@ -10,6 +10,14 @@ body {
     height: 100%;
 }
 
+#node-info, #edge-info {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #555;
+    color: white;
+}
+
 #results {
     height: 4%;
     line-height: 20px;
