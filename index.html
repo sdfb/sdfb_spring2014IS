@@ -19,10 +19,11 @@
 	<script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="js/pace.min.js"></script>
 	<script type="text/javascript" src="js/jsnetworkx.js"></script>
+	<script type="text/javascript" src="js/accordion.js"></script>
 	<script type="text/javascript" src="js/display.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/typeahead.js"></script>
-	<script type="text/javascript" src="js/accordion.js"></script>
+	
 </head>
 
 <body>
@@ -68,7 +69,7 @@
 	</figure>
 	<aside>
 		<div id="accordion">
-			<h3 class="on"><span class="icon-dashboard"></span>Search</h3>
+			<h3 class="on"><span class="icon-dashboard"></span>Search </h3>
 			<div id="navigation" class="active">
 				<ul>
 					<li id="onenode">1 network</li>
@@ -111,18 +112,25 @@
 				</section>
 			</div>
 
-			<h3><span class="icon-tasks"></span>Relationship</h3>
+			<h3><span class="icon-tasks"></span>Relationship </h3>
 			<div id="relationship">
 				Please click on an edge between two nodes to see relationship information.
 				<br>PSYCH.
 			</div>
 
-			<h3><span class="icon-calendar"></span>Node Info</h3>
+			<h3><span class="icon-calendar"></span>Node Information </h3>
 			<div id="nodeinfo">
-				First Name: <br>
-				Last Name: <br>
-				Birth Date: <br>
-				Death Date: <br>
+				<p id="node-name"></p>
+				Birth Date: <a id="node-bdate"></a> <br>
+				Death Date: <a id="node-ddate"></a> <br>
+				Historical Significance: <a id="node-significance"></a> <br>
+				Groups: <a id="node-group"></a> <br>
+				Citation: <br><a id="node-cite"></a> <br> <br>
+				Links: 
+				<a id="node-DNBlink" target="_blank">Oxford DNB</a> &nbsp;
+				<a id="node-GoogleLink" target="_blank">Google</a>
+
+
 			</div>
 		</div> <!-- closing accordian -->
 		

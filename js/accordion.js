@@ -30,3 +30,14 @@ $(document).ready(function(){
 		}
 	})
 })
+
+
+//accordian function for when a user clicks on a node or edge.
+function accordian(item){
+
+	if(item=="node"){
+		//console.log(("#node-info").prev());
+	}
+	else if(item=="edge"){
+	}
+}
