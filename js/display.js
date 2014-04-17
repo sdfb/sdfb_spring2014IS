@@ -289,7 +289,25 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 			}
 		});
 
-		
+		d3.selectAll('.edge').on('click', function (d) {
+			var id1 = data.nodes_names[d.edge[0]].id;
+			var id2 = data.nodes_names[d.edge[1]].id;
+			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2);			
+		});
+		d3.selectAll('.edge').on('mouseover', function (d) {
+			d3.select(this.firstChild).style('fill', '#7FB2E6');
+			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', '#7FB2E6');
+			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
+		});
+		d3.selectAll('.edge').on('mouseout', function (d) {
+			d3.select(this.firstChild).style('fill', '#999');
+			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
+				return parent != d.edge[0] ? '#CAE4E1' : '#aac';
+			});
+			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
+				return parent != d.edge[1] ? '#CAE4E1' : '#aac';
+			});
+		});	
 	}
 	
 	//figures out the groups of a node
