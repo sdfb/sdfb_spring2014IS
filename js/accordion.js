@@ -35,9 +35,32 @@ $(document).ready(function(){
 //accordian function for when a user clicks on a node or edge.
 function accordian(item){
 
+	$(".accordion_content").removeClass('active');
+	$(".accordion_content").slideUp();
+	$('#accordion h3').removeClass('on');
+
 	if(item=="node"){
-		//console.log(("#node-info").prev());
+		console.log("node click");
+		$("#nodeinfo").prev().addClass('on');
+		//console.log($("#nodeinfo").prev());//.addClass('on');
+
+		$("#nodeinfo").slideDown();	
+		$("#nodeinfo").addClass("active");
+			
 	}
 	else if(item=="edge"){
+
+		console.log("edge click");
+		$("#relationship").prev().addClass('on');
+
+		$("#relationship").slideDown();	
+		$("#relationship").addClass("active");
+	}
+	else{
+		console.log("this shouldnt happen");
+		$("#navigation").prev().addClass('on');
+		
+		$("#navigation").slideDown();	
+		$("#navigation").addClass("active");
 	}
 }

@@ -75,8 +75,8 @@
 
 	<aside>
 		<div id="accordion">
-			<h3 class="on"><span class="icon-dashboard"></span>Search </h3>
-			<div id="navigation" class="active">
+			<h3 class="accordion_btn on"><span class="icon-dashboard"></span>Search </h3>
+			<div  class="accordion_content active" id="navigation" >
 				<ul>
 					<li id="onenode">1 network</li>
 					<div id="onenodeD">The connections of one individual</div>
@@ -118,14 +118,20 @@
 				</section>
 			</div>
 
-			<h3><span class="icon-tasks"></span>Relationship </h3>
-			<div id="relationship">
-				Please click on an edge between two nodes to see relationship information.
-				<br>PSYCH.
+			<!-- Relationship accordian -->
+			<h3 class="accordion_btn "><span class="icon-tasks"></span>Relationship </h3>
+			<div  class="accordion_content " id="relationship">
+				Source:  <a id="edge-source"></a> <br>
+				Target: <a id="edge-target"></a> <br>
+				Confidence: <a id="edge-confidence"></a> <br>
+				Annotation: <a id="edge-annotation"></a> <br> <br>
+				<center><button>Edit</button></center>
 			</div>
 
-			<h3><span class="icon-calendar"></span>Node Information </h3>
-			<div id="nodeinfo">
+
+			<!-- Node accordian -->
+			<h3 class="accordion_btn "><span class="icon-calendar"></span>Node Information </h3>
+			<div  class="accordion_content " id="nodeinfo">
 				<p id="node-name"></p>
 				Birth Date: <a id="node-bdate"></a> <br>
 				Death Date: <a id="node-ddate"></a> <br>
@@ -134,9 +140,9 @@
 				Citation: <br><a id="node-cite"></a> <br> <br>
 				Links: 
 				<a id="node-DNBlink" target="_blank">Oxford DNB</a> &nbsp;
-				<a id="node-GoogleLink" target="_blank">Google</a>
+				<a id="node-GoogleLink" target="_blank">Google</a> <br> <br>
 
-
+				<input id="add-group" placeholder="Add A Group"></input> <a class="btn">Add </a>
 			</div>
 		</div> <!-- closing accordian -->
 		

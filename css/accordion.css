@@ -1,4 +1,4 @@
-/*custom font for text*/
+\/*custom font for text*/
 @import url(http://fonts.googleapis.com/css?family=Nunito);
 /*CSS file for fontawesome - an iconfont we will be using. This CSS file imported contains the font-face declaration. More info: http://fortawesome.github.io/Font-Awesome/ */
 @import url(http://thecodeplayer.com/uploads/fonts/fontawesome/css/font-awesome.min.css);
@@ -67,36 +67,60 @@ h3 .on {
 	border-left: 5px solid lightgreen;
 }*/
 /*Lets hide the non active LIs by default*/
-#accordion div {
+
+#accordion .accordion_content {
 	display: none;
 }
+
 #accordion .active{
 	display: block;
 }
 
 #navigation, #relationship, #nodeinfo{
-	height: 300px;
+	height: 350px;
 }
 
-#nodeinfo{
+#nodeinfo, #relationship{
 	text-align:left;
 	color:#333;
 	font-weight: bold;
 	font-size:11;
+	padding: 15px;
+	line-height: 20px;
 }
-#nodeinfo a{
+#nodeinfo a, #relationship a{
 
 	color: white;
 	font-weight: lighter;
 }
 
-#nodeinfo p{
+#nodeinfo p, #relationship p{
 	text-align: center;
 	color: white;
 	font-size:12;
 }
 
-#relationship, #nodeinfo{
-	padding: 15px;
-	line-height: 20px;
+#add-group{
+	margin: 0px;
+}
+
+#nodeinfo .btn{
+	color: #323236;
+	font-size: 12px;
+	height: 35px;
+	width: 200px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border:0;
+	background-color: #CAE4E1;
+	border: none;
+	padding:8 20 8 20px;
+	margin-left:10px;
+}
+
+#accordion #navigation button{
+
+ 	float:left;
+
 }
