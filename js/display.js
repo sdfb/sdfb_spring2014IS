@@ -271,6 +271,9 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.node').on('click', function (d) {
+			$("#node-info").html("Birth: " + data.nodes_names[d.node].birth + '<br>' +
+				"Death: " + data.nodes_names[d.node].death + '<br>' +
+				"Historical Significance: " + data.nodes_names[d.node].occupation);
 			if(data.nodes_names[d.node].explored) {
 				var n = data.nodes_names[d.node];
 				n.explored = false;
@@ -287,6 +290,25 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 			} else {
 				showOneNode(d.node, data, options, 0, graph);
 			}
+		});
+		d3.selectAll('.edge').on('click', function (d) {
+			var id1 = data.nodes_names[d.edge[0]].id;
+			var id2 = data.nodes_names[d.edge[1]].id;
+			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2);			
+		});
+		d3.selectAll('.edge').on('mouseover', function (d) {
+			d3.select(this.firstChild).style('fill', '#7FB2E6');
+			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', '#7FB2E6');
+			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
+		});
+		d3.selectAll('.edge').on('mouseout', function (d) {
+			d3.select(this.firstChild).style('fill', '#999');
+			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
+				return parent != d.edge[0] ? '#CAE4E1' : '#aac';
+			});
+			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
+				return parent != d.edge[1] ? '#CAE4E1' : '#aac';
+			});
 		});
 	}
 }
