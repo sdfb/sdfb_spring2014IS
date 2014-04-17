@@ -292,7 +292,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		d3.selectAll('.edge').on('click', function (d) {
 			var id1 = data.nodes_names[d.edge[0]].id;
 			var id2 = data.nodes_names[d.edge[1]].id;
-			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2);			
+			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
 		});
 		d3.selectAll('.edge').on('mouseover', function (d) {
 			d3.select(this.firstChild).style('fill', '#7FB2E6');
@@ -475,7 +475,7 @@ function downloadData(data, title) {
 	$(dwnbtn).appendTo('figure');
 }
 
-function getAnnotation(id1, id2) {
+function getAnnotation(id1, id2,data) {
 	// var k = Math.ceil((p.id + 1) / 250) / 10;
 	// var key = keys['edges' + Math.ceil(k)];
 	Tabletop.init({
@@ -485,8 +485,29 @@ function getAnnotation(id1, id2) {
 		callback: function(result) {
 			result.forEach(function (row){
 				$("#edge-info").html("Annotation: " + row.annotation + "<br>Confidence: " + row.confidence);
+				
+				$("#edge-source").html(data.nodes[id1].first+" "+data.nodes[id1].last);
+				$("#edge-target").html(data.nodes[id2].first+" "+data.nodes[id2].last);
+				$("#edge-confidence").html(getConfidence(row.confidence));
+				$("#edge-annotation").html(row.annotation);
+
+
 				return true;
 			});
 		}
 	});
+}
+
+function getConfidence(c){
+
+	if(c<0.2)
+		return "Very Unlikely";
+	else if(c<0.4)
+		return "Unlikey";
+	else if(c<0.6)
+		return "Possible";
+	else if(c<0.8)
+		return "Likely";
+	else 
+		return "Certain";
 }
