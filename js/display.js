@@ -333,7 +333,7 @@ function findGroups(node,data){
 //displays the node information
 function showNodeInfo(data, groups){
 
-	//accordian("node"); //switches accordian to this
+	accordian("node"); //switches accordian to this
 
 	$("#node-name").text(data.first+ " "+ data.last);
 	$("#node-bdate").text(data.birth);
@@ -484,6 +484,9 @@ function getAnnotation(id1, id2,data) {
 		simpleSheet: true,
 		callback: function(result) {
 			result.forEach(function (row){
+				accordian("edge");
+
+				
 				$("#edge-info").html("Annotation: " + row.annotation + "<br>Confidence: " + row.confidence);
 				
 				$("#edge-source").html(data.nodes[id1].first+" "+data.nodes[id1].last);
