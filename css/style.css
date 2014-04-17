@@ -10,6 +10,16 @@ body {
     height: 100%;
 }
 
+/*TEST*/
+#node-info, #edge-info {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #555;
+    color: white;
+}
+/*TEST*/
+
 header {
     height: 26px;
     line-height: 20px;

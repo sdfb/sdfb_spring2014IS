@@ -108,6 +108,9 @@ function initGraph(data){
 			linkDistance: 100
 		},
 		node_attr: {
+			id: function (d) {
+				return 'node-' + data.nodes_names[d.node].id;
+			},
 			r: function (d) {
 				if (!d.data.radius) {
 					return 10;
@@ -129,7 +132,8 @@ function initGraph(data){
 		},
 		edge_style: {
 			fill: '#999',
-			'stroke-width': 1
+			'stroke-width': 5,
+			cursor: 'pointer'
 		},
 		label_style: {
 			fill: '#222',
@@ -451,4 +455,20 @@ function downloadData(data, title) {
 	});
 	var dwnbtn = $('<a href="data:text/csv;charset=utf-8,' + encodeURIComponent(result) + ' "download="' + title + '.csv"><div id="download"></div></a>');
 	$(dwnbtn).appendTo('figure');
+}
+
+function getAnnotation(id1, id2) {
+	// var k = Math.ceil((p.id + 1) / 250) / 10;
+	// var key = keys['edges' + Math.ceil(k)];
+	Tabletop.init({
+		key: keys.annot,
+		query: 'source= ' + id1 + ' and target= ' + id2,
+		simpleSheet: true,
+		callback: function(result) {
+			result.forEach(function (row){
+				$("#edge-info").html("Annotation: " + row.annotation + "<br>Confidence: " + row.confidence);
+				return true;
+			});
+		}
+	});
 }
