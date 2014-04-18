@@ -22,7 +22,6 @@ function node() {
 	this.label = null;
 	this.occupation = null;
 	this.edges = null;
-	this.explored = false;
 }
 
 function group() {
@@ -131,14 +130,18 @@ function initGraph(data){
 			stroke: 'none'
 		},
 		edge_style: {
-			fill: '#999',
-			'stroke-width': 5,
+			fill: '#555',
+			'stroke-width': 10,
 			cursor: 'pointer'
 		},
 		label_style: {
 			fill: '#222',
 			cursor: 'pointer',
 			'font-size': '0.7em'
+		},
+		pan_zoom:{
+			enabled: true,
+			scale: false
 		}
 	}
 
@@ -222,7 +225,7 @@ function initGraph(data){
 function showRandomNode(data, options) {
 	if (!rand) return;
 	var parent = data.nodes[Math.floor((Math.random()*Object.keys(data.nodes).length - 1))].label;
-	showOneNode(parent, data, options, 0, null, true);
+	showOneNode(parent, data, options, 0, true);
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
@@ -230,18 +233,11 @@ function showRandomNode(data, options) {
 	}
 }
 
-function showOneNode(parent, data, options, confidence, graph, random) {
-	var isNew = false;
-	if (!graph) {
-		graph = new jsnx.Graph();
-		isNew = true;
-	}
+function showOneNode(parent, data, options, confidence, random) {
+	var graph = new jsnx.Graph();
 	var p = data.nodes_names[parent];
-	p.explored = true;
 	var edges = [];
 	var nodes = [];
-	// var k = Math.ceil((p.id + 1) / 250) / 10;
-	// var key = keys['edges' + Math.ceil(k)];
 	p.edges[confidence].forEach(function (edge){
 		var f = data.nodes[edge];
 		nodes.push(f.label);
@@ -253,43 +249,18 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 			}
 		});
 	});
-	
-	if (isNew) {
-		$('figure').html('');
-		$("#results").html("Network of <b>" + parent +"</b>");
-		graph.add_nodes_from(nodes, { first: true });
-		graph.add_node(p.label, { radius: 20, first: true });
-		jsnx.draw(graph, options, true);
-	} else {
-		graph.add_nodes_from(nodes);
-	}
+	$('figure').html('');
+	$("#results").html("Network of <b>" + parent +"</b>");
+	graph.add_nodes_from(nodes, { first: true });
+	graph.add_node(p.label, { radius: 20, first: true });
 	graph.add_edges_from(edges);
-	if (random) {
-		if (rand) {
-			jsnx.draw(graph, options);
-		}
-	} else {
+	jsnx.draw(graph, options);
+	if (!random) {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.node').on('click', function (d) {
-			if(data.nodes_names[d.node].explored) {
-				var n = data.nodes_names[d.node];
-				n.explored = false;
-				n.edges[confidence].forEach(function (e){
-					if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
-						graph.remove_node(data.nodes[e].label);
-					}
-				});
-				graph.nodes().forEach(function (e){
-					if (Object.keys(graph.adj.get(e).F).length == 0 && !(graph.node.get(e).first)) {
-						graph.remove_node(e);
-					}
-				});
-			} else {
-				showOneNode(d.node, data, options, 0, graph);
-			}
+			showOneNode(d.node, data, options, 0);
 		});
-
 		d3.selectAll('.edge').on('click', function (d) {
 			var id1 = data.nodes_names[d.edge[0]].id;
 			var id2 = data.nodes_names[d.edge[1]].id;
@@ -315,7 +286,6 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 	var g = findGroups(p,data);
 	//displays the node information
 	showNodeInfo(p, g);
-	
 }
 
 
