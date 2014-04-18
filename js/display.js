@@ -104,7 +104,7 @@ function initGraph(data){
 		with_labels: true,
 		layout_attr: {
 			charge: -500,
-			linkDistance: 100
+			linkDistance: 200
 		},
 		node_attr: {
 			id: function (d) {
@@ -112,7 +112,7 @@ function initGraph(data){
 			},
 			r: function (d) {
 				if (!d.data.radius) {
-					return 10;
+					return 18;
 				}
 				return d.data.radius;
 			},
@@ -209,7 +209,7 @@ function initGraph(data){
 		$('#addedgeform').css('display','block');
 		$('#entry_768090773').val(node);
 		addGraph = new jsnx.Graph();
-		addGraph.add_node(node, { radius: 20 });
+		addGraph.add_node(node, { radius: 25 });
 		jsnx.draw(addGraph, options, true);	
 	});
 
@@ -252,7 +252,7 @@ function showOneNode(parent, data, options, confidence, random) {
 	$('figure').html('');
 	$("#results").html("Network of <b>" + parent +"</b>");
 	graph.add_nodes_from(nodes, { first: true });
-	graph.add_node(p.label, { radius: 20, first: true });
+	graph.add_node(p.label, { radius: 25, first: true });
 	graph.add_edges_from(edges);
 	jsnx.draw(graph, options);
 	if (!random) {
@@ -262,6 +262,7 @@ function showOneNode(parent, data, options, confidence, random) {
 			showOneNode(d.node, data, options, 0);
 		});
 		d3.selectAll('.edge').on('click', function (d) {
+			console.log('edges clicked now!');
 			var id1 = data.nodes_names[d.edge[0]].id;
 			var id2 = data.nodes_names[d.edge[1]].id;
 			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
@@ -272,7 +273,7 @@ function showOneNode(parent, data, options, confidence, random) {
 			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
 		});
 		d3.selectAll('.edge').on('mouseout', function (d) {
-			d3.select(this.firstChild).style('fill', '#999');
+			d3.select(this.firstChild).style('fill', '#555');
 			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
 				return parent != d.edge[0] ? '#CAE4E1' : '#aac';
 			});
@@ -340,7 +341,7 @@ function showTwoNodes(person1, person2, data, options) {
 			edges.push([p2.label, label]);
 		}
 	});
-	G.add_nodes_from([p1.label, p2.label], { radius: 20 });
+	G.add_nodes_from([p1.label, p2.label], { radius: 25 });
 	G.add_edges_from(edges);
 	jsnx.draw(G, options);
 	$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
