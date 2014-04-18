@@ -138,6 +138,10 @@ function initGraph(data){
 			fill: '#222',
 			cursor: 'pointer',
 			'font-size': '0.7em'
+		},
+		pan_zoom:{
+			enabled: true,
+			scale: false
 		}
 	}
 
