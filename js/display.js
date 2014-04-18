@@ -182,7 +182,8 @@ function initGraph(data){
 			Pace.restart();
 			$('#group1').html($("#five").val());
 			$('#group3').html($("#six").val());
-			showOneGroup($("#five").val(), data);
+			// showOneGroup($("#five").val(), data);
+			findInterGroup($("#group1").html(), $("#group3").html(), data);
 		}
 	});
 
@@ -487,7 +488,7 @@ function getAnnotation(id1, id2,data) {
 				accordian("edge");
 
 				
-				$("#edge-info").html("Annotation: " + row.annotation + "<br>Confidence: " + row.confidence);
+				// $("#edge-info").html("Annotation: " + row.annotation + "<br>Confidence: " + row.confidence);
 				
 				$("#edge-source").html(data.nodes[id1].first+" "+data.nodes[id1].last);
 				$("#edge-target").html(data.nodes[id2].first+" "+data.nodes[id2].last);
