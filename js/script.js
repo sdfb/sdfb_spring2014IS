@@ -1,40 +1,8 @@
 $(document).ready(function() {
-	//hover over search bars for descriptions
-	$("#onenode").mouseover(function() {
-		// document.onmousemove = getMouseXY;
-		// placeDiv(tempX-20, tempY,'onenodeD');
-	    $("#onenodeD").show();
-	}).mouseout(function() {
-	    $("#onenodeD").hide();
-	});
-	$("#twonode").mouseover(function() {
-		// document.onmousemove = getMouseXY;
-		// placeDiv(tempX, tempY,'twonodeD');
-	    $("#twonodeD").show();
-	}).mouseout(function() {
-	    $("#twonodeD").hide();
-	});
-	$("#onegroup").mouseover(function() {
-		// document.onmousemove = getMouseXY;
-		// placeDiv(tempX, tempY,'onegroupD');
-	    $("#onegroupD").show();
-	}).mouseout(function() {
-	    $("#onegroupD").hide();
-	});
-	$("#twogroup").mouseover(function() {
-		// document.onmousemove = getMouseXY;
-		// placeDiv(tempX, tempY,'twogroupD');
-	    $("#twogroupD").show();
-	}).mouseout(function() {
-	    $("#twogroupD").hide();
-	});
-
-	function placeDiv(x_pos, y_pos, div) {
-	  var d = document.getElementById(div);
-	  d.style.position = "absolute";
-	  d.style.left = x_pos+'px';
-	  d.style.top = y_pos+'px';
-	}
+	$("#onenode").tooltip({placement: 	'right', title: 'The connections of one individual'});
+	$("#twonode").tooltip({placement: 	'right', title: 'The mutual connections between two individuals'});
+	$("#onegroup").tooltip({placement: 	'right', title: 'The members of one group'});
+	$("#twogroup").tooltip({placement: 	'right', title: 'The mutual members of two groups'});
 
 	//clicking menu buttons to show search bars
 	$('li').click(function(e){

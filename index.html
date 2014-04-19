@@ -7,6 +7,7 @@
 	<link rel="shortcut icon" href="img/favicon_16x16.ico">
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/tooltip.css" >
 	<link rel="stylesheet" type="text/css" href="css/demo_table.css" />
 	<link rel="stylesheet" type="text/css" href="css/accordion.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -21,9 +22,9 @@
 	<script type="text/javascript" src="js/jsnetworkx.js"></script>
 	<script type="text/javascript" src="js/accordion.js"></script>
 	<script type="text/javascript" src="js/display.js"></script>
-	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/typeahead.js"></script>
-	
+	<script type="text/javascript" src="js/script.js"></script>	
 </head>
 
 <body>
@@ -73,19 +74,10 @@
 			<h3 class="accordion_btn on">Search</h3>
 			<div class="accordion_content active" id="navigation">
 				<ul>
-					<li id="onenode">1 network</li>
-					<div id="onenodeD">The connections of one individual</div>
-					
+					<li id="onenode">1 network</li>		
 					<li id="twonode">2-person shared</li>
-					<div id="twonodeD">The mutual connections between two individuals</div>
-					
-					<br><br>
-					
 					<li id="onegroup">1 group</li>
-					<div id="onegroupD">The members of one group</div>
-					
 					<li id="twogroup">2 group shared</li>
-					<div id="twogroupD">The mutual members of two groups</div>
 				</ul>
 
 				<!-- NODE FORMS -->
@@ -96,10 +88,8 @@
 
 				<section id="twonodeform">
 					<input type="text" id="two" placeholder="Name 1"><br>
-					
 					<input type="text" id="three" placeholder="Name 2"><br>
 					<button type="button" id="findtwonode">Find</button>
-					<!--button type="button" id="findtwonodetable">Find (table)</button-->
 				</section>
 
 
@@ -118,18 +108,16 @@
 			</div>
 
 			<!-- Relationship accordian -->
-			<h3 class="accordion_btn ">Relationship </h3>
+			<h3 class="accordion_btn">Relationship </h3>
 			<div  class="accordion_content " id="relationship">
-				Source:  		<a id="edge-source"></a> <br>
-				Target: 		<a id="edge-target"></a> <br>
-				Confidence: 	<a id="edge-confidence"></a> <br>
-				Annotation: 	<a id="edge-annotation"></a> <br> <br>
-				<center><button>Edit</button></center>
+				Source:  		<a id="edge-source"></a><br>
+				Target: 		<a id="edge-target"></a><br>
+				Confidence: 	<a id="edge-confidence"></a><br>
+				Annotation: 	<a id="edge-annotation"></a><br>
 			</div>
 
-
 			<!-- Node accordian -->
-			<h3 class="accordion_btn ">Node Information </h3>
+			<h3 class="accordion_btn">Node Information </h3>
 			<div  class="accordion_content " id="nodeinfo">
 				<p id="node-name"></p>
 				Birth Date: <a id="node-bdate"></a> <br>
@@ -140,9 +128,8 @@
 				Links: 
 				<a id="node-DNBlink" target="_blank">Oxford DNB</a> &nbsp;
 				<a id="node-GoogleLink" target="_blank">Google</a> <br> <br>
+			</div>
 
-<!-- 				<input id="add-group" placeholder="Add A Group"></input> <a class="btn">Add </a>
- -->			</div>
 		</div> <!-- closing accordian -->
 		
 

@@ -277,7 +277,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 			if(data.nodes_names[d.node].explored) {
 				var n = data.nodes_names[d.node];
 				n.explored = false;
-				d3.select(this.firstChild).style('fill', '#7FB2E6');
+				d3.select(this.firstChild).style('fill', '#CAE4E1');
 				n.edges[confidence].forEach(function (e){
 					if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
 						graph.remove_node(data.nodes[e].label);
@@ -332,7 +332,7 @@ function findGroups(node,data){
 //displays the node information
 function showNodeInfo(data, groups){
 
-	// accordian("node"); //switches accordian to this
+	accordian("node");
 
 	$("#node-name").text(data.first+ " "+ data.last);
 	$("#node-bdate").text(data.birth);
