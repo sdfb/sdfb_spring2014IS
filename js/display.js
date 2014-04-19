@@ -22,6 +22,7 @@ function node() {
 	this.label = null;
 	this.occupation = null;
 	this.edges = null;
+	this.explored = false;
 }
 
 function group() {
@@ -104,7 +105,7 @@ function initGraph(data){
 		with_labels: true,
 		layout_attr: {
 			charge: -500,
-			linkDistance: 200
+			linkDistance: 100
 		},
 		node_attr: {
 			id: function (d) {
@@ -131,7 +132,7 @@ function initGraph(data){
 		},
 		edge_style: {
 			fill: '#555',
-			'stroke-width': 10,
+			'stroke-width': 5,
 			cursor: 'pointer'
 		},
 		label_style: {
@@ -225,7 +226,7 @@ function initGraph(data){
 function showRandomNode(data, options) {
 	if (!rand) return;
 	var parent = data.nodes[Math.floor((Math.random()*Object.keys(data.nodes).length - 1))].label;
-	showOneNode(parent, data, options, 0, true);
+	showOneNode(parent, data, options, 0, null, true);
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
@@ -233,9 +234,14 @@ function showRandomNode(data, options) {
 	}
 }
 
-function showOneNode(parent, data, options, confidence, random) {
-	var graph = new jsnx.Graph();
+function showOneNode(parent, data, options, confidence, graph, random) {
+	var isNew = false;
+	if (!graph) {
+		graph = new jsnx.Graph();
+		isNew = true;
+	}
 	var p = data.nodes_names[parent];
+	p.explored = true;
 	var edges = [];
 	var nodes = [];
 	p.edges[confidence].forEach(function (edge){
@@ -249,17 +255,38 @@ function showOneNode(parent, data, options, confidence, random) {
 			}
 		});
 	});
-	$('figure').html('');
-	$("#results").html("Network of <b>" + parent +"</b>");
-	graph.add_nodes_from(nodes, { first: true });
-	graph.add_node(p.label, { radius: 25, first: true });
+
+	if (isNew) {
+		$('figure').html('');
+		$("#results").html("Network of <b>" + parent +"</b>");
+		graph.add_nodes_from(nodes, { first: true });
+		graph.add_node(p.label, { radius: 20, first: true });
+		jsnx.draw(graph, options, true);
+	} else {
+		graph.add_nodes_from(nodes);
+	}
 	graph.add_edges_from(edges);
-	jsnx.draw(graph, options);
-	if (!random) {
+	if (random) {
+		if (rand) {
+			jsnx.draw(graph, options);
+		}
+	} else {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.node').on('click', function (d) {
-			showOneNode(d.node, data, options, 0);
+			if(data.nodes_names[d.node].explored) {
+				var n = data.nodes_names[d.node];
+				n.explored = false;
+				d3.select(this.firstChild).style('fill', '#7FB2E6');
+				n.edges[confidence].forEach(function (e){
+					if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
+						graph.remove_node(data.nodes[e].label);
+					}
+				});
+			} else {
+				d3.select(this.firstChild).style('fill', '#aac');
+				showOneNode(d.node, data, options, 0, graph);
+			}
 		});
 		d3.selectAll('.edge').on('click', function (d) {
 			console.log('edges clicked now!');
@@ -275,10 +302,10 @@ function showOneNode(parent, data, options, confidence, random) {
 		d3.selectAll('.edge').on('mouseout', function (d) {
 			d3.select(this.firstChild).style('fill', '#555');
 			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
-				return parent != d.edge[0] ? '#CAE4E1' : '#aac';
+				return data.nodes_names[d.edge[0]].explored ? '#aac' : '#CAE4E1';
 			});
 			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
-				return parent != d.edge[1] ? '#CAE4E1' : '#aac';
+				return data.nodes_names[d.edge[1]].explored ? '#aac' : '#CAE4E1';
 			});
 		});	
 	}
