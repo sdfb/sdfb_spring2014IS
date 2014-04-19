@@ -10,30 +10,19 @@ body {
     height: 100%;
 }
 
-/*TEST*/
-#node-info, #edge-info {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background-color: #555;
-    color: white;
-}
-/*TEST*/
-
 header {
     height: 26px;
     line-height: 20px;
     color: #CAE4E1;
     background: #555 repeat-x top left;
-    /*margin-left: 260px;*/
-    width: 354px;
+    width: 300px;
     text-align: center;
     font-weight: lighter;
     text-transform: uppercase;
     letter-spacing: 4px;
     padding-top: 7px;
     padding-bottom: auto;
-    font-size: 13px;
+    font-size: 11px;
     float: left;
 }
 
@@ -55,28 +44,8 @@ b {
 }
 
 figure {
-    margin-left: 354px;
+    margin-left: 300px;
     height: 93%;
-}
-
-aside {
-    position: absolute;
-    width: 354px;
-    top: 0;
-    bottom: 0;
-    /*background-color: #4281a0;*/
-    /*height: 100%;*/
-    text-align: center;
-    margin-top: 33px;
-}
-
-aside img {
-    display: block;
-    width: 80%;
-    margin: 16% auto;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 }
 
 canvas {
@@ -175,159 +144,19 @@ button:hover, button.active {
     width: 30px;
 }
 
-#navigation {
-    margin: 10%;
-    /*width: 80%;*/
-    width: 300px;
-    margin-top: 15px;
-}
-
-#navigation ul {
-    text-align: left;
-    display: inline;
-    margin: 0;
-    padding: 15px 4px 17px 0;
-    list-style: none;
-}
-
-#navigation ul li { /*search buttons */
-    z-index: 100;
-    font-family: 'Open Sans',sans-serif;
-    font-size: 12px;
-    display: inline-block;
-    margin-right: -4px;
-    position: relative;
-    padding: 15px 20px;
-    background: #fff;
-    cursor: pointer;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -ms-transition: all 0.2s;
-    -o-transition: all 0.2s;
-    transition: all 0.2s;
-    width: 94px;
-    border-style:none;
-    border-width:3px;
-    border-color: #555;
-    margin-right: 2px;
-}
-
-/*#navigation ul li:hover {
-    background: #c4c2c2;
-    color: #fff;
-}*/
-
-#navigation ul li ul {
-    padding: 0;
-    position: absolute;
-    top: 42px;
-    left: 0;
-    width: 85px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    display: none;
-    opacity: 0;
-    visibility: hidden;
-    -webkit-transiton: opacity 0.2s;
-    -moz-transition: opacity 0.2s;
-    -ms-transition: opacity 0.2s;
-    -o-transition: opacity 0.2s;
-    -transition: opacity 0.2s;
-}
-
-#navigation ul li ul li {
-    background: #555;
-    display: block;
-    color: #fff;
-    text-shadow: 0 -1px 0 #000;
-}
-
-#navigation ul li ul li:hover {
-    background: #666;
-}
-
-#navigation ul li:hover ul {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-}
-
-#onenodeD, #twonodeD, #onegroupD, #twogroupD {
-    display:none;
-    position:absolute;
-    width: 175px;
-    height:25px;
-    float: left;
-    margin-left: 10px;
-    background: #CAE4E1;
-    z-index: 1000;;
-    font-size: 10px;
-    line-height: 12px;
-    padding: 4px;
-}
-
-#twonodeD, #twogroupD{
-    /*right: 35px;*/
-    left: 175px;
-}
-
-.pace {
-    -webkit-pointer-events: none;
-    pointer-events: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-}
-
-/*PACE BIG COUNTER--percent*/
-/*.pace.pace-inactive .pace-progress {
-    display: none;
-}
-
-.pace .pace-progress {
-    position: fixed;
-    z-index: 2000;
-    top: 0;
-    right: 0;
-    height: 5rem;
-    width: 5rem;
-}
-
-.pace .pace-progress:after {
-    display: block;
-    position: absolute;
-    top: -10%;
-    right: .5rem;
-    content: attr(data-progress-text);
-    font-family: "Open Sans", sans-serif;
-    font-weight: 100;
-    font-size: 5rem;
-    line-height: 1;
-    text-align: right;
-    color: rgba(0, 0, 0, 0.5);
-}*/
-
-/*PACE CENTER SIMPLE--loading bar*/
-
 .pace {
   -webkit-pointer-events: none;
   pointer-events: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-
   z-index: 2000;
   position: fixed;
-  margin: auto;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 15px;
-  width: 400px;
+  left: 300;
+  height: 6px;
+  width: calc(100% - 300px);
   background: #fff;
-  border: 1px solid #4281a0;
 }
 
 .pace .pace-progress {
@@ -349,7 +178,7 @@ button:hover, button.active {
   -o-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 
-  max-width: 400px;
+  max-width: calc(100% - 300px);
   position: fixed;
   z-index: 2000;
   display: block;

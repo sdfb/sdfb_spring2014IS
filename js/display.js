@@ -332,7 +332,7 @@ function findGroups(node,data){
 //displays the node information
 function showNodeInfo(data, groups){
 
-	accordian("node"); //switches accordian to this
+	// accordian("node"); //switches accordian to this
 
 	$("#node-name").text(data.first+ " "+ data.last);
 	$("#node-bdate").text(data.birth);
@@ -500,16 +500,10 @@ function getAnnotation(id1, id2,data) {
 	});
 }
 
-function getConfidence(c){
-
-	if(c<0.2)
-		return "Very Unlikely";
-	else if(c<0.4)
-		return "Unlikey";
-	else if(c<0.6)
-		return "Possible";
-	else if(c<0.8)
-		return "Likely";
-	else 
-		return "Certain";
+function getConfidence(c) {
+	if (c<0.2) 		return "Very Unlikely";
+	else if(c<0.4) 	return "Unlikey";
+	else if(c<0.6) 	return "Possible";
+	else if(c<0.8) 	return "Likely";
+	else 			return "Certain";
 }
