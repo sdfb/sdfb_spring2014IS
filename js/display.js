@@ -331,9 +331,7 @@ function findGroups(node,data){
 
 //displays the node information
 function showNodeInfo(data, groups){
-
-	accordian("node");
-
+	accordion("node");
 	$("#node-name").text(data.first+ " "+ data.last);
 	$("#node-bdate").text(data.birth);
 	$("#node-ddate").text(data.death);
@@ -342,7 +340,6 @@ function showNodeInfo(data, groups){
 	var d = new Date();
 	$("#node-cite").text( data.first+ " "+ data.last + " Network Visualization. \n Six Degrees of Francis Bacon: Reassembling the Early Modern Social Network. Gen. eds. Daniel Shore and Christopher Warren. "+d.getMonth()+"/"+d.getDate()+"/"+d.getFullYear()+" <http://sixdegreesoffrancisbacon.com/>");
 	//http://sixdegreesoffrancisbacon.com/
-
 	$("#node-DNBlink").attr("href", "http://www.oxforddnb.com/view/article/"+data.id);
 	$("#node-GoogleLink").attr("href", "http://www.google.com/search?q="+data.first+"+"+ data.last);
 }
@@ -483,17 +480,11 @@ function getAnnotation(id1, id2,data) {
 		simpleSheet: true,
 		callback: function(result) {
 			result.forEach(function (row){
-				accordian("edge");
-
-				
-				// $("#edge-info").html("Annotation: " + row.annotation + "<br>Confidence: " + row.confidence);
-				
+				accordion("edge");			
 				$("#edge-source").html(data.nodes[id1].first+" "+data.nodes[id1].last);
 				$("#edge-target").html(data.nodes[id2].first+" "+data.nodes[id2].last);
 				$("#edge-confidence").html(getConfidence(row.confidence));
 				$("#edge-annotation").html(row.annotation);
-
-
 				return true;
 			});
 		}

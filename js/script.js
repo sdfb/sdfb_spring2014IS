@@ -16,32 +16,13 @@ $(document).ready(function() {
 		$('.toggle').removeClass('active');
 		$(this).addClass('active');
 	});
-	$('#prev').click(function(e){
-		var c = $('.active')[0].id.slice(5);
-		if (c == '2') {
-			$('#group1').click();
-		} else if (c == '3') {
-			$('#group2').click();
-		}
-	});
-	$('#next').click(function(e){
-		var c = $('.active')[0].id.slice(5);
-		if (c == '1') {
-			$('#group2').click();
-		} else if (c == '2') {
-			$('#group3').click();
-		}
-	});
 	$('#findtwogroup').click(function(e){
 		$('#twogroupsmenu').css('display','block');
 	});
 
-	
-    ////////////////////////////////// 1-PERSON SEARCH //////////////////////////////////
-
-    var confidence = "CI2";
     //SLIDER FOR CONFIDENCE INTERVAL
     // CI1 = 0.0-0.19, CI2 = 0.2-0.39, CI3 = 0.4-0.59, CI4 = 0.6-0.79, CI5 = 0.81-1.0
+    var confidence = "CI2";
     $("#confidInt td").click(function(){
     	$("#confidInt td").css('background', '#FFF');
     	confidence = this.id;

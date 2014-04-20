@@ -33,12 +33,30 @@ aside {
 	background: #196B94;
 }
 
-#accordion h3:hover {
-	background: #014357;
-}
-
 h3 .on {
 	background-color: #185D80;
+}
+
+#accordion h3 span {
+	display: inline-block;
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+    width: 12px;
+    height: 12px;
+    opacity: .5;
+    margin-right: 10px;
+}
+
+#icon-search {
+	background-image: url(../img/search.png);
+}
+
+#icon-node {
+	background-image: url(../img/node.png);
+}
+
+#icon-edge {
+	background-image: url(../img/edge.png);
 }
 
 .accordion_content {
@@ -49,7 +67,7 @@ h3 .on {
 	display: block;
 }
 
-#navigation, #nodeinfo, #relationship {
+#search, #nodeinfo, #edgeinfo {
 	color:#222;
 	font-size:12px;
 	padding: 10%;
@@ -58,7 +76,7 @@ h3 .on {
 	height: calc(100% - 162px);
 }
 
-#nodeinfo a, #relationship a {
+#nodeinfo a, #edgeinfo a {
 	color: #fff;
 }
 
@@ -69,14 +87,14 @@ h3 .on {
 	padding-bottom: 15px;
 }
 
-#navigation ul {
+#search ul {
     text-align: left;
     display: inline;
     margin: 0;
     list-style: none;
 }
 
-#navigation ul li { /*search buttons */
+#search ul li { /*search buttons */
 	background-color: #fff;
 	float: left;
 	cursor: pointer;

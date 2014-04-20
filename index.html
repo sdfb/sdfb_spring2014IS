@@ -31,11 +31,9 @@
 	<header>Six Degrees of Francis Bacon</header>
 	<div id="results"></div>
 	<div id="twogroupsmenu">
-		<button type="button" id="prev">&#171;</button>
 		<button type="button" class="toggle" id="group1" ></button>
 		<button type="button" class="toggle  active" id="group2" >Intersection</button>
 		<button type="button" class="toggle" id="group3" ></button>
-		<button type="button" id="next">&#187;</button>
 	</div>
 	<figure>
 		<!-- CONFIDENCE INTERVAL SLIDER -->
@@ -71,8 +69,8 @@
 
 	<aside>
 		<div id="accordion">
-			<h3 class="accordion_btn on">Search</h3>
-			<div class="accordion_content active" id="navigation">
+			<h3 class="accordion_btn on"><span id="icon-search"></span>Search</h3>
+			<div class="accordion_content active" id="search">
 				<ul>
 					<li id="onenode">1 network</li>		
 					<li id="twonode">2-person shared</li>
@@ -92,7 +90,6 @@
 					<button type="button" id="findtwonode">Find</button>
 				</section>
 
-
 				<!-- GROUP FORMS -->
 				<section id="onegroupform">
 					<input type="text" id="four" placeholder="Group">
@@ -101,15 +98,14 @@
 
 				<section id="twogroupform">
 					<input type="text" id="five" placeholder="Group 1"><br>
-					
 					<input type="text" id="six" placeholder="Group 2"><br>
 					<button type="button" id="findtwogroup">Find</button>
 				</section>
 			</div>
 
 			<!-- Relationship accordian -->
-			<h3 class="accordion_btn">Relationship </h3>
-			<div  class="accordion_content " id="relationship">
+			<h3 class="accordion_btn"><span id="icon-edge"></span>Relationship</h3>
+			<div  class="accordion_content " id="edgeinfo">
 				Source:  		<a id="edge-source"></a><br>
 				Target: 		<a id="edge-target"></a><br>
 				Confidence: 	<a id="edge-confidence"></a><br>
@@ -117,7 +113,7 @@
 			</div>
 
 			<!-- Node accordian -->
-			<h3 class="accordion_btn">Node Information </h3>
+			<h3 class="accordion_btn"><span id="icon-node"></span>Figure</h3>
 			<div  class="accordion_content " id="nodeinfo">
 				<p id="node-name"></p>
 				Birth Date: <a id="node-bdate"></a> <br>
