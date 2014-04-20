@@ -10,117 +10,86 @@ body {
 	background: #4EB889;
 	font-family: Nunito, arial, verdana;
 }
+
+aside {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    margin-top: 34px;
+}
+
 #accordion {
 	background: #4281a0;
-	width: 354px;
-	margin: 0 auto 0 auto;
-	/*color: white;*/
-	/*Some cool shadow and glow effect*/
-	/*box-shadow: 
-		0 5px 15px 1px rgba(0, 0, 0, 0.6), 
-		0 0 200px 1px rgba(255, 255, 255, 0.5);*/
 }
+
 /*heading styles*/
 #accordion h3 {
 	font-size: 12px;
 	line-height: 34px;
-	padding: 0 10px;
+	padding: 0 20px;
 	cursor: pointer;
-	color: white;
-	/*fallback for browsers not supporting gradients*/
-	background: #196B94; 
-	/*background: linear-gradient(#196B94, #055780);*/
+	color: #fff;
+	background: #196B94;
 }
-/*heading hover effect*/
-.hover {
-	/*text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);*/
+
+#accordion h3:hover {
 	background: #014357;
-}
-/*bar label styles*/
-#accordion h3 span {
-	font-size: 16px;
-	margin-right: 10px;
 }
 
 h3 .on {
 	background-color: #185D80;
 }
 
-/*list items*/
-#accordion li {
-	list-style-type: none;
-}
-/*links*/
-#accordion ul ul li a {
-	color: white;
-	text-decoration: none;
-	font-size: 11px;
-	line-height: 27px;
-	display: block;
-	padding: 0 15px;
-	/*transition for smooth hover animation*/
-	transition: all 0.15s;
-}
-/*hover effect on links*/
-/*#accordion ul ul li a:hover {
-	background: #003545;
-	border-left: 5px solid lightgreen;
-}*/
-/*Lets hide the non active LIs by default*/
-
-#accordion .accordion_content {
+.accordion_content {
 	display: none;
 }
 
-#accordion .active{
+.accordion_content .active {
 	display: block;
 }
 
-#navigation, #relationship, #nodeinfo{
-	height: 350px;
-}
-
-#nodeinfo, #relationship{
+#navigation, #nodeinfo, #relationship {
+	color:#222;
+	font-size:12px;
+	padding: 10%;
+	line-height: 25px;
 	text-align:left;
-	color:#333;
-	font-weight: bold;
-	font-size:11;
-	padding: 15px;
-	line-height: 20px;
-}
-#nodeinfo a, #relationship a{
-
-	color: white;
-	font-weight: lighter;
+	height: calc(100% - 162px);
 }
 
-#nodeinfo p, #relationship p{
+#nodeinfo a, #relationship a {
+	color: #fff;
+}
+
+#nodeinfo p {
+	color: #fff;
 	text-align: center;
-	color: white;
-	font-size:12;
+	font-size:14px;
+	padding-bottom: 15px;
 }
 
-#add-group{
-	margin: 0px;
+#navigation ul {
+    text-align: left;
+    display: inline;
+    margin: 0;
+    list-style: none;
 }
 
-#nodeinfo .btn{
-	color: #323236;
-	font-size: 12px;
-	height: 35px;
-	width: 200px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	border:0;
-	background-color: #CAE4E1;
-	border: none;
-	padding:8 20 8 20px;
-	margin-left:10px;
+#navigation ul li { /*search buttons */
+	background-color: #fff;
+	float: left;
+	cursor: pointer;
+    margin: 1%;
+    width: calc(48% - 20px);
+    padding: 10px;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
 }
 
-#accordion #navigation button{
-
- 	float:left;
-
+#accordion section {
+	margin-top: 60%;
 }
