@@ -72,10 +72,10 @@
 			<h3 class="accordion_btn on"><span id="icon-search"></span>Search</h3>
 			<div class="accordion_content active" id="search">
 				<ul>
-					<li id="onenode">1 network</li>		
-					<li id="twonode">2-person shared</li>
-					<li id="onegroup">1 group</li>
-					<li id="twogroup">2 group shared</li>
+					<li id="onenode">Network</li>		
+					<li id="twonode">Shared network</li>
+					<li id="onegroup">Group</li>
+					<li id="twogroup">Shared groups</li>
 				</ul>
 
 				<!-- NODE FORMS -->
@@ -103,7 +103,51 @@
 				</section>
 			</div>
 
-			<!-- Relationship accordian -->
+			<h3 class="accordion_btn"><span id="icon-add"></span>Contribute</h3>
+			<div  class="accordion_content " id="contribute">
+
+				<ul>
+					<li id="addnode">Add figure</li>		
+					<li id="addedge">Add relationship</li>
+					<li id="addgroup">Add group</li>
+				</ul>
+				
+				<section id="addnodeform">
+					<script type="text/javascript">
+						var submitted = false;
+					</script>
+					<iframe name="hidden_iframe1" id="hidden_iframe1" style="display:none;" onload=""></iframe>
+					<form action="https://docs.google.com/forms/d/151VLJDd62rmg_elgMLsiRjwmN0ecuZZbWdFz1QazhtA/formResponse" id="googleaddnode" method="post" target="hidden_iframe1" onsubmit="submitted=true;">
+						<input type="text" name="entry.1804360896" id="entry_1804360896" placeholder="First Name">
+						<input type="text" name="entry.754797571" id="entry_754797571" placeholder="Last Name">
+						<input type="text" name="entry.524366257" id="entry_524366257" placeholder="Birth Date">
+						<input type="text" name="entry.1810714929" id="entry_1810714929" placeholder="Death Date">
+						<button type="submit" name="submit" id="submitnode">Submit</button>
+					</form>
+				</section>
+
+				<section id="addedgeform">
+					<script type="text/javascript">
+						var submitted = false;
+					</script>
+					<iframe name="hidden_iframe2" id="hidden_iframe2" style="display:none;" onload=""></iframe>
+					<form action="https://docs.google.com/forms/d/10Gfo4lX_iEArcffCxd5SqP9b-lEttdW5ymOTwX5-t5A/formResponse" id="googleaddedge" method="post" target="hidden_iframe2" onsubmit="submitted=true;">
+						<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Source">
+						<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Target">
+						<select name="entry.875203595" id="entry_875203595">
+							<option value="">Confidence</option>
+							<option value="0.2">Very unlikely</option>
+							<option value="0.4">Unlikely</option>
+							<option value="0.6">Possible</option>
+							<option value="0.8">Likely</option>
+							<option value="1.0">Certain</option>
+						</select>
+						<input type="text" name="entry.948502783" id="entry_948502783" placeholder="Annotation">
+						<button type="submit" name="submit" id="submitedge">Submit</button>
+					</form>
+				</section>
+			</div>
+
 			<h3 class="accordion_btn"><span id="icon-edge"></span>Relationship</h3>
 			<div  class="accordion_content " id="edgeinfo">
 				Source:  		<a id="edge-source"></a><br>
@@ -112,7 +156,6 @@
 				Annotation: 	<a id="edge-annotation"></a><br>
 			</div>
 
-			<!-- Node accordian -->
 			<h3 class="accordion_btn"><span id="icon-node"></span>Figure</h3>
 			<div  class="accordion_content " id="nodeinfo">
 				<p id="node-name"></p>
@@ -125,46 +168,7 @@
 				<a id="node-DNBlink" target="_blank">Oxford DNB</a> &nbsp;
 				<a id="node-GoogleLink" target="_blank">Google</a> <br> <br>
 			</div>
-
-		</div> <!-- closing accordian -->
-		
-
-		<!-- GOOGLE FORMS -->
-
-		<section id="addnodeform">
-			<script type="text/javascript">
-				var submitted = false;
-			</script>
-			<iframe name="hidden_iframe1" id="hidden_iframe1" style="display:none;" onload=""></iframe>
-			<form action="https://docs.google.com/forms/d/151VLJDd62rmg_elgMLsiRjwmN0ecuZZbWdFz1QazhtA/formResponse" id="googleaddnode" method="post" target="hidden_iframe1" onsubmit="submitted=true;">
-<!-- 				<input type="text" name="entry.1051066799" id="entry_1051066799" placeholder="ID"> -->
-				<input type="text" name="entry.1804360896" id="entry_1804360896" placeholder="First Name">
-				<input type="text" name="entry.754797571" id="entry_754797571" placeholder="Last Name">
-				<input type="text" name="entry.524366257" id="entry_524366257" placeholder="Birth Date">
-				<input type="text" name="entry.1810714929" id="entry_1810714929" placeholder="Death Date">
-				<button type="submit" name="submit" id="submitnode">Submit</button>
-			</form>
-		</section>
-		<section id="addedgeform">
-			<script type="text/javascript">
-				var submitted = false;
-			</script>
-			<iframe name="hidden_iframe2" id="hidden_iframe2" style="display:none;" onload=""></iframe>
-			<form action="https://docs.google.com/forms/d/10Gfo4lX_iEArcffCxd5SqP9b-lEttdW5ymOTwX5-t5A/formResponse" id="googleaddedge" method="post" target="hidden_iframe2" onsubmit="submitted=true;">
-				<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Source">
-				<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Target">
-				<select name="entry.875203595" id="entry_875203595">
-					<option value="">Confidence</option>
-					<option value="0.2">Very unlikely</option>
-					<option value="0.4">Unlikely</option>
-					<option value="0.6">Possible</option>
-					<option value="0.8">Likely</option>
-					<option value="1.0">Certain</option>
-				</select>
-				<input type="text" name="entry.948502783" id="entry_948502783" placeholder="Annotation">
-				<button type="submit" name="submit" id="submitedge">Submit</button>
-			</form>
-		</section>
+		</div>
 	</aside>
 </body>
 
