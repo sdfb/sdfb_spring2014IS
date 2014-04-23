@@ -387,12 +387,20 @@ function showTwoNodes(person1, person2, data, options) {
 		}		
 	}
 
+	//console.log(p1)
+	if(p2_1.indexOf(p2.id)){
+		edges.push([p1.label, p2.label]);
+		tableview.push([p1.label+", "+ p2.label+" twosome"])
+	}
+	
+
 	p1_1.forEach(function (edge){
 		if (p2_1.indexOf(edge) >= 0) {
 			var label = data.nodes[edge].label;
 			G.add_node(label);
 			edges.push([p1.label, label]);
 			edges.push([p2.label, label]);
+			tableview.push([p1.label+", "+label+", "+ p2.label+"3"])
 		}
 	});
 
@@ -401,41 +409,59 @@ function showTwoNodes(person1, person2, data, options) {
 		p2_2.forEach(function (pair2){
 			if (edge===pair2["edge"]) {
 				var label = data.nodes[edge].label;
-				G.add_node(label);
-				edges.push([label, p1.label]);
-				edges.push([data.nodes[pair2["source"]].label, label]);
-				edges.push([data.nodes[pair2["source"]].label, p2.label]);
+				var s2 = data.nodes[pair2["source"]].label;
+
+				if( (p1.label!=s2) && (p2.label!=label)){
+
+					G.add_node(label);
+
+					edges.push([label, p1.label]);
+					edges.push([s2, label]);
+					edges.push([s2, p2.label]);
+
+					tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label+"4-1"])
+				}
 			}
 
 		})
 	
 	})
 
-	p2_1.forEach(function (edge){
-		p1_2.forEach(function (pair1){
-			if (edge===pair1["edge"]) {
-				var label = data.nodes[edge].label;
-				G.add_node(label);
-				edges.push([data.nodes[pair1["source"]].label, label]);
-				edges.push([data.nodes[pair1["source"]].label, p1.label]);
-				edges.push([label, p2.label]);
-			}
-
-		})
+	//unecessary pairback
+	// p2_1.forEach(function (edge){
+	// 	p1_2.forEach(function (pair1){
+	// 		if (edge===pair1["edge"]) {
+	// 			var label = data.nodes[edge].label;
+	// 			var s1 = data.nodes[pair1["source"]].label;
+	// 			G.add_node(label);
+	// 			edges.push([s1, p1.label]);
+	// 			edges.push([s1, label]);
+	// 			edges.push([label, p2.label]);
+	// 			tableview.push([p1.label+", "+s1+", "+label+", "+ p2.label +"4-2"])
+	// 		}
+	// 	})
 	
-	})
+	// })
 	
 
 	p1_2.forEach(function (pair1){
 		p2_2.forEach(function (pair2){
 			if (pair1["edge"]===pair2["edge"]) {
+
 				var label = data.nodes[pair2["edge"]].label;
-				//console.log(label +" "+ pair2["source"]+" "+ pair1["source"]);
-				G.add_node(label);
-				edges.push([data.nodes[pair1["source"]].label, label]);
-				edges.push([data.nodes[pair2["source"]].label, label]);
-				edges.push([data.nodes[pair1["source"]].label, p1.label]);
-				edges.push([data.nodes[pair2["source"]].label, p2.label]);
+				var s1 = data.nodes[pair1["source"]].label;
+				var s2 = data.nodes[pair2["source"]].label;
+				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
+					G.add_node(label);
+
+					edges.push([s1, label]);
+					edges.push([s2, label]);
+					edges.push([s1, p1.label]);
+					edges.push([s2, p2.label]);
+
+					tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label+"all out"]);
+				}
+				
 			}
 
 		})
@@ -448,8 +474,8 @@ function showTwoNodes(person1, person2, data, options) {
 
 
 	d3.selectAll('.node').on('click', function (d) {
-		console.log("Clicked on");
-		console.log(this);
+		//console.log("Clicked on");
+		//console.log(this);
 		if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
 			// console.log("adding class");
 			$(d3.select(this.firstChild).firstChild).addClass("node-selected");
@@ -475,7 +501,7 @@ function showTwoNodes(person1, person2, data, options) {
 		});
 	});	
 
-
+	console.log(tableview);
 
 
 	$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
