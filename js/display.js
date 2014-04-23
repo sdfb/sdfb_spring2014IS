@@ -366,7 +366,7 @@ function showTwoNodes(person1, person2, data, options) {
 	var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
 	var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
 
-	for (var i = 0; i < p1_1.length; i ++) {//can change number here also
+	for (var i = 0; i < p1_1.length; i ++) {//can change number for confidence
 		for(var j=0; j<1; j++){
 			var p1edges = data.nodes[p1_1[i]].edges[j];
 			p1edges.forEach( function(p1edge){
@@ -375,7 +375,7 @@ function showTwoNodes(person1, person2, data, options) {
 			}); 
 		}		
 	}
-	for (var i = 0; i < p2_1.length; i ++) {//can change number here also
+	for (var i = 0; i < p2_1.length; i ++) {//can change number for confidence
 		for(var j=0; j<1; j++){
 			var p2edges = data.nodes[p2_1[i]].edges[j];
 			p2edges.forEach( function(p2edge){
@@ -383,19 +383,20 @@ function showTwoNodes(person1, person2, data, options) {
 				p2_2.push({"source":p2_1[i], "edge":p2edge});
 
 			}); 
-
 		}		
 	}
 
-	//console.log(p1)
+	//one edge 
 	if(p2_1.indexOf(p2.id)){
 		edges.push([p1.label, p2.label]);
 		tableview.push([p1.label+", "+ p2.label+" twosome"])
 	}
 	
 
+	//two edge
 	p1_1.forEach(function (edge){
 		if (p2_1.indexOf(edge) >= 0) {
+
 			var label = data.nodes[edge].label;
 			G.add_node(label);
 			edges.push([p1.label, label]);
@@ -404,46 +405,27 @@ function showTwoNodes(person1, person2, data, options) {
 		}
 	});
 
-
+	//three edge
 	p1_1.forEach(function (edge){
 		p2_2.forEach(function (pair2){
 			if (edge===pair2["edge"]) {
+
 				var label = data.nodes[edge].label;
 				var s2 = data.nodes[pair2["source"]].label;
 
 				if( (p1.label!=s2) && (p2.label!=label)){
 
 					G.add_node(label);
-
 					edges.push([label, p1.label]);
 					edges.push([s2, label]);
 					edges.push([s2, p2.label]);
-
 					tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label+"4-1"])
 				}
 			}
+		});
+	});
 
-		})
-	
-	})
-
-	//unecessary pairback
-	// p2_1.forEach(function (edge){
-	// 	p1_2.forEach(function (pair1){
-	// 		if (edge===pair1["edge"]) {
-	// 			var label = data.nodes[edge].label;
-	// 			var s1 = data.nodes[pair1["source"]].label;
-	// 			G.add_node(label);
-	// 			edges.push([s1, p1.label]);
-	// 			edges.push([s1, label]);
-	// 			edges.push([label, p2.label]);
-	// 			tableview.push([p1.label+", "+s1+", "+label+", "+ p2.label +"4-2"])
-	// 		}
-	// 	})
-	
-	// })
-	
-
+	// four edge
 	p1_2.forEach(function (pair1){
 		p2_2.forEach(function (pair2){
 			if (pair1["edge"]===pair2["edge"]) {
@@ -451,22 +433,19 @@ function showTwoNodes(person1, person2, data, options) {
 				var label = data.nodes[pair2["edge"]].label;
 				var s1 = data.nodes[pair1["source"]].label;
 				var s2 = data.nodes[pair2["source"]].label;
-				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
-					G.add_node(label);
 
+				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
+
+					G.add_node(label);
 					edges.push([s1, label]);
 					edges.push([s2, label]);
 					edges.push([s1, p1.label]);
 					edges.push([s2, p2.label]);
-
 					tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label+"all out"]);
 				}
-				
 			}
-
-		})
-	
-	})
+		});
+	});
 
 	G.add_nodes_from([p1.label, p2.label], { radius: 25 });
 	G.add_edges_from(edges);
@@ -474,8 +453,6 @@ function showTwoNodes(person1, person2, data, options) {
 
 
 	d3.selectAll('.node').on('click', function (d) {
-		//console.log("Clicked on");
-		//console.log(this);
 		if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
 			// console.log("adding class");
 			$(d3.select(this.firstChild).firstChild).addClass("node-selected");
