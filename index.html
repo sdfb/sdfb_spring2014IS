@@ -29,13 +29,20 @@
 
 <body>
 	<header>Six Degrees of Francis Bacon</header>
+
+
 	<div id="results"></div>
 	<div id="twogroupsmenu">
 		<button type="button" class="toggle" id="group1" ></button>
 		<button type="button" class="toggle  active" id="group2" >Intersection</button>
 		<button type="button" class="toggle" id="group3" ></button>
 	</div>
+	<!-- <div id="sharednetworkmenu">
+		<button type="button" class="toggle  active" id="group1" id="showNetworkNodes">Show Nodes</Node>
+		<button type="button" class="toggle" id="group2" id="showNetworkTable">Show Table</button>
+	<div> -->
 	<figure>
+
 		<!-- CONFIDENCE INTERVAL SLIDER -->
 		<div id="confidence">
 			<div id="confidNum">
@@ -87,6 +94,7 @@
 				<section id="twonodeform">
 					<input type="text" id="two" placeholder="Name 1"><br>
 					<input type="text" id="three" placeholder="Name 2"><br>
+					<input type="checkbox" id="check-shared" value="table"> Show Table</br>
 					<button type="button" id="findtwonode">Find</button>
 				</section>
 

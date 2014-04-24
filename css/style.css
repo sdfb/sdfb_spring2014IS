@@ -311,3 +311,19 @@ select {
     height: 15px;
     vertical-align: center;
 }
+#check-shared[type="checkbox"]{
+  display:inline;
+  margin:0;
+  padding:0;
+  margin-right:5px;
+  height:15px;
+  width:15px;
+  /*  position: absolute; 
+    overflow: hidden; 
+    clip: rect(0 0 0 0); 
+    height:1px; 
+    width:1px; 
+    margin:-1px; 
+    padding:0;
+    border:0;*/
+}
