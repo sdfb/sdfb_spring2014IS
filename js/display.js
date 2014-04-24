@@ -344,148 +344,175 @@ function showNodeInfo(data, groups){
 }
 
 
+// displays the network of two nodes
 function showTwoNodes(person1, person2, data, options) {
-	$('figure').html('');
-	var G = jsnx.Graph();
-	var edges = [];
-	var p1 = data.nodes_names[person1];
-	var p2 = data.nodes_names[person2];
 
-	var tableview=[];
-
-	var p1_1 = [];	//nodes connection to p1 by one edge
-	var p2_1 = []; // nodes connecting to p2 by one edge
-	for (var i = 0; i < 1; i ++) { // can change number for certain (0), likely (1),  possible(2), unlikely(3), etc
-		p1_1= p1_1.concat(p1.edges[i]);
-		p2_1= p2_1.concat(p2.edges[i]);	
+	if(person1===person2){
+		alert("YOU SELECTED THE SAME PERSON. \n PLEASE TRY AGAIN");
 	}
+	else{
 
-	p1_1 = nodupSort(p1_1);
-	p2_1 = nodupSort(p2_1);
 
-	var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
-	var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
+		$('figure').html('');
+		var G = jsnx.Graph();
+		var edges = [];
+		var p1 = data.nodes_names[person1];
+		var p2 = data.nodes_names[person2];
 
-	for (var i = 0; i < p1_1.length; i ++) {//can change number for confidence
-		for(var j=0; j<1; j++){
-			var p1edges = data.nodes[p1_1[i]].edges[j];
-			p1edges.forEach( function(p1edge){
-				//p1_2.push([p1_1[i], p1edge]);
-				p1_2.push({"source":p1_1[i], "edge":p1edge});
-			}); 
-		}		
-	}
-	for (var i = 0; i < p2_1.length; i ++) {//can change number for confidence
-		for(var j=0; j<1; j++){
-			var p2edges = data.nodes[p2_1[i]].edges[j];
-			p2edges.forEach( function(p2edge){
-				//p1_2.push([p2_1[i], p2edge]);
-				p2_2.push({"source":p2_1[i], "edge":p2edge});
+		var tableview=[];
 
-			}); 
-		}		
-	}
-
-	//one edge 
-	if(p2_1.indexOf(p2.id)){
-		edges.push([p1.label, p2.label]);
-		tableview.push([p1.label+", "+ p2.label+" twosome"])
-	}
-	
-
-	//two edge
-	p1_1.forEach(function (edge){
-		if (p2_1.indexOf(edge) >= 0) {
-
-			var label = data.nodes[edge].label;
-			G.add_node(label);
-			edges.push([p1.label, label]);
-			edges.push([p2.label, label]);
-			tableview.push([p1.label+", "+label+", "+ p2.label+"3"])
+		var p1_1 = [];	//nodes connection to p1 by one edge
+		var p2_1 = []; // nodes connecting to p2 by one edge
+		for (var i = 0; i < 1; i ++) { // can change number for certain (0), likely (1),  possible(2), unlikely(3), etc
+			p1_1= p1_1.concat(p1.edges[i]);
+			p2_1= p2_1.concat(p2.edges[i]);	
 		}
-	});
 
-	//three edge
-	p1_1.forEach(function (edge){
-		p2_2.forEach(function (pair2){
-			if (edge===pair2["edge"]) {
+		p1_1 = nodupSort(p1_1);
+		p2_1 = nodupSort(p2_1);
+
+		var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
+		var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
+
+		for (var i = 0; i < p1_1.length; i ++) {//can change number for confidence
+			for(var j=0; j<1; j++){
+				var p1edges = data.nodes[p1_1[i]].edges[j];
+				p1edges.forEach( function(p1edge){
+					//p1_2.push([p1_1[i], p1edge]);
+					p1_2.push({"source":p1_1[i], "edge":p1edge});
+				}); 
+			}		
+		}
+		for (var i = 0; i < p2_1.length; i ++) {//can change number for confidence
+			for(var j=0; j<1; j++){
+				var p2edges = data.nodes[p2_1[i]].edges[j];
+				p2edges.forEach( function(p2edge){
+					//p1_2.push([p2_1[i], p2edge]);
+					p2_2.push({"source":p2_1[i], "edge":p2edge});
+
+				}); 
+			}		
+		}
+
+		//one edge 
+		if(p2_1.indexOf(p2.id)){
+			edges.push([p1.label, p2.label]);
+			tableview.push({ "network": p1.label+", "+ p2.label })
+		}
+		
+
+		//two edge
+		p1_1.forEach(function (edge){
+			if (p2_1.indexOf(edge) >= 0) {
 
 				var label = data.nodes[edge].label;
-				var s2 = data.nodes[pair2["source"]].label;
-
-				if( (p1.label!=s2) && (p2.label!=label)){
-
-					G.add_node(label);
-					edges.push([label, p1.label]);
-					edges.push([s2, label]);
-					edges.push([s2, p2.label]);
-					tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label+"4-1"])
-				}
+				G.add_node(label);
+				edges.push([p1.label, label]);
+				edges.push([p2.label, label]);
+				tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
+				//tableview.push([p1.label+", "+label+", "+ p2.label])
 			}
 		});
-	});
 
-	// four edge
-	p1_2.forEach(function (pair1){
-		p2_2.forEach(function (pair2){
-			if (pair1["edge"]===pair2["edge"]) {
+		//three edge
+		p1_1.forEach(function (edge){
+			p2_2.forEach(function (pair2){
+				if (edge===pair2["edge"]) {
 
-				var label = data.nodes[pair2["edge"]].label;
-				var s1 = data.nodes[pair1["source"]].label;
-				var s2 = data.nodes[pair2["source"]].label;
+					var label = data.nodes[edge].label;
+					var s2 = data.nodes[pair2["source"]].label;
 
-				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
+					if( (p1.label!=s2) && (p2.label!=label)){
 
-					G.add_node(label);
-					edges.push([s1, label]);
-					edges.push([s2, label]);
-					edges.push([s1, p1.label]);
-					edges.push([s2, p2.label]);
-					tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label+"all out"]);
+						G.add_node(label);
+						edges.push([label, p1.label]);
+						edges.push([s2, label]);
+						edges.push([s2, p2.label]);
+						tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
+						//tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label])
+					}
 				}
+			});
+		});
+
+		// four edge
+		p1_2.forEach(function (pair1){
+			p2_2.forEach(function (pair2){
+				if (pair1["edge"]===pair2["edge"]) {
+
+					var label = data.nodes[pair2["edge"]].label;
+					var s1 = data.nodes[pair1["source"]].label;
+					var s2 = data.nodes[pair2["source"]].label;
+
+					if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
+
+						G.add_node(label);
+						edges.push([s1, label]);
+						edges.push([s2, label]);
+						edges.push([s1, p1.label]);
+						edges.push([s2, p2.label]);
+						//tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label]);
+						tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
+					}
+				}
+			});
+		});
+
+		G.add_nodes_from([p1.label, p2.label], { radius: 25 });
+		G.add_edges_from(edges);
+		jsnx.draw(G, options);	
+
+
+		d3.selectAll('.node').on('click', function (d) {
+			if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
+				// console.log("adding class");
+				$(d3.select(this.firstChild).firstChild).addClass("node-selected");
+				//d3.select(this.firstChild).style('fill', '#CAE4E1');
+			} else {
+				// console.log("removing class");
+				$(d3.select(this.firstChild)).removeClass("node-selected");
+				//d3.select(this.firstChild).style('fill', '#aac');
 			}
 		});
-	});
+		d3.selectAll('.edge').on('mouseover', function (d) {
+			d3.select(this.firstChild).style('fill', '#7FB2E6');
+			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', '#7FB2E6');
+			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
+		});
+		d3.selectAll('.edge').on('mouseout', function (d) {
+			d3.select(this.firstChild).style('fill', '#555');
+			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
+				return data.nodes_names[d.edge[0]].explored ? '#aac' : '#CAE4E1';
+			});
+			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
+				return data.nodes_names[d.edge[1]].explored ? '#aac' : '#CAE4E1';
+			});
+		});	
 
-	G.add_nodes_from([p1.label, p2.label], { radius: 25 });
-	G.add_edges_from(edges);
-	jsnx.draw(G, options);	
+		//console.log(sharednetworkmenu);		
+		// $("#tableview").css('display','block')
+		if ($("#check-shared").is(":checked")){
+			var title = "Common network between " + person1 + " and  " + person2 ;
+			writeNodeTable(tableview, title);
 
-
-	d3.selectAll('.node').on('click', function (d) {
-		if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
-			// console.log("adding class");
-			$(d3.select(this.firstChild).firstChild).addClass("node-selected");
-			//d3.select(this.firstChild).style('fill', '#CAE4E1');
-		} else {
-			// console.log("removing class");
-			$(d3.select(this.firstChild)).removeClass("node-selected");
-			//d3.select(this.firstChild).style('fill', '#aac');
 		}
-	});
-	d3.selectAll('.edge').on('mouseover', function (d) {
-		d3.select(this.firstChild).style('fill', '#7FB2E6');
-		d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', '#7FB2E6');
-		d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
-	});
-	d3.selectAll('.edge').on('mouseout', function (d) {
-		d3.select(this.firstChild).style('fill', '#555');
-		d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
-			return data.nodes_names[d.edge[0]].explored ? '#aac' : '#CAE4E1';
-		});
-		d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
-			return data.nodes_names[d.edge[1]].explored ? '#aac' : '#CAE4E1';
-		});
-	});	
 
-	console.log(tableview);
+		// $("#showNetworkTable").click(function(){
 
+		// });
 
-	$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
-	$("#two").val('');
-	$("#two").typeahead('setQuery', '');
-	$("#three").val('');
-	$("#three").typeahead('setQuery', '');
+		// $("#showNetworkNodes").click(function(){
+		// 	jsnx.draw(G, options);	
+		// });
+	
+
+		$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
+		$("#two").val('');
+		$("#two").typeahead('setQuery', '');
+		$("#three").val('');
+		$("#three").typeahead('setQuery', '');
+
+	}
 }
 
 function nodupSort(array){
@@ -498,7 +525,6 @@ function nodupSort(array){
         }
     }
     return no_dup;
-
 }
 
 function showTable(person1, person2, data) {
@@ -577,6 +603,23 @@ function writeTableWith(dataSource, title){
         }
     });
     downloadData(dataSource, title);
+};
+
+function writeNodeTable(dataSource, title){
+	//console.log(dataSource);
+    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+    $('#data-table-container').dataTable({
+		'sPaginationType': 'bootstrap',
+		'iDisplayLength': 100,
+        'aaData': dataSource,
+        'aoColumns': [
+            {'mDataProp': 'network', 'sTitle': 'Network'},
+        ],
+        'oLanguage': {
+            'sLengthMenu': '_MENU_ records per page'
+        }
+    });
+    //downloadData(dataSource, title);
 };
 
 // Define two custom functions (asc and desc) for string sorting
