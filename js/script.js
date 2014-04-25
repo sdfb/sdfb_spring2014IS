@@ -3,6 +3,7 @@ $(document).ready(function() {
 	$("#twonode").tooltip({placement: 	'right', title: 'The mutual connections between two individuals'});
 	$("#onegroup").tooltip({placement: 	'right', title: 'The members of one group'});
 	$("#twogroup").tooltip({placement: 	'right', title: 'The mutual members of two groups'});
+	$('#onenodeform').css('display','block');
 
 	//clicking menu buttons to show search bars
 	$('li').click(function(e){

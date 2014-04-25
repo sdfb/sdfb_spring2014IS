@@ -1,6 +1,6 @@
 var keys = {
 	nodes: "0AhtG6Yl2-hiRdHdQM1JrS2JTRklaQ2M1ek41bEs5LVE",
-	annot: "0AhtG6Yl2-hiRdFo5b1RKSl9tRVd2VnpzNklrWTVKaXc"
+	annot: "0AhtG6Yl2-hiRdGdjLVNKZmJkbkhhNDMzQm5BTzlHX0E"
 }
 
 var rand = true;
@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
 		key: keys.nodes,
 		callback: init
+	});
+	$("#accordion h3").click(function(){
+		rand = false;
 	});
 });
 
@@ -50,7 +53,7 @@ function init(result) {
 		n.death = row.death; 
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
-		n.edges = {};
+		n.edges = [];
 		n.edges[0] = row.unlikely.split(', ');
 		n.edges[1] = row.possible.split(', ');
 		n.edges[2] = row.likely.split(', ');
@@ -103,7 +106,7 @@ function initGraph(data){
 		with_labels: true,
 		layout_attr: {
 			charge: -500,
-			linkDistance: 100
+			linkDistance: 130
 		},
 		node_attr: {
 			id: function (d) {
@@ -136,7 +139,7 @@ function initGraph(data){
 		label_style: {
 			fill: '#222',
 			cursor: 'pointer',
-			'font-size': '0.7em'
+			'font-size': '0.6em'
 		},
 		pan_zoom:{
 			enabled: true,
@@ -223,7 +226,8 @@ function initGraph(data){
 
 function showRandomNode(data, options) {
 	if (!rand) return;
-	var parent = data.nodes[Math.floor((Math.random()*Object.keys(data.nodes).length - 1))].label;
+	var keys = Object.keys(data.nodes);
+	var parent = data.nodes[keys[Math.floor(keys.length * Math.random())]].label;
 	showOneNode(parent, data, options, 0, null, true);
 	if (rand) {
 		setTimeout(function(){
@@ -243,15 +247,17 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 	var edges = [];
 	var nodes = [];
 	p.edges[confidence].forEach(function (edge){
-		var f = data.nodes[edge];
-		nodes.push(f.label);
-		edges.push([p.label, f.label]);
-		f.edges[confidence].forEach(function (e){
-			var s = data.nodes[e];
-			if (nodes.indexOf(s.label) >= 0 || graph.nodes().indexOf(s.label) >= 0) {
-				edges.push([f.label, s.label]);
-			}
-		});
+		if (edge != "")  {
+			var f = data.nodes[edge];
+			nodes.push(f.label);
+			edges.push([p.label, f.label]);
+			f.edges[confidence].forEach(function (e){
+				var s = data.nodes[e];
+				if (nodes.indexOf(s.label) >= 0 || graph.nodes().indexOf(s.label) >= 0) {
+					edges.push([f.label, s.label]);
+				}
+			});
+		}
 	});
 
 	if (isNew) {
@@ -272,6 +278,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
 		d3.selectAll('.edge').on('click', function (d) {
+			Pace.restart();
 			var id1 = data.nodes_names[d.edge[0]].id;
 			var id2 = data.nodes_names[d.edge[1]].id;
 			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
@@ -298,7 +305,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 			n.explored = false;
 			d3.select(this.firstChild).style('fill', '#CAE4E1');
 			n.edges[confidence].forEach(function (e){
-				if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
+				if (graph.node.get(data.nodes[e].label)  && !(graph.node.get(data.nodes[e].label).first)) {
 					graph.remove_node(data.nodes[e].label);
 				}
 			});
@@ -531,10 +538,10 @@ function showTable(person1, person2, data) {
 	$('figure').html('');
 	var p1 = data.nodes_names[person1];
 	var p2 = data.nodes_names[person2];
-	var common = [];
+	var common = [];	
 	var e1 = [];
 	var e2 = [];
-	for (var i = 0; i < 5; i ++) {
+	for (var i = 0; i < p1.edges.length; i ++) {
 		e1.push.apply(e1, p1.edges[i]);
 		e2.push.apply(e2, p2.edges[i]);
 	}
