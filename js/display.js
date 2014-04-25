@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		key: keys.nodes,
 		callback: init
 	});
+	$("#accordion h3").click(function(){
+		rand = false;
+	});
 });
 
 function node() {
