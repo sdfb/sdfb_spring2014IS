@@ -16,6 +16,7 @@ $(document).ready(function(){
 
 //accordion function for when a user clicks on a node or edge.
 function accordion(item){
+	Pace.restart();
 	$(".accordion_content").removeClass('active');
 	$(".accordion_content").slideUp();
 	$("#accordion h3").removeClass('on');

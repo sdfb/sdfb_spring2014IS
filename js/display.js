@@ -651,7 +651,7 @@ function getAnnotation(id1, id2,data) {
 		callback: function(result) {
 			result.forEach(function (row){
 				accordion("edge");			
-				$("#edge-source").html(data.nodes[id1].first+" "+data.nodes[id1].last);
+				$("#edge-source").html(data.nodes[id1].first +" "+data.nodes[id1].last);
 				$("#edge-target").html(data.nodes[id2].first+" "+data.nodes[id2].last);
 				$("#edge-confidence").html(getConfidence(row.confidence));
 				$("#edge-annotation").html(row.annotation);
