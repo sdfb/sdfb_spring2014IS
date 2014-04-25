@@ -1,6 +1,6 @@
 var keys = {
-	nodes: "0AhtG6Yl2-hiRdHpTZFIwM1dBZDY5ZUYxR3FISGRkd2c",
-	annot: "0AhtG6Yl2-hiRdDlpMXRfcThXcTBjZ0Rzc3l1a0dSdFE"
+	nodes: "0AhtG6Yl2-hiRdHdQM1JrS2JTRklaQ2M1ek41bEs5LVE",
+	annot: "0AhtG6Yl2-hiRdFo5b1RKSl9tRVd2VnpzNklrWTVKaXc"
 }
 
 var rand = true;
@@ -51,11 +51,9 @@ function init(result) {
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
 		n.edges = {};
-		n.edges[0] = row.certain.split(', ');
-		n.edges[1] = row.likely.split(', ');
-		n.edges[2] = row.possible.split(', ');
-		n.edges[3] = row.unlikely.split(', ');
-		n.edges[4] = row.impossible.split(', ');
+		n.edges[0] = row.unlikely.split(', ');
+		n.edges[1] = row.possible.split(', ');
+		n.edges[2] = row.likely.split(', ');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.label] = n;
 	});
@@ -273,23 +271,7 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 	} else {
 		$("#one").val('');
 		$("#one").typeahead('setQuery', '');
-		d3.selectAll('.node').on('click', function (d) {
-			if(data.nodes_names[d.node].explored) {
-				var n = data.nodes_names[d.node];
-				n.explored = false;
-				d3.select(this.firstChild).style('fill', '#CAE4E1');
-				n.edges[confidence].forEach(function (e){
-					if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
-						graph.remove_node(data.nodes[e].label);
-					}
-				});
-			} else {
-				d3.select(this.firstChild).style('fill', '#aac');
-				showOneNode(d.node, data, options, 0, graph);
-			}
-		});
 		d3.selectAll('.edge').on('click', function (d) {
-			console.log('edges clicked now!');
 			var id1 = data.nodes_names[d.edge[0]].id;
 			var id2 = data.nodes_names[d.edge[1]].id;
 			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
@@ -309,6 +291,24 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 			});
 		});	
 	}
+	d3.selectAll('.node').on('click', function (d) {
+		rand = false;
+		if(data.nodes_names[d.node].explored) {
+			var n = data.nodes_names[d.node];
+			n.explored = false;
+			d3.select(this.firstChild).style('fill', '#CAE4E1');
+			n.edges[confidence].forEach(function (e){
+				if (graph.node.get(data.nodes[e].label) && !(graph.node.get(data.nodes[e].label).first)) {
+					graph.remove_node(data.nodes[e].label);
+				}
+			});
+		} else {
+			if (!random) {
+				d3.select(this.firstChild).style('fill', '#aac');
+				showOneNode(d.node, data, options, 0, graph);
+			}
+		}
+	});
 	
 	//figures out the groups of a node
 	var g = findGroups(p,data);
@@ -319,12 +319,12 @@ function showOneNode(parent, data, options, confidence, graph, random) {
 
 // takes in the node object and the data object, returns the groups that the node is in
 function findGroups(node,data){
-	var groups=[];
+	var groups = [];
 	for(var key in data.groups){
 		if ((data.groups[key].nodes).indexOf(node.id)>-1)
 			groups.push(data.groups[key].name);
 	}
-	var strgroups=groups.join(', ')
+	var strgroups = groups.join(', ')
 	return strgroups;
 }
 
@@ -643,6 +643,7 @@ function downloadData(data, title) {
 function getAnnotation(id1, id2,data) {
 	// var k = Math.ceil((p.id + 1) / 250) / 10;
 	// var key = keys['edges' + Math.ceil(k)];
+	console.log(id1 + ' ' + id2);
 	Tabletop.init({
 		key: keys.annot,
 		query: 'source= ' + id1 + ' and target= ' + id2,
