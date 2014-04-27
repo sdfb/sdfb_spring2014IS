@@ -318,7 +318,9 @@ function showNodeInfo(data, groups){
 	$("#node-group").text(groups);
 	var d = new Date();
 	$("#node-cite").text( data.first+ " "+ data.last + " Network Visualization. \n Six Degrees of Francis Bacon: Reassembling the Early Modern Social Network. Gen. eds. Daniel Shore and Christopher Warren. "+d.getMonth()+"/"+d.getDate()+"/"+d.getFullYear()+" <http://sixdegreesoffrancisbacon.com/>");
-	$("#node-DNBlink").attr("href", "http://www.oxforddnb.com/view/article/"+data.id);
+	
+	//"http://www.oxforddnb.com/search/refine/?lifeDateModifier=alive&startDate="+data.birth+"&lifeEventModifier=ANY&place=&aor=&search=Search"
+	$("#node-DNBlink").attr("href", "http://www.oxforddnb.com/search/quick/?quicksearch=quicksearch&docPos=1&searchTarget=people&simpleName="+data.first+"-"+data.last+"&imageField.x=0&imageField.y=0&imageField=Go");//"http://www.oxforddnb.com/view/article/"+data.id);
 	$("#node-GoogleLink").attr("href", "http://www.google.com/search?q="+data.first+"+"+ data.last);
 }
 
@@ -349,7 +351,7 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 	var selected = highlighted; 
 	var highlight = false;
 	if (selected.length!==0){
-		console.log("special selection");
+		//console.log("special selection");
 		var sedge = [];
 		highlight=true;
 	}
@@ -419,7 +421,7 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 					}
 				});
 				if(allnodes){
-					G.add_node(label);
+					G.add_node(label, {id: edge});
 					sedges.push([p1.label, label]);
 					sedges.push([p2.label, label]);
 				}
@@ -456,7 +458,7 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 		                    }
 		                });
 		                if(allnodes){
-			                G.add_node(label);
+			                G.add_node(label, {id: edge});
 							sedge.push([label, p1.label]);
 							sedge.push([s2, label]);
 							sedge.push([s2, p2.label]);
@@ -497,7 +499,7 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 		                    }
 		                });
 		                if(allnodes){
-		                    G.add_node(label);
+		                    G.add_node(label, {id: pair1});
 							sedge.push([s1, label]);
 							sedge.push([s2, label]);
 							sedge.push([s1, p1.label]);
@@ -518,6 +520,7 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 	}
 	else{
 		G.add_nodes_from([p1.label, p2.label], { radius: 25 });
+		G.add_nodes_from(selected, { fill: '#eee' });
 		G.add_edges_from(edges);
 		jsnx.draw(G, options);	
 	}
@@ -550,6 +553,12 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 	});
 
 
+	d3.selectAll('.node').on('mouseover', function (d) {
+		d3.select(this.firstChild).style('fill', '#196B94');
+	});
+	d3.selectAll('.node').on('mouseout', function (d) {
+		d3.select(this.firstChild).style('fill', '#cae4e1');
+	});
 	//console.log(sharednetworkmenu);		
 	// $("#tableview").css('display','block')
 	if ($("#check-shared").is(":checked")){
@@ -568,10 +577,10 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 
 
 	$("#results").html("Common network between <b>" + p1.label  + "</b> and <b>" +  p2.label + "</b>");
-	$("#two").val('');
-	$("#two").typeahead('setQuery', '');
-	$("#three").val('');
-	$("#three").typeahead('setQuery', '');
+	// $("#two").val('');
+	// $("#two").typeahead('setQuery', '');
+	// $("#three").val('');
+	// $("#three").typeahead('setQuery', '');
 }
 
 function nodupSort(array){
