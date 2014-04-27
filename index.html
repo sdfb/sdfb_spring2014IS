@@ -13,6 +13,7 @@
 
 	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.1.0/tabletop.min.js"></script>
 	<script type="text/javascript" src="js/data-tables-bootstrap.js"></script>
@@ -42,11 +43,11 @@
 		<div id="accordion">
 			<h3 class="accordion_btn"><span id="icon-add"></span>Contribute</h3>
 			<div  class="accordion_content " id="contribute">
-
 				<ul>
-					<center><li id="addnode">Add figure</li>	
+					<li id="addnode">Add person</li>	
 					<li id="addedge">Add relationship</li>
-					<li id="addgroup">Add group</li></center>
+					<li id="addgroup">Add group</li>
+					<li id="addannot">Add annotation</li>
 				</ul>
 				
 				<section id="addnodeform">
@@ -93,7 +94,7 @@
 				Annotation: 	<a id="edge-annotation"></a><br>
 			</div>
 
-			<h3 class="accordion_btn"><span id="icon-node"></span>Figure</h3>
+			<h3 class="accordion_btn"><span id="icon-node"></span>Person</h3>
 			<div  class="accordion_content " id="nodeinfo">
 				<p id="node-name"></p>
 				<b>Birth Date:</b> <a id="node-bdate"></a> <br>
@@ -109,15 +110,18 @@
 			<h3 class="accordion_btn on"><span id="icon-search"></span>Search</h3>
 			<div class="accordion_content active" id="search">
 				<ul>
-					<center><li id="onenode">Network</li>		
+					<li id="onenode">Network</li>		
 					<li id="twonode">Shared network</li>
 					<li id="onegroup">Group</li>
-					<li id="twogroup">Shared groups</li></center>
+					<li id="twogroup">Shared groups</li>
 				</ul>
 
 				<!-- NODE FORMS -->
 				<section id="onenodeform">
 					<input type="text" id="one" placeholder="Name">
+					<article class="slider"></article>
+					<article id="slider-result">Likely relationships</article>
+					<input id="confidence" type="hidden" value="2"/>
 					<button type="button" id="findonenode">Find</button>
 				</section>
 
@@ -140,7 +144,6 @@
 					<button type="button" id="findtwogroup">Find</button>
 				</section>
 			</div>
-
 		</div>
 	</aside>
 </body>

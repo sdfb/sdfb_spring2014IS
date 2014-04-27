@@ -21,17 +21,30 @@ $(document).ready(function() {
 		$('#twogroupsmenu').css('display','block');
 	});
 
-    //SLIDER FOR CONFIDENCE INTERVAL
-    // CI1 = 0.0-0.19, CI2 = 0.2-0.39, CI3 = 0.4-0.59, CI4 = 0.6-0.79, CI5 = 0.81-1.0
-    var confidence = "CI2";
-    $("#confidInt td").click(function(){
-    	$("#confidInt td").css('background', '#FFF');
-    	confidence = this.id;
-    	var cid = Number(confidence.charAt(2)); //number for conf int
-    	for (var i=0; i<=cid; i++){
-    		var temp = "#CI"+i;
-    		$(temp).css('background', '#8F9094');
-    	}
-    	$(this).css('background', '#73757D');
-    })
+	$( ".slider" ).slider({
+        animate: true,
+        range: "min",
+        value: 2,
+        min: 0,
+        max: 3,
+        step: 1,
+
+        //this gets a live reading of the value and prints it on the page
+        slide: function( event, ui ) {
+        	var result = "Unlikely";
+        	if (ui.value == 1) {
+        		result = "Possible";
+        	} else if (ui.value == 2) {
+        		result = "Likely";
+        	} else if (ui.value == 3) {
+        		result = "Very likely";
+        	}
+            $( "#slider-result" ).html( result + " relationships");
+        },
+
+        //this updates the hidden form field so we can submit the data using a form
+        change: function(event, ui) { 
+            $('#confidence').attr('value', ui.value);
+        }
+    });
 });

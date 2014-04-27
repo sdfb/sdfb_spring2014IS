@@ -52,13 +52,15 @@ function init(result) {
 		n.birth = row.birth;
 		n.death = row.death; 
 		n.occupation = row.occupation;
-		n.label = row.first + ' ' + row.last + ' (' + row.birth + ')';
+		n.label = row.first + ' ' + row.last;
+		n.name = n.label + ' (' + row.birth + ')';
 		n.edges = [];
 		n.edges[0] = row.unlikely.split(', ');
 		n.edges[1] = row.possible.split(', ');
 		n.edges[2] = row.likely.split(', ');
+		n.edges[3] = row.likely.split(', ');
 		data.nodes[n.id] = n;
-		data.nodes_names[n.label] = n;
+		data.nodes_names[n.name] = n.id;
 	});
 
 	result.groups.elements.forEach(function (row) {
@@ -110,7 +112,7 @@ function initGraph(data){
 		},
 		node_attr: {
 			id: function (d) {
-				return 'node-' + data.nodes_names[d.node].id;
+				return 'node-' + d.data.id;
 			},
 			r: function (d) {
 				if (!d.data.radius) {
@@ -153,7 +155,7 @@ function initGraph(data){
 		if ($("#one").val()) {
 			rand = false;
 			Pace.restart();
-			showOneNode($("#one").val(), data, options, 0);
+			showOneNode(data.nodes_names[$("#one").val()], data, options, parseInt($('#confidence')[0].value));
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
@@ -162,12 +164,7 @@ function initGraph(data){
 		if ($("#two").val() && $("#three").val()) {
 			rand = false;
 			Pace.restart();
-			// if ($('#squaredThree')[0].checked) {
-			// 	showTable($("#two").val(), $("#three").val(), data);
-			// 	$('#squaredThree')[0].checked = false;
-			// } else {
-				showTwoNodes($("#two").val(), $("#three").val(), data, options);
-			// }			
+			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], data, options);			
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
@@ -187,7 +184,6 @@ function initGraph(data){
 			Pace.restart();
 			$('#group1').html($("#five").val());
 			$('#group3').html($("#six").val());
-			// showOneGroup($("#five").val(), data);
 			findInterGroup($("#group1").html(), $("#group3").html(), data);
 		}
 	});
@@ -211,8 +207,8 @@ function initGraph(data){
 		$('#addedgeform').css('display','block');
 		$('#entry_768090773').val(node);
 		addGraph = new jsnx.Graph();
-		addGraph.add_node(node, { radius: 25 });
-		jsnx.draw(addGraph, options, true);	
+		addGraph.add_node(node, { id: 0, radius: 25 });
+		jsnx.draw(addGraph, options, true);
 	});
 
 	$('#submitedge').click(function(){
@@ -227,8 +223,8 @@ function initGraph(data){
 function showRandomNode(data, options) {
 	if (!rand) return;
 	var keys = Object.keys(data.nodes);
-	var parent = data.nodes[keys[Math.floor(keys.length * Math.random())]].label;
-	showOneNode(parent, data, options, 0, null, true);
+	var id = data.nodes[keys[Math.floor(keys.length * Math.random())]].id;
+	showOneNode(id, data, options, 2);
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
@@ -236,90 +232,66 @@ function showRandomNode(data, options) {
 	}
 }
 
-function showOneNode(parent, data, options, confidence, graph, random) {
+function showOneNode(parent, data, options, confidence, graph) {
+	console.log(confidence);
 	var isNew = false;
 	if (!graph) {
 		graph = new jsnx.Graph();
 		isNew = true;
 	}
-	var p = data.nodes_names[parent];
+	var p = data.nodes[parent];
 	p.explored = true;
-	var edges = [];
-	var nodes = [];
+	graph.add_node(p.label, { id: p.id, radius: 20 });
 	p.edges[confidence].forEach(function (edge){
 		if (edge != "")  {
 			var f = data.nodes[edge];
-			nodes.push(f.label);
-			edges.push([p.label, f.label]);
+			graph.add_node(f.label, { id: f.id });
+			graph.add_edge(p.label, f.label);
 			f.edges[confidence].forEach(function (e){
 				var s = data.nodes[e];
-				if (nodes.indexOf(s.label) >= 0 || graph.nodes().indexOf(s.label) >= 0) {
-					edges.push([f.label, s.label]);
+				if (graph.nodes().indexOf(s.label) >= 0) {
+					graph.add_edge(f.label, s.label);
 				}
 			});
 		}
 	});
-
 	if (isNew) {
 		$('figure').html('');
-		$("#results").html("Network of <b>" + parent +"</b>");
-		graph.add_nodes_from(nodes, { first: true });
-		graph.add_node(p.label, { radius: 20, first: true });
+		$("#results").html("Network of <b>" + p.name +"</b>");
 		jsnx.draw(graph, options, true);
-	} else {
-		graph.add_nodes_from(nodes);
 	}
-	graph.add_edges_from(edges);
-	if (random) {
-		if (rand) {
-			jsnx.draw(graph, options);
-		}
-	} else {
-		$("#one").val('');
-		$("#one").typeahead('setQuery', '');
-		d3.selectAll('.edge').on('click', function (d) {
-			Pace.restart();
-			var id1 = data.nodes_names[d.edge[0]].id;
-			var id2 = data.nodes_names[d.edge[1]].id;
-			getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
-		});
-		d3.selectAll('.edge').on('mouseover', function (d) {
-			d3.select(this.firstChild).style('fill', '#7FB2E6');
-			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', '#7FB2E6');
-			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
-		});
-		d3.selectAll('.edge').on('mouseout', function (d) {
-			d3.select(this.firstChild).style('fill', '#555');
-			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
-				return data.nodes_names[d.edge[0]].explored ? '#aac' : '#CAE4E1';
-			});
-			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
-				return data.nodes_names[d.edge[1]].explored ? '#aac' : '#CAE4E1';
-			});
-		});	
-	}
+	$("#one").val('');
+	$("#one").typeahead('setQuery', '');
 	d3.selectAll('.node').on('click', function (d) {
 		rand = false;
-		if(data.nodes_names[d.node].explored) {
-			var n = data.nodes_names[d.node];
-			n.explored = false;
-			d3.select(this.firstChild).style('fill', '#CAE4E1');
-			n.edges[confidence].forEach(function (e){
-				if (graph.node.get(data.nodes[e].label)  && !(graph.node.get(data.nodes[e].label).first)) {
-					graph.remove_node(data.nodes[e].label);
-				}
-			});
-		} else {
-			if (!random) {
-				d3.select(this.firstChild).style('fill', '#aac');
-				showOneNode(d.node, data, options, 0, graph);
-			}
+		Pace.restart();
+		if (!data.nodes[d.data.id].explored) {			
+			d3.select(this.firstChild).style('fill', '#aac');
+			showOneNode(d.data.id, data, options, confidence, graph);
 		}
 	});
-	
-	//figures out the groups of a node
-	var g = findGroups(p,data);
-	//displays the node information
+	d3.selectAll('.edge').on('click', function (d) {
+		rand = false;
+		Pace.restart();
+		var id1 = parseInt(d.source.data.id);
+		var id2 = parseInt(d.target.data.id);
+		getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
+	});
+	d3.selectAll('.edge').on('mouseover', function (d) {
+		d3.select(this.firstChild).style('fill', '#7FB2E6');
+		d3.select('#node-' + d.source.data.id).style('fill', '#7FB2E6');
+		d3.select('#node-' + d.target.data.id).style('fill', '#7FB2E6');
+	});
+	d3.selectAll('.edge').on('mouseout', function (d) {
+		d3.select(this.firstChild).style('fill', '#555');
+		d3.select('#node-' + d.source.data.id).style('fill', function (n) {
+			return data.nodes[d.source.data.id].explored ? '#aac' : '#CAE4E1';
+		});
+		d3.select('#node-' + d.target.data.id).style('fill', function (n) {
+			return data.nodes[d.target.data.id].explored ? '#aac' : '#CAE4E1';
+		});
+	});
+	var g = findGroups(p, data);
 	showNodeInfo(p, g);
 }
 
@@ -352,174 +324,151 @@ function showNodeInfo(data, groups){
 
 
 // displays the network of two nodes
-function showTwoNodes(person1, person2, data, options) {
-
-	if(person1===person2){
-		alert("YOU SELECTED THE SAME PERSON. \n PLEASE TRY AGAIN");
+function showTwoNodes(id1, id2, data, options) {
+	if (id1 === id2) {
+		alert("You have selected the same person twice. \n Please try again...");
+		return;
 	}
-	else{
+	$('figure').html('');
+	var G = jsnx.Graph();
+	var edges = [];
+	var p1 = data.nodes[id1];
+	var p2 = data.nodes[id2];
+	var tableview = [];
 
+	var p1_1 = [];	//nodes connection to p1 by one edge
+	var p2_1 = []; // nodes connecting to p2 by one edge
+	for (var i = 0; i < 1; i ++) { // can change number for certain (0), likely (1),  possible(2), unlikely(3), etc
+		p1_1= p1_1.concat(p1.edges[i]);
+		p2_1= p2_1.concat(p2.edges[i]);	
+	}
 
-		$('figure').html('');
-		var G = jsnx.Graph();
-		var edges = [];
-		var p1 = data.nodes_names[person1];
-		var p2 = data.nodes_names[person2];
+	p1_1 = nodupSort(p1_1);
+	p2_1 = nodupSort(p2_1);
 
-		var tableview=[];
+	var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
+	var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
 
-		var p1_1 = [];	//nodes connection to p1 by one edge
-		var p2_1 = []; // nodes connecting to p2 by one edge
-		for (var i = 0; i < 1; i ++) { // can change number for certain (0), likely (1),  possible(2), unlikely(3), etc
-			p1_1= p1_1.concat(p1.edges[i]);
-			p2_1= p2_1.concat(p2.edges[i]);	
-		}
+	for (var i = 0; i < p1_1.length; i ++) {//can change number for confidence
+		for(var j=0; j<1; j++){
+			var p1edges = data.nodes[p1_1[i]].edges[j];
+			p1edges.forEach( function(p1edge){
+				//p1_2.push([p1_1[i], p1edge]);
+				p1_2.push({"source":p1_1[i], "edge":p1edge});
+			}); 
+		}		
+	}
+	for (var i = 0; i < p2_1.length; i ++) {//can change number for confidence
+		for(var j=0; j<1; j++){
+			var p2edges = data.nodes[p2_1[i]].edges[j];
+			p2edges.forEach( function(p2edge){
+				//p1_2.push([p2_1[i], p2edge]);
+				p2_2.push({"source":p2_1[i], "edge":p2edge});
 
-		p1_1 = nodupSort(p1_1);
-		p2_1 = nodupSort(p2_1);
+			}); 
+		}		
+	}
 
-		var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
-		var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
-
-		for (var i = 0; i < p1_1.length; i ++) {//can change number for confidence
-			for(var j=0; j<1; j++){
-				var p1edges = data.nodes[p1_1[i]].edges[j];
-				p1edges.forEach( function(p1edge){
-					//p1_2.push([p1_1[i], p1edge]);
-					p1_2.push({"source":p1_1[i], "edge":p1edge});
-				}); 
-			}		
-		}
-		for (var i = 0; i < p2_1.length; i ++) {//can change number for confidence
-			for(var j=0; j<1; j++){
-				var p2edges = data.nodes[p2_1[i]].edges[j];
-				p2edges.forEach( function(p2edge){
-					//p1_2.push([p2_1[i], p2edge]);
-					p2_2.push({"source":p2_1[i], "edge":p2edge});
-
-				}); 
-			}		
-		}
-
-		//one edge 
-		if(p2_1.indexOf(p2.id)){
-			edges.push([p1.label, p2.label]);
-			tableview.push({ "network": p1.label+", "+ p2.label })
-		}
-		
-
-		//two edge
-		p1_1.forEach(function (edge){
-			if (p2_1.indexOf(edge) >= 0) {
-
-				var label = data.nodes[edge].label;
-				G.add_node(label);
-				edges.push([p1.label, label]);
-				edges.push([p2.label, label]);
-				tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
-				//tableview.push([p1.label+", "+label+", "+ p2.label])
-			}
-		});
-
-		//three edge
-		p1_1.forEach(function (edge){
-			p2_2.forEach(function (pair2){
-				if (edge===pair2["edge"]) {
-
-					var label = data.nodes[edge].label;
-					var s2 = data.nodes[pair2["source"]].label;
-
-					if( (p1.label!=s2) && (p2.label!=label)){
-
-						G.add_node(label);
-						edges.push([label, p1.label]);
-						edges.push([s2, label]);
-						edges.push([s2, p2.label]);
-						tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
-						//tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label])
-					}
-				}
-			});
-		});
-
-		// four edge
-		p1_2.forEach(function (pair1){
-			p2_2.forEach(function (pair2){
-				if (pair1["edge"]===pair2["edge"]) {
-
-					var label = data.nodes[pair2["edge"]].label;
-					var s1 = data.nodes[pair1["source"]].label;
-					var s2 = data.nodes[pair2["source"]].label;
-
-					if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
-
-						G.add_node(label);
-						edges.push([s1, label]);
-						edges.push([s2, label]);
-						edges.push([s1, p1.label]);
-						edges.push([s2, p2.label]);
-						//tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label]);
-						tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
-					}
-				}
-			});
-		});
-
-		G.add_nodes_from([p1.label, p2.label], { radius: 25 });
-		G.add_edges_from(edges);
-		jsnx.draw(G, options);	
-
-
-		d3.selectAll('.node').on('click', function (d) {
-			if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
-				// console.log("adding class");
-				$(d3.select(this.firstChild).firstChild).addClass("node-selected");
-				//d3.select(this.firstChild).style('fill', '#CAE4E1');
-			} else {
-				// console.log("removing class");
-				$(d3.select(this.firstChild)).removeClass("node-selected");
-				//d3.select(this.firstChild).style('fill', '#aac');
-			}
-		});
-		d3.selectAll('.edge').on('mouseover', function (d) {
-			d3.select(this.firstChild).style('fill', '#7FB2E6');
-			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', '#7FB2E6');
-			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', '#7FB2E6');
-		});
-		d3.selectAll('.edge').on('mouseout', function (d) {
-			d3.select(this.firstChild).style('fill', '#555');
-			d3.select('#node-' + data.nodes_names[d.edge[0]].id).style('fill', function (n) {
-				return data.nodes_names[d.edge[0]].explored ? '#aac' : '#CAE4E1';
-			});
-			d3.select('#node-' + data.nodes_names[d.edge[1]].id).style('fill', function (n) {
-				return data.nodes_names[d.edge[1]].explored ? '#aac' : '#CAE4E1';
-			});
-		});	
-
-		//console.log(sharednetworkmenu);		
-		// $("#tableview").css('display','block')
-		if ($("#check-shared").is(":checked")){
-			var title = "Common network between " + person1 + " and  " + person2 ;
-			writeNodeTable(tableview, title);
-
-		}
-
-		// $("#showNetworkTable").click(function(){
-
-		// });
-
-		// $("#showNetworkNodes").click(function(){
-		// 	jsnx.draw(G, options);	
-		// });
+	//one edge 
+	if(p2_1.indexOf(p2.id)){
+		edges.push([p1.label, p2.label]);
+		tableview.push({ "network": p1.label+", "+ p2.label })
+	}
 	
 
-		$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
-		$("#two").val('');
-		$("#two").typeahead('setQuery', '');
-		$("#three").val('');
-		$("#three").typeahead('setQuery', '');
+	//two edge
+	p1_1.forEach(function (edge){
+		if (p2_1.indexOf(edge) >= 0) {
+
+			var label = data.nodes[edge].label;
+			G.add_node(label);
+			edges.push([p1.label, label]);
+			edges.push([p2.label, label]);
+			tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
+			//tableview.push([p1.label+", "+label+", "+ p2.label])
+		}
+	});
+
+	//three edge
+	p1_1.forEach(function (edge){
+		p2_2.forEach(function (pair2){
+			if (edge===pair2["edge"]) {
+
+				var label = data.nodes[edge].label;
+				var s2 = data.nodes[pair2["source"]].label;
+
+				if( (p1.label!=s2) && (p2.label!=label)){
+
+					G.add_node(label);
+					edges.push([label, p1.label]);
+					edges.push([s2, label]);
+					edges.push([s2, p2.label]);
+					tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
+					//tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label])
+				}
+			}
+		});
+	});
+
+	// four edge
+	p1_2.forEach(function (pair1){
+		p2_2.forEach(function (pair2){
+			if (pair1["edge"]===pair2["edge"]) {
+
+				var label = data.nodes[pair2["edge"]].label;
+				var s1 = data.nodes[pair1["source"]].label;
+				var s2 = data.nodes[pair2["source"]].label;
+
+				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
+
+					G.add_node(label);
+					edges.push([s1, label]);
+					edges.push([s2, label]);
+					edges.push([s1, p1.label]);
+					edges.push([s2, p2.label]);
+					//tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label]);
+					tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
+				}
+			}
+		});
+	});
+
+	G.add_nodes_from([p1.label, p2.label], { radius: 25 });
+	G.add_edges_from(edges);
+	jsnx.draw(G, options);	
+
+
+	d3.selectAll('.node').on('click', function (d) {
+		if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
+			$(d3.select(this.firstChild).firstChild).addClass("node-selected");
+		} else {
+			$(d3.select(this.firstChild)).removeClass("node-selected");
+		}
+	});
+
+
+	//console.log(sharednetworkmenu);		
+	// $("#tableview").css('display','block')
+	if ($("#check-shared").is(":checked")){
+		var title = "Common network between " + person1 + " and  " + person2 ;
+		writeNodeTable(tableview, title);
 
 	}
+
+	// $("#showNetworkTable").click(function(){
+
+	// });
+
+	// $("#showNetworkNodes").click(function(){
+	// 	jsnx.draw(G, options);	
+	// });
+
+
+	$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
+	$("#two").val('');
+	$("#two").typeahead('setQuery', '');
+	$("#three").val('');
+	$("#three").typeahead('setQuery', '');
 }
 
 function nodupSort(array){
@@ -532,31 +481,6 @@ function nodupSort(array){
         }
     }
     return no_dup;
-}
-
-function showTable(person1, person2, data) {
-	$('figure').html('');
-	var p1 = data.nodes_names[person1];
-	var p2 = data.nodes_names[person2];
-	var common = [];	
-	var e1 = [];
-	var e2 = [];
-	for (var i = 0; i < p1.edges.length; i ++) {
-		e1.push.apply(e1, p1.edges[i]);
-		e2.push.apply(e2, p2.edges[i]);
-	}
-	e1.forEach(function (edge){
-		if (e2.indexOf(edge) >= 0) {
-			common.push(data.nodes[edge]);
-		}
-	});
-	var title = "Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>";
-	writeTableWith(common, title);
-	$("#results").html(title);
-	$("#two").val('');
-	$("#two").typeahead('setQuery', '');
-	$("#three").val('');
-	$("#three").typeahead('setQuery', '');
 }
 
 function showOneGroup(group, data) {
