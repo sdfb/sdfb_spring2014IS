@@ -326,9 +326,9 @@ function showNodeInfo(data, groups){
 // displays the network of two nodes
 function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 	
-	if(confidence===3){
+	//if(confidence===3){
 		confidence=2
-	}
+	//}
 	
 
 	if (id1 === id2) {
@@ -538,16 +538,15 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 			var index = selected.indexOf(nclick);
 			if(index>-1){
 			
-					selected.splice(index,1);
+				selected.splice(index,1);
 			}
 			else{
 				selected.push(nclick);
 			}
 			console.log(selected);
+			showTwoNodes(id1, id2, data, options, confidence, selected); 
 		}
-
-		//display()
-		showTwoNodes(id1, id2, data, options, confidence, selected); 
+		
 	});
 
 
