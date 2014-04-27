@@ -13,6 +13,7 @@
 
 	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.1.0/tabletop.min.js"></script>
 	<script type="text/javascript" src="js/data-tables-bootstrap.js"></script>
@@ -118,6 +119,9 @@
 				<!-- NODE FORMS -->
 				<section id="onenodeform">
 					<input type="text" id="one" placeholder="Name">
+					<article class="slider"></article>
+					<article id="slider-result">Likely relationships</article>
+					<input id="confidence" type="hidden" value="2"/>
 					<button type="button" id="findonenode">Find</button>
 				</section>
 

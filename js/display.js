@@ -58,6 +58,7 @@ function init(result) {
 		n.edges[0] = row.unlikely.split(', ');
 		n.edges[1] = row.possible.split(', ');
 		n.edges[2] = row.likely.split(', ');
+		n.edges[3] = row.likely.split(', ');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.name] = n.id;
 	});
@@ -154,7 +155,7 @@ function initGraph(data){
 		if ($("#one").val()) {
 			rand = false;
 			Pace.restart();
-			showOneNode(data.nodes_names[$("#one").val()], data, options, 0);
+			showOneNode(data.nodes_names[$("#one").val()], data, options, parseInt($('#confidence')[0].value));
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
@@ -223,7 +224,7 @@ function showRandomNode(data, options) {
 	if (!rand) return;
 	var keys = Object.keys(data.nodes);
 	var id = data.nodes[keys[Math.floor(keys.length * Math.random())]].id;
-	showOneNode(id, data, options, 2, null);
+	showOneNode(id, data, options, 2);
 	if (rand) {
 		setTimeout(function(){
 			showRandomNode(data, options)
@@ -232,6 +233,7 @@ function showRandomNode(data, options) {
 }
 
 function showOneNode(parent, data, options, confidence, graph) {
+	console.log(confidence);
 	var isNew = false;
 	if (!graph) {
 		graph = new jsnx.Graph();
