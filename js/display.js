@@ -103,6 +103,8 @@ function initGraph(data){
 		local: Object.keys(data.groups_names).sort()
 	});
 
+	//var color = d3.scale.category20();
+	//console.log(color);
 	var options = {
 		element: 'figure',
 		with_labels: true,
@@ -129,7 +131,11 @@ function initGraph(data){
 				if (!d.data.radius) {
 					return '#CAE4E1';
 				}
+				if(d.data.group===0){
+					return '#eee';
+				}
 				return '#aac';
+
 			},
 			stroke: 'none'
 		},
@@ -164,7 +170,7 @@ function initGraph(data){
 		if ($("#two").val() && $("#three").val()) {
 			rand = false;
 			Pace.restart();
-			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], data, options);			
+			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], data, options, parseInt($('#confidence')[0].value),[]);			
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
@@ -233,7 +239,7 @@ function showRandomNode(data, options) {
 }
 
 function showOneNode(parent, data, options, confidence, graph) {
-	console.log(confidence);
+	// console.log(confidence);
 	var isNew = false;
 	if (!graph) {
 		graph = new jsnx.Graph();
@@ -318,17 +324,26 @@ function showNodeInfo(data, groups){
 	$("#node-group").text(groups);
 	var d = new Date();
 	$("#node-cite").text( data.first+ " "+ data.last + " Network Visualization. \n Six Degrees of Francis Bacon: Reassembling the Early Modern Social Network. Gen. eds. Daniel Shore and Christopher Warren. "+d.getMonth()+"/"+d.getDate()+"/"+d.getFullYear()+" <http://sixdegreesoffrancisbacon.com/>");
-	$("#node-DNBlink").attr("href", "http://www.oxforddnb.com/view/article/"+data.id);
+	
+	//"http://www.oxforddnb.com/search/refine/?lifeDateModifier=alive&startDate="+data.birth+"&lifeEventModifier=ANY&place=&aor=&search=Search"
+	$("#node-DNBlink").attr("href", "http://www.oxforddnb.com/search/quick/?quicksearch=quicksearch&docPos=1&searchTarget=people&simpleName="+data.first+"-"+data.last+"&imageField.x=0&imageField.y=0&imageField=Go");//"http://www.oxforddnb.com/view/article/"+data.id);
 	$("#node-GoogleLink").attr("href", "http://www.google.com/search?q="+data.first+"+"+ data.last);
 }
 
 
 // displays the network of two nodes
-function showTwoNodes(id1, id2, data, options) {
+function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
+	
+	//if(confidence===3){
+		confidence=2
+	//}
+	
+
 	if (id1 === id2) {
 		alert("You have selected the same person twice. \n Please try again...");
 		return;
 	}
+
 	$('figure').html('');
 	var G = jsnx.Graph();
 	var edges = [];
@@ -336,9 +351,22 @@ function showTwoNodes(id1, id2, data, options) {
 	var p2 = data.nodes[id2];
 	var tableview = [];
 
+	// console.log(confidence);
+	// console.log(p1);
+	// console.log(p2);
+	var selected = highlighted; 
+	var highlight = false;
+	if (selected.length!==0){
+		//console.log("special selection");
+		var sedge = [];
+		highlight=true;
+	}
+	
+	
+
 	var p1_1 = [];	//nodes connection to p1 by one edge
 	var p2_1 = []; // nodes connecting to p2 by one edge
-	for (var i = 0; i < 1; i ++) { // can change number for certain (0), likely (1),  possible(2), unlikely(3), etc
+	for (var i = 2; i >= confidence; i --) { // change confidence after db/bucket change
 		p1_1= p1_1.concat(p1.edges[i]);
 		p2_1= p2_1.concat(p2.edges[i]);	
 	}
@@ -349,8 +377,8 @@ function showTwoNodes(id1, id2, data, options) {
 	var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
 	var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
 
-	for (var i = 0; i < p1_1.length; i ++) {//can change number for confidence
-		for(var j=0; j<1; j++){
+	for (var i = 0; i < p1_1.length; i ++) {
+		for(var j = 2; j >= confidence; j --){ // j is confidence
 			var p1edges = data.nodes[p1_1[i]].edges[j];
 			p1edges.forEach( function(p1edge){
 				//p1_2.push([p1_1[i], p1edge]);
@@ -358,8 +386,8 @@ function showTwoNodes(id1, id2, data, options) {
 			}); 
 		}		
 	}
-	for (var i = 0; i < p2_1.length; i ++) {//can change number for confidence
-		for(var j=0; j<1; j++){
+	for (var i = 0; i < p2_1.length; i ++) {
+		for(var j = 2; j >= confidence; j --){// j is confidence
 			var p2edges = data.nodes[p2_1[i]].edges[j];
 			p2edges.forEach( function(p2edge){
 				//p1_2.push([p2_1[i], p2edge]);
@@ -369,8 +397,9 @@ function showTwoNodes(id1, id2, data, options) {
 		}		
 	}
 
+
 	//one edge 
-	if(p2_1.indexOf(p2.id)){
+	if(p2_1.indexOf(p2.id)>=0){
 		edges.push([p1.label, p2.label]);
 		tableview.push({ "network": p1.label+", "+ p2.label })
 	}
@@ -381,11 +410,30 @@ function showTwoNodes(id1, id2, data, options) {
 		if (p2_1.indexOf(edge) >= 0) {
 
 			var label = data.nodes[edge].label;
-			G.add_node(label);
-			edges.push([p1.label, label]);
-			edges.push([p2.label, label]);
-			tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
-			//tableview.push([p1.label+", "+label+", "+ p2.label])
+			if(!highlight){
+				G.add_node(label);
+			
+				edges.push([p1.label, label]);
+				edges.push([p2.label, label]);
+				tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
+			}
+			else {
+				var allnodes=true;
+				selected.forEach(function (node){
+					//console.log(node+" " +label);
+					if (node!==label){
+						allnodes=false
+					}
+				});
+				if(allnodes){
+					if(!selected.indexOf(label)>=0){
+						G.add_node(label, {id: edge});
+					}
+					sedges.push([p1.label, label]);
+					sedges.push([p2.label, label]);
+				}
+		
+			}
 		}
 	});
 
@@ -399,12 +447,32 @@ function showTwoNodes(id1, id2, data, options) {
 
 				if( (p1.label!=s2) && (p2.label!=label)){
 
-					G.add_node(label);
-					edges.push([label, p1.label]);
-					edges.push([s2, label]);
-					edges.push([s2, p2.label]);
-					tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
-					//tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label])
+					if(!highlight){
+						G.add_node(label);
+					
+						edges.push([label, p1.label]);
+						edges.push([s2, label]);
+						edges.push([s2, p2.label]);
+						tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
+					}
+					else {//&& (((selected.indexOf(label)>=0)) || (selected.indexOf(s2)>=0) )
+						var allnodes=true;
+		                selected.forEach(function (node){
+		                	//console.log(node+" " +label + " " + s2);
+		                    if (node!==label && node!==s2){
+		                        allnodes=false
+		                    }
+		                });
+		                if(allnodes){
+		                	if(!selected.indexOf(label)>=0){
+			               		G.add_node(label, {id: edge});
+			               	}
+							sedge.push([label, p1.label]);
+							sedge.push([s2, label]);
+							sedge.push([s2, p2.label]);
+		                }
+					
+					}
 				}
 			}
 		});
@@ -421,54 +489,86 @@ function showTwoNodes(id1, id2, data, options) {
 
 				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
 
-					G.add_node(label);
-					edges.push([s1, label]);
-					edges.push([s2, label]);
-					edges.push([s1, p1.label]);
-					edges.push([s2, p2.label]);
-					//tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label]);
-					tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
+					if(!highlight){
+						G.add_node(label);
+						edges.push([s1, label]);
+						edges.push([s2, label]);
+						edges.push([s1, p1.label]);
+						edges.push([s2, p2.label]);
+						tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
+					}
+					else{ //  && ( (selected.indexOf(label)>=0) || (selected.indexOf(s1)>=0) || (selected.indexOf(s2)>=0) )
+					    var allnodes=true;
+		                selected.forEach(function (node){
+		                	//console.log(node+" " +label + " " + s1 + " " + s2);
+		                    if (node!==label && node!==s1 && node!==s2){
+		                        allnodes=false
+		                    }
+		                });
+		                if(allnodes){
+		                	if(!selected.indexOf(label)>=0){
+		                		G.add_node(label, {id: pair1["edge"]});
+		                	}
+		       				sedge.push([s1, label]);
+							sedge.push([s2, label]);
+							sedge.push([s1, p1.label]);
+							sedge.push([s2, p2.label]);
+		                }
+					}
 				}
 			}
 		});
 	});
 
-	G.add_nodes_from([p1.label, p2.label], { radius: 25 });
-	G.add_edges_from(edges);
-	jsnx.draw(G, options);	
+
+
+	if (highlight){
+		G.add_nodes_from([p1.label, p2.label], { data: "network", radius: 25 });
+		G.add_edges_from(sedge);
+		jsnx.draw(G, options);
+	}
+	else{
+		G.add_nodes_from(selected, {radius: 25, highlight: true, group: 0 });
+		G.add_nodes_from([p1.label, p2.label], { radius: 30 });
+		G.add_edges_from(edges);
+		jsnx.draw(G, options);	
+	}
 
 
 	d3.selectAll('.node').on('click', function (d) {
-		if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
-			$(d3.select(this.firstChild).firstChild).addClass("node-selected");
-		} else {
-			$(d3.select(this.firstChild)).removeClass("node-selected");
+		var nclick= $(this).children().eq(1).text();
+		if (nclick != p1.label && nclick != p2.label){
+			var index = selected.indexOf(nclick);
+			if(index>-1){			
+				selected.splice(index,1);
+			}
+			else{
+				selected.push(nclick);
+			}
+			console.log(selected);
+			showTwoNodes(id1, id2, data, options, confidence, selected); 
 		}
+		
 	});
 
 
-	//console.log(sharednetworkmenu);		
-	// $("#tableview").css('display','block')
-	if ($("#check-shared").is(":checked")){
-		var title = "Common network between " + person1 + " and  " + person2 ;
-		writeNodeTable(tableview, title);
+	d3.selectAll('.node').on('mouseover', function (d) {
+		d3.select(this.firstChild).style('fill', '#196B94');
+	});
+	d3.selectAll('.node').on('mouseout', function (d) {
+		d3.select(this.firstChild).style('fill', '#cae4e1');
+	});
 
+	if ($("#check-shared").is(":checked")){
+		var title = "Common network between " + p1.label + " and  " + p2.label ;
+		writeNodeTable(tableview, title);
 	}
 
-	// $("#showNetworkTable").click(function(){
-
-	// });
-
-	// $("#showNetworkNodes").click(function(){
-	// 	jsnx.draw(G, options);	
-	// });
-
-
-	$("#results").html("Common network between <b>" + person1 + "</b> and <b>" + person2 + "</b>");
-	$("#two").val('');
-	$("#two").typeahead('setQuery', '');
-	$("#three").val('');
-	$("#three").typeahead('setQuery', '');
+	$("#results").html("Common network between <b>" + p1.label  + "</b> and <b>" +  p2.label + "</b>");
+	// $("#two").val('');
+	// $("#two").typeahead('setQuery', '');
+	// $("#three").val('');
+	// $("#three").typeahead('setQuery', '');
 }
 
 function nodupSort(array){

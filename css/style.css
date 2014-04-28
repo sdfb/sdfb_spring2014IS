@@ -302,3 +302,12 @@ a {
   outline:none;
   -moz-outline-style:none;
 }
+
+#check-shared[type="checkbox"]{
+   display:inline;
+   margin:0;
+   padding:0;
+   margin-right:5px;
+   height:15px;
+   width:15px;
+}
