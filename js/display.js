@@ -103,6 +103,8 @@ function initGraph(data){
 		local: Object.keys(data.groups_names).sort()
 	});
 
+	//var color = d3.scale.category20();
+	//console.log(color);
 	var options = {
 		element: 'figure',
 		with_labels: true,
@@ -129,7 +131,11 @@ function initGraph(data){
 				if (!d.data.radius) {
 					return '#CAE4E1';
 				}
+				if(d.data.group===0){
+					return '#eee';
+				}
 				return '#aac';
+
 			},
 			stroke: 'none'
 		},
@@ -406,13 +412,12 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 			var label = data.nodes[edge].label;
 			if(!highlight){
 				G.add_node(label);
+			
+				edges.push([p1.label, label]);
+				edges.push([p2.label, label]);
+				tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
 			}
-			edges.push([p1.label, label]);
-			edges.push([p2.label, label]);
-			tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
-
-			//tableview.push([p1.label+", "+label+", "+ p2.label])
-			if(highlight){
+			else {
 				var allnodes=true;
 				selected.forEach(function (node){
 					//console.log(node+" " +label);
@@ -421,7 +426,9 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 					}
 				});
 				if(allnodes){
-					G.add_node(label, {id: edge});
+					if(!selected.indexOf(label)>=0){
+						G.add_node(label, {id: edge});
+					}
 					sedges.push([p1.label, label]);
 					sedges.push([p2.label, label]);
 				}
@@ -442,14 +449,13 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 
 					if(!highlight){
 						G.add_node(label);
+					
+						edges.push([label, p1.label]);
+						edges.push([s2, label]);
+						edges.push([s2, p2.label]);
+						tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
 					}
-					edges.push([label, p1.label]);
-					edges.push([s2, label]);
-					edges.push([s2, p2.label]);
-					tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
-					//tableview.push([p1.label+", "+label+", "+s2+", "+ p2.label])
-
-					if(highlight) {//&& (((selected.indexOf(label)>=0)) || (selected.indexOf(s2)>=0) )
+					else {//&& (((selected.indexOf(label)>=0)) || (selected.indexOf(s2)>=0) )
 						var allnodes=true;
 		                selected.forEach(function (node){
 		                	//console.log(node+" " +label + " " + s2);
@@ -458,7 +464,9 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 		                    }
 		                });
 		                if(allnodes){
-			                G.add_node(label, {id: edge});
+		                	if(!selected.indexOf(label)>=0){
+			               		G.add_node(label, {id: edge});
+			               	}
 							sedge.push([label, p1.label]);
 							sedge.push([s2, label]);
 							sedge.push([s2, p2.label]);
@@ -483,14 +491,13 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 
 					if(!highlight){
 						G.add_node(label);
+						edges.push([s1, label]);
+						edges.push([s2, label]);
+						edges.push([s1, p1.label]);
+						edges.push([s2, p2.label]);
+						tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
 					}
-					edges.push([s1, label]);
-					edges.push([s2, label]);
-					edges.push([s1, p1.label]);
-					edges.push([s2, p2.label]);
-					//tableview.push([p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label]);
-					tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
-					if(highlight) { //  && ( (selected.indexOf(label)>=0) || (selected.indexOf(s1)>=0) || (selected.indexOf(s2)>=0) )
+					else{ //  && ( (selected.indexOf(label)>=0) || (selected.indexOf(s1)>=0) || (selected.indexOf(s2)>=0) )
 					    var allnodes=true;
 		                selected.forEach(function (node){
 		                	//console.log(node+" " +label + " " + s1 + " " + s2);
@@ -499,8 +506,10 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 		                    }
 		                });
 		                if(allnodes){
-		                    G.add_node(label, {id: pair1});
-							sedge.push([s1, label]);
+		                	if(!selected.indexOf(label)>=0){
+		                		G.add_node(label, {id: pair1["edge"]});
+		                	}
+		       				sedge.push([s1, label]);
 							sedge.push([s2, label]);
 							sedge.push([s1, p1.label]);
 							sedge.push([s2, p2.label]);
@@ -514,33 +523,23 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 
 
 	if (highlight){
-		G.add_nodes_from([p1.label, p2.label], { radius: 25 });
+		G.add_nodes_from([p1.label, p2.label], { data: "network", radius: 25 });
 		G.add_edges_from(sedge);
 		jsnx.draw(G, options);
 	}
 	else{
-		G.add_nodes_from([p1.label, p2.label], { radius: 25 });
-		G.add_nodes_from(selected, { fill: '#eee' });
+		G.add_nodes_from(selected, {radius: 25, highlight: true, group: 0 });
+		G.add_nodes_from([p1.label, p2.label], { radius: 30 });
 		G.add_edges_from(edges);
 		jsnx.draw(G, options);	
 	}
 
 
 	d3.selectAll('.node').on('click', function (d) {
-		// if(! $(d3.select(this.firstChild)).hasClass("node-selected") ) {
-		// 	$(d3.select(this.firstChild).firstChild).addClass("node-selected");
-		// } else {
-		// 	$(d3.select(this.firstChild)).removeClass("node-selected");
-		// }
-
-		//console.log(this);
-		//console.log($(this).children().eq(1).text());
-
 		var nclick= $(this).children().eq(1).text();
 		if (nclick != p1.label && nclick != p2.label){
 			var index = selected.indexOf(nclick);
-			if(index>-1){
-			
+			if(index>-1){			
 				selected.splice(index,1);
 			}
 			else{
@@ -559,22 +558,11 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 	d3.selectAll('.node').on('mouseout', function (d) {
 		d3.select(this.firstChild).style('fill', '#cae4e1');
 	});
-	//console.log(sharednetworkmenu);		
-	// $("#tableview").css('display','block')
+
 	if ($("#check-shared").is(":checked")){
 		var title = "Common network between " + p1.label + " and  " + p2.label ;
 		writeNodeTable(tableview, title);
-
 	}
-
-	// $("#showNetworkTable").click(function(){
-
-	// });
-
-	// $("#showNetworkNodes").click(function(){
-	// 	jsnx.draw(G, options);	
-	// });
-
 
 	$("#results").html("Common network between <b>" + p1.label  + "</b> and <b>" +  p2.label + "</b>");
 	// $("#two").val('');
