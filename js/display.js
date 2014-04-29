@@ -3,7 +3,7 @@ var keys = {
 	annot: "0AhtG6Yl2-hiRdGdjLVNKZmJkbkhhNDMzQm5BTzlHX0E"
 }
 
-var rand = true;
+var random = true;
 var addGraph;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		callback: init
 	});
 	$("#accordion h3").click(function(){
-		rand = false;
+		random = false;
 	});
 });
 
@@ -25,7 +25,6 @@ function node() {
 	this.label = null;
 	this.occupation = null;
 	this.edges = null;
-	this.explored = false;
 }
 
 function group() {
@@ -78,97 +77,21 @@ function init(result) {
 // Populate the suggested drop-down menus
 // Make the buttons in the search panel functional
 function initGraph(data){
-	$('#one').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#two').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#three').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#entry_768090773').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#entry_1321382891').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#four').typeahead({
-		local: Object.keys(data.groups_names).sort()
-	});
-	$('#five').typeahead({
-		local: Object.keys(data.groups_names).sort()
-	});
-	$('#six').typeahead({
-		local: Object.keys(data.groups_names).sort()
-	});
-
-	//var color = d3.scale.category20();
-	//console.log(color);
-	var options = {
-		element: 'figure',
-		with_labels: true,
-		layout_attr: {
-			charge: -500,
-			linkDistance: 130
-		},
-		node_attr: {
-			id: function (d) {
-				return 'node-' + d.data.id;
-			},
-			r: function (d) {
-				if (!d.data.radius) {
-					return 18;
-				}
-				return d.data.radius;
-			},
-			title: function (d) {
-				return d.label;
-			}
-		},
-		node_style: {
-			fill: function (d) {
-				if (!d.data.radius) {
-					return '#CAE4E1';
-				}
-				if(d.data.group===0){
-					return '#eee';
-				}
-				return '#aac';
-
-			},
-			stroke: 'none'
-		},
-		edge_style: {
-			fill: '#555',
-			'stroke-width': 5,
-			cursor: 'pointer'
-		},
-		label_style: {
-			fill: '#222',
-			cursor: 'pointer',
-			'font-size': '0.6em'
-		},
-		pan_zoom:{
-			enabled: true,
-			scale: false
-		}
-	}
-
-	showRandomNode(data, options);
+	
+	populateLists(data);
+	
+	showRandomNode(data);
 
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
-			rand = false;
 			Pace.restart();
-			showOneNode(data.nodes_names[$("#one").val()], data, options, parseInt($('#confidence')[0].value));
+			showOneNode(data.nodes_names[$("#one").val()], parseInt($('#confidence')[0].value), data);
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
 
 	$("#findtwonode").click(function () {
 		if ($("#two").val() && $("#three").val()) {
-			rand = false;
 			Pace.restart();
 			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], data, options, parseInt($('#confidence')[0].value),[]);			
 			$('#twogroupsmenu').css('display','none');
@@ -177,7 +100,6 @@ function initGraph(data){
 
 	$("#findonegroup").click(function () {
 		if ($("#four").val()) {
-			rand = false;
 			Pace.restart();
 			showOneGroup($("#four").val(), data);
 			$('#twogroupsmenu').css('display','none');
@@ -186,7 +108,6 @@ function initGraph(data){
 
 	$("#findtwogroup").click(function () {
 		if ($("#five").val() && $("#six").val()) {
-			rand = false;
 			Pace.restart();
 			$('#group1').html($("#five").val());
 			$('#group3').html($("#six").val());
@@ -207,7 +128,6 @@ function initGraph(data){
 	});
 
 	$('#submitnode').click(function(){
-		rand = false;
 		var node = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val() + ' (' + $('#entry_524366257').val() + ')';
 		$('section').css('display','none');
 		$('#addedgeform').css('display','block');
@@ -218,7 +138,6 @@ function initGraph(data){
 	});
 
 	$('#submitedge').click(function(){
-		rand = false;
 		var source = $('#entry_768090773').val();
 		var target = $('#entry_1321382891').val();
 		addGraph.add_node(target);
@@ -226,84 +145,84 @@ function initGraph(data){
 	});
 }
 
-function showRandomNode(data, options) {
-	if (!rand) return;
+function showRandomNode(data) {
+	if (!random) return;
 	var keys = Object.keys(data.nodes);
 	var id = data.nodes[keys[Math.floor(keys.length * Math.random())]].id;
-	showOneNode(id, data, options, 2);
-	if (rand) {
+	showOneNode(id, 2, data);
+	if (random) {
 		setTimeout(function(){
-			showRandomNode(data, options)
+			showRandomNode(data)
 		}, 15000);
 	}
 }
 
-function showOneNode(parent, data, options, confidence, graph) {
-	// console.log(confidence);
-	var isNew = false;
-	if (!graph) {
-		graph = new jsnx.Graph();
-		isNew = true;
-	}
-	var p = data.nodes[parent];
-	p.explored = true;
-	graph.add_node(p.label, { id: p.id, radius: 20 });
-	p.edges[confidence].forEach(function (edge){
-		if (edge != "")  {
-			var f = data.nodes[edge];
-			graph.add_node(f.label, { id: f.id });
-			graph.add_edge(p.label, f.label);
-			f.edges[confidence].forEach(function (e){
-				var s = data.nodes[e];
-				if (graph.nodes().indexOf(s.label) >= 0) {
-					graph.add_edge(f.label, s.label);
+function getCluster(year){
+	var cluster = Math.round((1800 - parseInt(year)) / 70);
+	return cluster;
+}
+
+function showOneNode(id, confidence, data) {
+	var p = data.nodes[id];
+	$('#graph').html('');
+	$("#results").html("Network of <b>" + p.name +"</b>");
+	var keys = {};
+	var nodes = [];
+	var edges = [];
+	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": p.edges[confidence].length };
+	p.edges[confidence].forEach(function (i){
+		var f = data.nodes[i];
+		if (f) {
+			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+			if (notInArray(edges, [p.id, f.id])) { edges.push([p.id, f.id]); }
+			f.edges[confidence].forEach(function (j){
+				var s = data.nodes[j];
+				if (s) {
+					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": s.edges[confidence].length };
+					if (notInArray(edges, [f.id, s.id])) { edges.push([f.id, s.id]); }
+					s.edges[confidence].forEach(function (k){
+						var t = data.nodes[k];
+						if (t && t.id in keys && notInArray(edges, [s.id, t.id])) { edges.push([s.id, t.id]); }
+					});
 				}
 			});
 		}
 	});
-	if (isNew) {
-		$('figure').html('');
-		$("#results").html("Network of <b>" + p.name +"</b>");
-		jsnx.draw(graph, options, true);
-	}
-	$("#one").val('');
-	$("#one").typeahead('setQuery', '');
-	d3.selectAll('.node').on('click', function (d) {
-		rand = false;
+	var el = document.getElementById("graph");
+	var options = { width: el.width, height: el.height };
+	var circles = [];
+	for (n in keys) { nodes.push(keys[n]); }
+	var graph = new Insights(el, nodes, edges, options).render();	
+	graph.on("node:click", function(d) {
+		random = false;
+		var clicked = data.nodes[d.id];
+		showNodeInfo(clicked, findGroups(clicked, data));
+	});
+	graph.on("edge:click", function(d) {
+		random = false;
 		Pace.restart();
-		if (!data.nodes[d.data.id].explored) {			
-			d3.select(this.firstChild).style('fill', '#aac');
-			showOneNode(d.data.id, data, options, confidence, graph);
-		}
+		var id1 = parseInt(d.source.id);
+		var id2 = parseInt(d.target.id);
+		getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);
 	});
-	d3.selectAll('.edge').on('click', function (d) {
-		rand = false;
-		Pace.restart();
-		var id1 = parseInt(d.source.data.id);
-		var id2 = parseInt(d.target.data.id);
-		getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
-	});
-	d3.selectAll('.edge').on('mouseover', function (d) {
-		d3.select(this.firstChild).style('fill', '#7FB2E6');
-		d3.select('#node-' + d.source.data.id).style('fill', '#7FB2E6');
-		d3.select('#node-' + d.target.data.id).style('fill', '#7FB2E6');
-	});
-	d3.selectAll('.edge').on('mouseout', function (d) {
-		d3.select(this.firstChild).style('fill', '#555');
-		d3.select('#node-' + d.source.data.id).style('fill', function (n) {
-			return data.nodes[d.source.data.id].explored ? '#aac' : '#CAE4E1';
-		});
-		d3.select('#node-' + d.target.data.id).style('fill', function (n) {
-			return data.nodes[d.target.data.id].explored ? '#aac' : '#CAE4E1';
-		});
-	});
-	var g = findGroups(p, data);
-	showNodeInfo(p, g);
+	showNodeInfo(p, findGroups(p, data));
 }
 
+function notInArray(arr, val) {
+	var i = arr.length;
+	while (i--) {
+		if (arr[i][0] == val[0] && arr[i][1] == val[1]) {
+			return false;
+		}
+		if (arr[i][1] == val[0] && arr[i][0] == val[1]) {
+			return false;
+		}
+	}
+	return true;
+}
 
 // takes in the node object and the data object, returns the groups that the node is in
-function findGroups(node,data){
+function findGroups(node, data){
 	var groups = [];
 	for(var key in data.groups){
 		if ((data.groups[key].nodes).indexOf(node.id)>-1)
@@ -313,8 +232,7 @@ function findGroups(node,data){
 	return strgroups;
 }
 
-
-//displays the node information
+// Display node information
 function showNodeInfo(data, groups){
 	accordion("node");
 	$("#node-name").text(data.first+ " "+ data.last);
@@ -333,238 +251,223 @@ function showNodeInfo(data, groups){
 
 // displays the network of two nodes
 function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
-	
 	//if(confidence===3){
-		confidence=2
+	confidence = 2
 	//}
-	
-
 	if (id1 === id2) {
 		alert("You have selected the same person twice. \n Please try again...");
 		return;
 	}
-
-	$('figure').html('');
+	$('#graph').html('');
 	var G = jsnx.Graph();
 	var edges = [];
 	var p1 = data.nodes[id1];
 	var p2 = data.nodes[id2];
 	var tableview = [];
-
 	// console.log(confidence);
 	// console.log(p1);
 	// console.log(p2);
-	var selected = highlighted; 
+	var selected = highlighted;
 	var highlight = false;
-	if (selected.length!==0){
+	if (selected.length !== 0) {
 		//console.log("special selection");
 		var sedge = [];
-		highlight=true;
+		highlight = true;
 	}
-	
-	
-
-	var p1_1 = [];	//nodes connection to p1 by one edge
+	var p1_1 = []; //nodes connection to p1 by one edge
 	var p2_1 = []; // nodes connecting to p2 by one edge
-	for (var i = 2; i >= confidence; i --) { // change confidence after db/bucket change
-		p1_1= p1_1.concat(p1.edges[i]);
-		p2_1= p2_1.concat(p2.edges[i]);	
+	for (var i = 2; i >= confidence; i--) { // change confidence after db/bucket change
+		p1_1 = p1_1.concat(p1.edges[i]);
+		p2_1 = p2_1.concat(p2.edges[i]);
 	}
-
 	p1_1 = nodupSort(p1_1);
 	p2_1 = nodupSort(p2_1);
-
-	var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
-	var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
-
-	for (var i = 0; i < p1_1.length; i ++) {
-		for(var j = 2; j >= confidence; j --){ // j is confidence
+	var p1_2 = []; // nodes connected to p1_1 (all nodes 2 away from p1)
+	var p2_2 = []; // nodes connected to p2_1  (all nodes 2 away from p2)
+	for (var i = 0; i < p1_1.length; i++) {
+		for (var j = 2; j >= confidence; j--) { // j is confidence
 			var p1edges = data.nodes[p1_1[i]].edges[j];
-			p1edges.forEach( function(p1edge){
+			p1edges.forEach(function (p1edge) {
 				//p1_2.push([p1_1[i], p1edge]);
-				p1_2.push({"source":p1_1[i], "edge":p1edge});
-			}); 
-		}		
+				p1_2.push({
+					"source": p1_1[i],
+					"edge": p1edge
+				});
+			});
+		}
 	}
-	for (var i = 0; i < p2_1.length; i ++) {
-		for(var j = 2; j >= confidence; j --){// j is confidence
+	for (var i = 0; i < p2_1.length; i++) {
+		for (var j = 2; j >= confidence; j--) { // j is confidence
 			var p2edges = data.nodes[p2_1[i]].edges[j];
-			p2edges.forEach( function(p2edge){
+			p2edges.forEach(function (p2edge) {
 				//p1_2.push([p2_1[i], p2edge]);
-				p2_2.push({"source":p2_1[i], "edge":p2edge});
-
-			}); 
-		}		
+				p2_2.push({
+					"source": p2_1[i],
+					"edge": p2edge
+				});
+			});
+		}
 	}
-
-
 	//one edge 
-	if(p2_1.indexOf(p2.id)>=0){
+	if (p2_1.indexOf(p2.id) >= 0) {
 		edges.push([p1.label, p2.label]);
-		tableview.push({ "network": p1.label+", "+ p2.label })
+		tableview.push({
+			"network": p1.label + ", " + p2.label
+		})
 	}
-	
-
 	//two edge
-	p1_1.forEach(function (edge){
+	p1_1.forEach(function (edge) {
 		if (p2_1.indexOf(edge) >= 0) {
-
 			var label = data.nodes[edge].label;
-			if(!highlight){
+			if (!highlight) {
 				G.add_node(label);
-			
 				edges.push([p1.label, label]);
 				edges.push([p2.label, label]);
-				tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
-			}
-			else {
-				var allnodes=true;
-				selected.forEach(function (node){
+				tableview.push({
+					"network": p1.label + ", " + label + ", " + p2.label
+				})
+			} else {
+				var allnodes = true;
+				selected.forEach(function (node) {
 					//console.log(node+" " +label);
-					if (node!==label){
-						allnodes=false
+					if (node !== label) {
+						allnodes = false
 					}
 				});
-				if(allnodes){
-					if(!selected.indexOf(label)>=0){
-						G.add_node(label, {id: edge});
+				if (allnodes) {
+					if (!selected.indexOf(label) >= 0) {
+						G.add_node(label, {
+							id: edge
+						});
 					}
 					sedges.push([p1.label, label]);
 					sedges.push([p2.label, label]);
 				}
-		
 			}
 		}
 	});
-
 	//three edge
-	p1_1.forEach(function (edge){
-		p2_2.forEach(function (pair2){
-			if (edge===pair2["edge"]) {
-
+	p1_1.forEach(function (edge) {
+		p2_2.forEach(function (pair2) {
+			if (edge === pair2["edge"]) {
 				var label = data.nodes[edge].label;
 				var s2 = data.nodes[pair2["source"]].label;
-
-				if( (p1.label!=s2) && (p2.label!=label)){
-
-					if(!highlight){
+				if ((p1.label != s2) && (p2.label != label)) {
+					if (!highlight) {
 						G.add_node(label);
-					
 						edges.push([label, p1.label]);
 						edges.push([s2, label]);
 						edges.push([s2, p2.label]);
-						tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
-					}
-					else {//&& (((selected.indexOf(label)>=0)) || (selected.indexOf(s2)>=0) )
-						var allnodes=true;
-		                selected.forEach(function (node){
-		                	//console.log(node+" " +label + " " + s2);
-		                    if (node!==label && node!==s2){
-		                        allnodes=false
-		                    }
-		                });
-		                if(allnodes){
-		                	if(!selected.indexOf(label)>=0){
-			               		G.add_node(label, {id: edge});
-			               	}
+						tableview.push({
+							"network": p1.label + ", " + label + ", " + s2 + ", " + p2.label
+						})
+					} else { //&& (((selected.indexOf(label)>=0)) || (selected.indexOf(s2)>=0) )
+						var allnodes = true;
+						selected.forEach(function (node) {
+							//console.log(node+" " +label + " " + s2);
+							if (node !== label && node !== s2) {
+								allnodes = false
+							}
+						});
+						if (allnodes) {
+							if (!selected.indexOf(label) >= 0) {
+								G.add_node(label, {
+									id: edge
+								});
+							}
 							sedge.push([label, p1.label]);
 							sedge.push([s2, label]);
 							sedge.push([s2, p2.label]);
-		                }
-					
+						}
 					}
 				}
 			}
 		});
 	});
-
 	// four edge
-	p1_2.forEach(function (pair1){
-		p2_2.forEach(function (pair2){
-			if (pair1["edge"]===pair2["edge"]) {
-
+	p1_2.forEach(function (pair1) {
+		p2_2.forEach(function (pair2) {
+			if (pair1["edge"] === pair2["edge"]) {
 				var label = data.nodes[pair2["edge"]].label;
 				var s1 = data.nodes[pair1["source"]].label;
 				var s2 = data.nodes[pair2["source"]].label;
-
-				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
-
-					if(!highlight){
+				if ((p1.label != s2) && (p1.label != label) && (p2.label != label) && (s1 != s2) && (p2.label != s1)) {
+					if (!highlight) {
 						G.add_node(label);
 						edges.push([s1, label]);
 						edges.push([s2, label]);
 						edges.push([s1, p1.label]);
 						edges.push([s2, p2.label]);
-						tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
-					}
-					else{ //  && ( (selected.indexOf(label)>=0) || (selected.indexOf(s1)>=0) || (selected.indexOf(s2)>=0) )
-					    var allnodes=true;
-		                selected.forEach(function (node){
-		                	//console.log(node+" " +label + " " + s1 + " " + s2);
-		                    if (node!==label && node!==s1 && node!==s2){
-		                        allnodes=false
-		                    }
-		                });
-		                if(allnodes){
-		                	if(!selected.indexOf(label)>=0){
-		                		G.add_node(label, {id: pair1["edge"]});
-		                	}
-		       				sedge.push([s1, label]);
+						tableview.push({
+							"network": p1.label + ", " + s1 + ", " + label + ", " + s2 + ", " + p2.label
+						});
+					} else { //  && ( (selected.indexOf(label)>=0) || (selected.indexOf(s1)>=0) || (selected.indexOf(s2)>=0) )
+						var allnodes = true;
+						selected.forEach(function (node) {
+							//console.log(node+" " +label + " " + s1 + " " + s2);
+							if (node !== label && node !== s1 && node !== s2) {
+								allnodes = false
+							}
+						});
+						if (allnodes) {
+							if (!selected.indexOf(label) >= 0) {
+								G.add_node(label, {
+									id: pair1["edge"]
+								});
+							}
+							sedge.push([s1, label]);
 							sedge.push([s2, label]);
 							sedge.push([s1, p1.label]);
 							sedge.push([s2, p2.label]);
-		                }
+						}
 					}
 				}
 			}
 		});
 	});
-
-
-
-	if (highlight){
-		G.add_nodes_from([p1.label, p2.label], { data: "network", radius: 25 });
+	if (highlight) {
+		G.add_nodes_from([p1.label, p2.label], {
+			data: "network",
+			radius: 25
+		});
 		G.add_edges_from(sedge);
 		jsnx.draw(G, options);
-	}
-	else{
-		G.add_nodes_from(selected, {radius: 25, highlight: true, group: 0 });
-		G.add_nodes_from([p1.label, p2.label], { radius: 30 });
+	} else {
+		G.add_nodes_from(selected, {
+			radius: 25,
+			highlight: true,
+			group: 0
+		});
+		G.add_nodes_from([p1.label, p2.label], {
+			radius: 30
+		});
 		G.add_edges_from(edges);
-		jsnx.draw(G, options);	
+		jsnx.draw(G, options);
 	}
-
-
 	d3.selectAll('.node').on('click', function (d) {
-		var nclick= $(this).children().eq(1).text();
-		if (nclick != p1.label && nclick != p2.label){
+		var nclick = $(this).children().eq(1).text();
+		if (nclick != p1.label && nclick != p2.label) {
 			var index = selected.indexOf(nclick);
-			if(index>-1){			
-				selected.splice(index,1);
-			}
-			else{
+			if (index > -1) {
+				selected.splice(index, 1);
+			} else {
 				selected.push(nclick);
 			}
 			console.log(selected);
-			showTwoNodes(id1, id2, data, options, confidence, selected); 
+			showTwoNodes(id1, id2, data, options, confidence, selected);
 		}
-		
 	});
-
-
 	d3.selectAll('.node').on('mouseover', function (d) {
 		d3.select(this.firstChild).style('fill', '#196B94');
 	});
 	d3.selectAll('.node').on('mouseout', function (d) {
 		d3.select(this.firstChild).style('fill', '#cae4e1');
 	});
-
-	if ($("#check-shared").is(":checked")){
-		var title = "Common network between " + p1.label + " and  " + p2.label ;
+	if ($("#check-shared").is(":checked")) {
+		var title = "Common network between " + p1.label + " and  " + p2.label;
 		writeNodeTable(tableview, title);
 	}
-
-	$("#results").html("Common network between <b>" + p1.label  + "</b> and <b>" +  p2.label + "</b>");
+	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
 	// $("#two").val('');
 	// $("#two").typeahead('setQuery', '');
 	// $("#three").val('');
@@ -572,7 +475,6 @@ function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
 }
 
 function nodupSort(array){
-
     var sorted_arr = array.sort(function(a,b){return a-b});
     var no_dup=[];
     for (var i = 0; i < array.length - 1; i++) {
@@ -617,7 +519,7 @@ function findInterGroup(group1, group2, data) {
 
 // Create the table container
 function writeTableWith(dataSource, title){
-    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+    $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
 		'iDisplayLength': 100,
@@ -637,8 +539,7 @@ function writeTableWith(dataSource, title){
 };
 
 function writeNodeTable(dataSource, title){
-	//console.log(dataSource);
-    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+    $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
 		'iDisplayLength': 100,
@@ -650,7 +551,6 @@ function writeNodeTable(dataSource, title){
             'sLengthMenu': '_MENU_ records per page'
         }
     });
-    //downloadData(dataSource, title);
 };
 
 // Define two custom functions (asc and desc) for string sorting
@@ -668,7 +568,7 @@ function downloadData(data, title) {
 		result += cell["first"] + ',' + cell["last"] + ',' + cell["birth"] + ',' + cell["death"] + ',' + cell["occupation"] + "\n";
 	});
 	var dwnbtn = $('<a href="data:text/csv;charset=utf-8,' + encodeURIComponent(result) + ' "download="' + title + '.csv"><div id="download"></div></a>');
-	$(dwnbtn).appendTo('figure');
+	$(dwnbtn).appendTo('#graph');
 }
 
 function getAnnotation(id1, id2,data) {
@@ -682,8 +582,7 @@ function getAnnotation(id1, id2,data) {
 		callback: function(result) {
 			result.forEach(function (row){
 				accordion("edge");			
-				$("#edge-source").html(data.nodes[id1].first +" "+data.nodes[id1].last);
-				$("#edge-target").html(data.nodes[id2].first+" "+data.nodes[id2].last);
+				$("#edge-nodes").html(data.nodes[id1].first +" "+data.nodes[id1].last + " & " + data.nodes[id2].first+" "+data.nodes[id2].last);
 				$("#edge-confidence").html(getConfidence(row.confidence));
 				$("#edge-annotation").html(row.annotation);
 				return true;
@@ -693,9 +592,36 @@ function getAnnotation(id1, id2,data) {
 }
 
 function getConfidence(c) {
-	if (c<0.2) 		return "Very Unlikely";
-	else if(c<0.4) 	return "Unlikey";
-	else if(c<0.6) 	return "Possible";
-	else if(c<0.8) 	return "Likely";
-	else 			return "Certain";
+	if (c < 0.2) return "Very Unlikely";
+	else if (c < 0.4) return "Unlikey";
+	else if (c < 0.6) return "Possible";
+	else if (c < 0.8) return "Likely";
+	else return "Certain";
+}
+
+function populateLists(data){
+		$('#one').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#two').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#three').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#entry_768090773').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#entry_1321382891').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#four').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#five').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#six').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
 }

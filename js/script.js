@@ -1,14 +1,16 @@
 $(document).ready(function() {
-	$("#onenode").tooltip({placement: 	'right', title: 'The connections of one individual'});
-	$("#twonode").tooltip({placement: 	'right', title: 'The mutual connections between two individuals'});
-	$("#onegroup").tooltip({placement: 	'right', title: 'The members of one group'});
-	$("#twogroup").tooltip({placement: 	'right', title: 'The mutual members of two groups'});
+	$("#onenode").tooltip({placement: 	'right', title: 'Connections of one individual'});
+	$("#twonode").tooltip({placement: 	'right', title: 'Mutual connections between two individuals'});
+	$("#onegroup").tooltip({placement: 	'right', title: 'Members of one group'});
+	$("#twogroup").tooltip({placement: 	'right', title: 'Mutual members of two groups'});
 	$('#onenodeform').css('display','block');
 
 	//clicking menu buttons to show search bars
-	$('li').click(function(e){
+	$('.accordion_content ul li').click(function(e){
 		document.getElementById('googleaddnode').reset();
 		document.getElementById('googleaddedge').reset();
+        $('.accordion_content ul li').removeClass('clicked');
+        $(this).addClass('clicked');
 		$('section').css('display','none');	
 		var id = '#' + e.target.id + 'form';
 		$(id).css('display','block');

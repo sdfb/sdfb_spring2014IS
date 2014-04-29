@@ -23,11 +23,6 @@ aside {
 	background: #4281a0;
 }
 
-
-#accordion section {
-	margin-top: 60%;
-}
-
 #accordion h3 {
 	font-size: 12px;
 	line-height: 34px;
@@ -51,6 +46,10 @@ aside {
     margin-right: 10px;
 }
 
+#icon-about {
+	background-image: url(../img/us.png);
+}
+
 #icon-search {
 	background-image: url(../img/search.png);
 }
@@ -67,6 +66,10 @@ aside {
 	background-image: url(../img/add.png);
 }
 
+#nodeinfo {
+	overflow: auto;
+}
+
 .accordion_content {
 	display: none;
 	color:#222;
@@ -74,8 +77,7 @@ aside {
 	padding: 10%;
 	line-height: 25px;
 	text-align:left;
-	height: calc(100% - 195px);
-    overflow:auto;
+	height: calc(100% - 230px);
 }
 
 .accordion_content .active {
@@ -95,6 +97,7 @@ aside {
 	cursor: pointer;
     margin: 1%;
     padding: 10px;
+    width: calc(48% - 20px);
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
     -ms-transition: all 0.2s;
@@ -102,8 +105,9 @@ aside {
     transition: all 0.2s;
 }
 
-.accordion_content ul li {
-	width: calc(48% - 20px);
+.accordion_content ul li:hover, .accordion_content ul li.clicked {
+	color: #fff;	
+	background-color: #185D80;
 }
 
 #nodeinfo a, #edgeinfo a {
@@ -118,15 +122,97 @@ aside {
 }
 
 ::-webkit-scrollbar {  
-    width: 10px;  
+    width: 8px;  
 }  
 ::-webkit-scrollbar-track {  
-    background-color: #eaeaea;  
-    border-left: 1px solid #ccc;  
+    background-color: #4281a0;
 }  
 ::-webkit-scrollbar-thumb {  
-    background-color: #ccc;  
+    background-color: #555;  
 }  
 ::-webkit-scrollbar-thumb:hover {  
     background-color: #aaa;  
-}  
+}
+
+.accordion_content section {
+    margin: 50% 0 0 2px;
+    display: none;
+}
+
+.accordion_content section input, section select {
+    display: inline-block;
+    margin-bottom: 8%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 6px 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    height: 35px;
+    width: 235px;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+}
+
+form select {
+    min-width: 235px;
+}
+
+.tt-hint {
+    color: #999;
+    padding: 6px 10px;
+    height: 35px;
+    width: 235px;
+}
+
+.tt-suggestion {
+    padding: 6px 10px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    color: #0097cf;
+    background-color: #ccc;
+}
+
+.tt-dropdown-menu {
+    width: 233px;
+    margin-top: -7%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+button {
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+    height: 35px;
+    width: 235px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #CAE4E1;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover, button.active {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#1a000000', GradientType=0);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(40%,rgba(0,0,0,.05)),to(rgba(0,0,0,.1)));
+    background-image: -webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+    background-image: -moz-linear-gradient(top,rgba(0,0,0,.05) 0,rgba(0,0,0,.1));
+    background-image: -ms-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+    background-image: -o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+    background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+}
+
+#check-shared[type="checkbox"]{
+   display:inline-block;
+   margin:0;
+   padding:0;
+   margin-right:5px;
+   height:15px;
+   width:15px;
+   margin-bottom: 10%;
+}

@@ -2,16 +2,18 @@
 
 <head>
 	<title>SDFB</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 	<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,700'>
 	<link rel="shortcut icon" href="img/favicon_16x16.ico">
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/tooltip.css" >
-	<link rel="stylesheet" type="text/css" href="css/demo_table.css" />
+	<link rel="stylesheet" type="text/css" href="css/insights.standalone.css" />
+	<link rel="stylesheet" type="text/css" href="css/tooltip.css" />
+	<link rel="stylesheet" type="text/css" href="css/table.css" />
 	<link rel="stylesheet" type="text/css" href="css/accordion.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
-	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
@@ -19,28 +21,38 @@
 	<script type="text/javascript" src="js/data-tables-bootstrap.js"></script>
 	<script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="js/pace.min.js"></script>
-	<script type="text/javascript" src="js/jsnetworkx.js"></script>
+	<script type="text/javascript" src="js/insights.standalone.js"></script>
 	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/display.js"></script>
 	<script type="text/javascript" src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/typeahead.js"></script>
-	<script type="text/javascript" src="js/script.js"></script>	
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/display.js"></script>
 </head>
 
 <body>
 	<header>Six Degrees of Francis Bacon</header>
 
 	<div id="results"></div>
+	<div id="graph"></div>
+
 	<div id="twogroupsmenu">
 		<button type="button" class="toggle" id="group1" ></button>
 		<button type="button" class="toggle  active" id="group2" >Intersection</button>
 		<button type="button" class="toggle" id="group3" ></button>
 	</div>
 
-	<figure></figure>
-
 	<aside>
 		<div id="accordion">
+
+			<h3 class="accordion_btn"><span id="icon-about"></span>About</h3>
+			<div  class="accordion_content " id="about">
+				Six Degrees of Francis Bacon (SDFB) is a digital reconstruction of the early modern social network (EMSN) that scholars and students from all over the world will be able to collaboratively expand, revise, curate, and critique. <br>
+				<a href="http://sixdegreesoffrancisbacon.com/overview" target="_blank">Read more...</a><br><br>
+				<b>CREDITS</b><br>
+				Interface by Carnegie Mellon University Information Systems team members Angela Qui, Chanamon Ratanalert, Ivy Chung, Sama Kanbour and advisor Raja Sooriamurthi.
+
+			</div>
+
 			<h3 class="accordion_btn"><span id="icon-add"></span>Contribute</h3>
 			<div  class="accordion_content " id="contribute">
 				<ul>
@@ -70,11 +82,11 @@
 					</script>
 					<iframe name="hidden_iframe2" id="hidden_iframe2" style="display:none;" onload=""></iframe>
 					<form action="https://docs.google.com/forms/d/10Gfo4lX_iEArcffCxd5SqP9b-lEttdW5ymOTwX5-t5A/formResponse" id="googleaddedge" method="post" target="hidden_iframe2" onsubmit="submitted=true;">
-						<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Source">
-						<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Target">
+						<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Name 1">
+						<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Name 2">
 						<select name="entry.875203595" id="entry_875203595">
 							<option value="">Confidence</option>
-							<option value="0.2">Very unlikely</option>
+							<option value="0.3">Very unlikely</option>
 							<option value="0.4">Unlikely</option>
 							<option value="0.6">Possible</option>
 							<option value="0.8">Likely</option>
@@ -88,29 +100,28 @@
 
 			<h3 class="accordion_btn"><span id="icon-edge"></span>Relationship</h3>
 			<div  class="accordion_content " id="edgeinfo">
-				Source:  		<a id="edge-source"></a><br>
-				Target: 		<a id="edge-target"></a><br>
-				Confidence: 	<a id="edge-confidence"></a><br>
-				Annotation: 	<a id="edge-annotation"></a><br>
+				<a id="edge-nodes"></a><br><br>
+				<b>CONFIDENCE&nbsp;</b> 	<a id="edge-confidence"></a><br>
+				<b>ANNOTATION&nbsp;</b> 	<a id="edge-annotation"></a><br>
 			</div>
 
 			<h3 class="accordion_btn"><span id="icon-node"></span>Person</h3>
 			<div  class="accordion_content " id="nodeinfo">
 				<p id="node-name"></p>
-				<b>Birth Date:</b> <a id="node-bdate"></a> <br>
-				<b>Death Date:</b> <a id="node-ddate"></a> <br>
-				<b>Historical Significance:</b> <a id="node-significance"></a> <br>
-				<b>Groups:</b> <a id="node-group"></a> <br>
-				<b>Citation:</b> <br><a id="node-cite"></a> <br> <br>
-				<b>Links: </b>
+				<b>BIRTH DATE&nbsp;</b> 				<a id="node-bdate"></a><br>
+				<b>DEATH DATE&nbsp;</b> 				<a id="node-ddate"></a><br>
+				<b>HISTORICAL SIGNIFICANCE</b><br>		<a id="node-significance"></a><br>
+				<b>GROUPS&nbsp;</b>						<a id="node-group"></a><br>
+				<b>CITATION</b><br>						<a id="node-cite"></a><br>
+				<b>LINKS&nbsp;</b>
 				<a id="node-DNBlink" target="_blank">Oxford DNB</a> &nbsp;
-				<a id="node-GoogleLink" target="_blank">Google</a> <br> <br>
+				<a id="node-GoogleLink" target="_blank">Google</a>
 			</div>
 
 			<h3 class="accordion_btn on"><span id="icon-search"></span>Search</h3>
 			<div class="accordion_content active" id="search">
 				<ul>
-					<li id="onenode">Network</li>		
+					<li id="onenode" class="clicked">Network</li>		
 					<li id="twonode">Shared network</li>
 					<li id="onegroup">Group</li>
 					<li id="twogroup">Shared groups</li>
@@ -132,8 +143,7 @@
 					<article class="slider"></article>
 					<article id="slider-result">Likely relationships</article>
 					<input id="confidence" type="hidden" value="2"/>
-
-					<input type="checkbox" id="check-shared" value="table"> Show Table<br>
+					<input id="check-shared" type="checkbox" value="table">Show Table<br>
 					<button type="button" id="findtwonode">Find</button>
 				</section>
 
