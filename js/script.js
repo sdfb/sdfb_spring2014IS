@@ -23,30 +23,31 @@ $(document).ready(function() {
 		$('#twogroupsmenu').css('display','block');
 	});
 
-	$( ".slider" ).slider({
+	$(".slider").slider({
         animate: true,
         range: "min",
-        value: 2,
+        value: 3,
         min: 0,
-        max: 3,
+        max: 4,
         step: 1,
-
         //this gets a live reading of the value and prints it on the page
         slide: function( event, ui ) {
-        	var result = "Unlikely";
+        	var result = "Very unlikely";
         	if (ui.value == 1) {
-        		result = "Possible";
+        		result = "Unlikely";
         	} else if (ui.value == 2) {
-        		result = "Likely";
+        		result = "Possible";
         	} else if (ui.value == 3) {
-        		result = "Very likely";
-        	}
-            $( "#slider-result" ).html( result + " relationships");
+        		result = "Likely";
+        	} else if (ui.value == 4){
+                result = "Very likely"
+            }
+            $("#slider-result" + this.title).html( result + " relationships");
         },
 
         //this updates the hidden form field so we can submit the data using a form
         change: function(event, ui) { 
-            $('#confidence').attr('value', ui.value);
+            $("#confidence" + this.title).attr('value', ui.value);
         }
     });
 });

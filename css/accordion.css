@@ -1,4 +1,4 @@
-\/*custom font for text*/
+/*custom font for text*/
 @import url(http://fonts.googleapis.com/css?family=Nunito);
 /*CSS file for fontawesome - an iconfont we will be using. This CSS file imported contains the font-face declaration. More info: http://fortawesome.github.io/Font-Awesome/ */
 @import url(http://thecodeplayer.com/uploads/fonts/fontawesome/css/font-awesome.min.css);
@@ -41,9 +41,11 @@ aside {
     background-repeat: no-repeat;
     background-size: 12px 12px;
     width: 12px;
-    height: 12px;
+    height: 15px;
     opacity: .5;
     margin-right: 10px;
+    position: relative;
+    top: 5px;
 }
 
 #icon-about {
@@ -205,14 +207,4 @@ button:hover, button.active {
     background-image: -ms-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
     background-image: -o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
     background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-}
-
-#check-shared[type="checkbox"]{
-   display:inline-block;
-   margin:0;
-   padding:0;
-   margin-right:5px;
-   height:15px;
-   width:15px;
-   margin-bottom: 10%;
 }

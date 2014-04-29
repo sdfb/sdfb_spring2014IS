@@ -210,7 +210,7 @@ select {
 }
 
 /*Result div where the slider value is displayed*/
-#slider-result {
+.slider-result {
   display: inline-block;
   text-align:center;
   height: 35px;

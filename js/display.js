@@ -58,6 +58,7 @@ function init(result) {
 		n.edges[1] = row.possible.split(', ');
 		n.edges[2] = row.likely.split(', ');
 		n.edges[3] = row.likely.split(', ');
+		n.edges[4] = row.likely.split(', ');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.name] = n.id;
 	});
@@ -85,7 +86,7 @@ function initGraph(data){
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
 			Pace.restart();
-			showOneNode(data.nodes_names[$("#one").val()], parseInt($('#confidence')[0].value), data);
+			showOneNode(data.nodes_names[$("#one").val()], parseInt($('#confidence1')[0].value), data);
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
@@ -93,7 +94,7 @@ function initGraph(data){
 	$("#findtwonode").click(function () {
 		if ($("#two").val() && $("#three").val()) {
 			Pace.restart();
-			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], data, options, parseInt($('#confidence')[0].value),[]);			
+			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], parseInt($('#confidence2')[0].value), data);			
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
@@ -164,8 +165,6 @@ function getCluster(year){
 
 function showOneNode(id, confidence, data) {
 	var p = data.nodes[id];
-	$('#graph').html('');
-	$("#results").html("Network of <b>" + p.name +"</b>");
 	var keys = {};
 	var nodes = [];
 	var edges = [];
@@ -190,9 +189,10 @@ function showOneNode(id, confidence, data) {
 	});
 	var el = document.getElementById("graph");
 	var options = { width: el.width, height: el.height };
-	var circles = [];
 	for (n in keys) { nodes.push(keys[n]); }
-	var graph = new Insights(el, nodes, edges, options).render();	
+	$('#graph').html('');
+	$("#results").html("Network of <b>" + p.name +"</b>");
+	var graph = new Insights(el, nodes, edges, options).render();
 	graph.on("node:click", function(d) {
 		random = false;
 		var clicked = data.nodes[d.id];
@@ -221,7 +221,7 @@ function notInArray(arr, val) {
 	return true;
 }
 
-// takes in the node object and the data object, returns the groups that the node is in
+// Returns list of groups that a node belongs to
 function findGroups(node, data){
 	var groups = [];
 	for(var key in data.groups){
@@ -242,247 +242,58 @@ function showNodeInfo(data, groups){
 	$("#node-group").text(groups);
 	var d = new Date();
 	$("#node-cite").text( data.first+ " "+ data.last + " Network Visualization. \n Six Degrees of Francis Bacon: Reassembling the Early Modern Social Network. Gen. eds. Daniel Shore and Christopher Warren. "+d.getMonth()+"/"+d.getDate()+"/"+d.getFullYear()+" <http://sixdegreesoffrancisbacon.com/>");
-	
-	//"http://www.oxforddnb.com/search/refine/?lifeDateModifier=alive&startDate="+data.birth+"&lifeEventModifier=ANY&place=&aor=&search=Search"
 	$("#node-DNBlink").attr("href", "http://www.oxforddnb.com/search/quick/?quicksearch=quicksearch&docPos=1&searchTarget=people&simpleName="+data.first+"-"+data.last+"&imageField.x=0&imageField.y=0&imageField=Go");//"http://www.oxforddnb.com/view/article/"+data.id);
 	$("#node-GoogleLink").attr("href", "http://www.google.com/search?q="+data.first+"+"+ data.last);
 }
 
 
-// displays the network of two nodes
-function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
-	//if(confidence===3){
-	confidence = 2
-	//}
-	if (id1 === id2) {
-		alert("You have selected the same person twice. \n Please try again...");
-		return;
-	}
-	$('#graph').html('');
-	var G = jsnx.Graph();
+// Display shared network of two nodes
+function showTwoNodes(id1, id2, confidence, data) {
+	if (id1 === id2) return;
+	var keys = {};
+	var nodes = [];
 	var edges = [];
 	var p1 = data.nodes[id1];
 	var p2 = data.nodes[id2];
-	var tableview = [];
-	// console.log(confidence);
-	// console.log(p1);
-	// console.log(p2);
-	var selected = highlighted;
-	var highlight = false;
-	if (selected.length !== 0) {
-		//console.log("special selection");
-		var sedge = [];
-		highlight = true;
-	}
-	var p1_1 = []; //nodes connection to p1 by one edge
-	var p2_1 = []; // nodes connecting to p2 by one edge
-	for (var i = 2; i >= confidence; i--) { // change confidence after db/bucket change
-		p1_1 = p1_1.concat(p1.edges[i]);
-		p2_1 = p2_1.concat(p2.edges[i]);
-	}
-	p1_1 = nodupSort(p1_1);
-	p2_1 = nodupSort(p2_1);
-	var p1_2 = []; // nodes connected to p1_1 (all nodes 2 away from p1)
-	var p2_2 = []; // nodes connected to p2_1  (all nodes 2 away from p2)
-	for (var i = 0; i < p1_1.length; i++) {
-		for (var j = 2; j >= confidence; j--) { // j is confidence
-			var p1edges = data.nodes[p1_1[i]].edges[j];
-			p1edges.forEach(function (p1edge) {
-				//p1_2.push([p1_1[i], p1edge]);
-				p1_2.push({
-					"source": p1_1[i],
-					"edge": p1edge
-				});
-			});
-		}
-	}
-	for (var i = 0; i < p2_1.length; i++) {
-		for (var j = 2; j >= confidence; j--) { // j is confidence
-			var p2edges = data.nodes[p2_1[i]].edges[j];
-			p2edges.forEach(function (p2edge) {
-				//p1_2.push([p2_1[i], p2edge]);
-				p2_2.push({
-					"source": p2_1[i],
-					"edge": p2edge
-				});
-			});
-		}
-	}
-	//one edge 
-	if (p2_1.indexOf(p2.id) >= 0) {
-		edges.push([p1.label, p2.label]);
-		tableview.push({
-			"network": p1.label + ", " + p2.label
-		})
-	}
-	//two edge
-	p1_1.forEach(function (edge) {
-		if (p2_1.indexOf(edge) >= 0) {
-			var label = data.nodes[edge].label;
-			if (!highlight) {
-				G.add_node(label);
-				edges.push([p1.label, label]);
-				edges.push([p2.label, label]);
-				tableview.push({
-					"network": p1.label + ", " + label + ", " + p2.label
-				})
-			} else {
-				var allnodes = true;
-				selected.forEach(function (node) {
-					//console.log(node+" " +label);
-					if (node !== label) {
-						allnodes = false
-					}
-				});
-				if (allnodes) {
-					if (!selected.indexOf(label) >= 0) {
-						G.add_node(label, {
-							id: edge
-						});
-					}
-					sedges.push([p1.label, label]);
-					sedges.push([p2.label, label]);
-				}
-			}
+	keys[p1.id] = { "id": p1.id, "text": p1.label, "cluster": getCluster(p1.birth), "size": p1.edges[confidence].length };
+	keys[p2.id] = { "id": p2.id, "text": p2.label, "cluster": getCluster(p2.birth), "size": p2.edges[confidence].length };
+	p1.edges.forEach(function (list){
+		if (list.indexOf(p2.id) > -1) { edges.push([p1.id, p2.id]); return; }
+	});
+	p1.edges[confidence].forEach(function (e){
+		if (p2.edges[confidence].indexOf(e) > -1) {
+			var f = data.nodes[e];
+			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+			edges.push([p1.id, f.id]);
+			edges.push([p2.id, f.id]);
 		}
 	});
-	//three edge
-	p1_1.forEach(function (edge) {
-		p2_2.forEach(function (pair2) {
-			if (edge === pair2["edge"]) {
-				var label = data.nodes[edge].label;
-				var s2 = data.nodes[pair2["source"]].label;
-				if ((p1.label != s2) && (p2.label != label)) {
-					if (!highlight) {
-						G.add_node(label);
-						edges.push([label, p1.label]);
-						edges.push([s2, label]);
-						edges.push([s2, p2.label]);
-						tableview.push({
-							"network": p1.label + ", " + label + ", " + s2 + ", " + p2.label
-						})
-					} else { //&& (((selected.indexOf(label)>=0)) || (selected.indexOf(s2)>=0) )
-						var allnodes = true;
-						selected.forEach(function (node) {
-							//console.log(node+" " +label + " " + s2);
-							if (node !== label && node !== s2) {
-								allnodes = false
-							}
-						});
-						if (allnodes) {
-							if (!selected.indexOf(label) >= 0) {
-								G.add_node(label, {
-									id: edge
-								});
-							}
-							sedge.push([label, p1.label]);
-							sedge.push([s2, label]);
-							sedge.push([s2, p2.label]);
-						}
-					}
+	p1.edges[confidence].forEach(function (i){
+		var f = data.nodes[i];
+		f.edges[confidence].forEach(function (j){
+			if (p2.edges[confidence].indexOf(j) > -1) {
+				var s = data.nodes[j];
+				if (f.id != p2.id && s.id != p1.id) {
+					keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": s.edges[confidence].length };
+					if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
+					if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
+					if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
 				}
 			}
 		});
 	});
-	// four edge
-	p1_2.forEach(function (pair1) {
-		p2_2.forEach(function (pair2) {
-			if (pair1["edge"] === pair2["edge"]) {
-				var label = data.nodes[pair2["edge"]].label;
-				var s1 = data.nodes[pair1["source"]].label;
-				var s2 = data.nodes[pair2["source"]].label;
-				if ((p1.label != s2) && (p1.label != label) && (p2.label != label) && (s1 != s2) && (p2.label != s1)) {
-					if (!highlight) {
-						G.add_node(label);
-						edges.push([s1, label]);
-						edges.push([s2, label]);
-						edges.push([s1, p1.label]);
-						edges.push([s2, p2.label]);
-						tableview.push({
-							"network": p1.label + ", " + s1 + ", " + label + ", " + s2 + ", " + p2.label
-						});
-					} else { //  && ( (selected.indexOf(label)>=0) || (selected.indexOf(s1)>=0) || (selected.indexOf(s2)>=0) )
-						var allnodes = true;
-						selected.forEach(function (node) {
-							//console.log(node+" " +label + " " + s1 + " " + s2);
-							if (node !== label && node !== s1 && node !== s2) {
-								allnodes = false
-							}
-						});
-						if (allnodes) {
-							if (!selected.indexOf(label) >= 0) {
-								G.add_node(label, {
-									id: pair1["edge"]
-								});
-							}
-							sedge.push([s1, label]);
-							sedge.push([s2, label]);
-							sedge.push([s1, p1.label]);
-							sedge.push([s2, p2.label]);
-						}
-					}
-				}
-			}
-		});
-	});
-	if (highlight) {
-		G.add_nodes_from([p1.label, p2.label], {
-			data: "network",
-			radius: 25
-		});
-		G.add_edges_from(sedge);
-		jsnx.draw(G, options);
-	} else {
-		G.add_nodes_from(selected, {
-			radius: 25,
-			highlight: true,
-			group: 0
-		});
-		G.add_nodes_from([p1.label, p2.label], {
-			radius: 30
-		});
-		G.add_edges_from(edges);
-		jsnx.draw(G, options);
-	}
-	d3.selectAll('.node').on('click', function (d) {
-		var nclick = $(this).children().eq(1).text();
-		if (nclick != p1.label && nclick != p2.label) {
-			var index = selected.indexOf(nclick);
-			if (index > -1) {
-				selected.splice(index, 1);
-			} else {
-				selected.push(nclick);
-			}
-			console.log(selected);
-			showTwoNodes(id1, id2, data, options, confidence, selected);
-		}
-	});
-	d3.selectAll('.node').on('mouseover', function (d) {
-		d3.select(this.firstChild).style('fill', '#196B94');
-	});
-	d3.selectAll('.node').on('mouseout', function (d) {
-		d3.select(this.firstChild).style('fill', '#cae4e1');
-	});
-	if ($("#check-shared").is(":checked")) {
-		var title = "Common network between " + p1.label + " and  " + p2.label;
-		writeNodeTable(tableview, title);
-	}
-	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
-	// $("#two").val('');
-	// $("#two").typeahead('setQuery', '');
-	// $("#three").val('');
-	// $("#three").typeahead('setQuery', '');
-}
 
-function nodupSort(array){
-    var sorted_arr = array.sort(function(a,b){return a-b});
-    var no_dup=[];
-    for (var i = 0; i < array.length - 1; i++) {
-        if (sorted_arr[i + 1] != sorted_arr[i]) {
-            no_dup.push(sorted_arr[i]);
-        }
-    }
-    return no_dup;
+	var el = document.getElementById("graph");
+	var options = { width: el.width, height: el.height };
+	for (n in keys) { nodes.push(keys[n]); }
+	$('#graph').html('');
+	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
+	var graph = new Insights(el, nodes, edges, options).render();
+	graph.on("node:click", function(d) {
+		var clicked = data.nodes[d.id];
+		showNodeInfo(clicked, findGroups(clicked, data));
+	});
 }
 
 function showOneGroup(group, data) {
@@ -492,17 +303,11 @@ function showOneGroup(group, data) {
 		results.push(data.nodes[node]);
 	});
 	var title = "People who belong to the <b>" + group + "</b> group";
-	writeTableWith(results, title);
+	writeGroupTable(results, title);
 	$("#results").html(title);
-	$("#four").val('');
-	$("#four").typeahead('setQuery', '');
-	$("#five").val('');
-	$("#five").typeahead('setQuery', '');
-	$("#six").val('');
-	$("#six").typeahead('setQuery', '');
 }
 
-// Display the intersections between group1 and group2
+// Display the intersections between two groups
 function findInterGroup(group1, group2, data) {
 	var g1 = data.groups_names[group1];
 	var g2 = data.groups_names[group2];
@@ -513,12 +318,12 @@ function findInterGroup(group1, group2, data) {
 		}
 	});
 	var title = "Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>";
-	writeTableWith(common, title);
+	writeGroupTable(common, title);
 	$("#results").html(title);
 }
 
 // Create the table container
-function writeTableWith(dataSource, title){
+function writeGroupTable(dataSource, title){
     $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
@@ -536,21 +341,6 @@ function writeTableWith(dataSource, title){
         }
     });
     downloadData(dataSource, title);
-};
-
-function writeNodeTable(dataSource, title){
-    $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
-    $('#data-table-container').dataTable({
-		'sPaginationType': 'bootstrap',
-		'iDisplayLength': 100,
-        'aaData': dataSource,
-        'aoColumns': [
-            {'mDataProp': 'network', 'sTitle': 'Network'},
-        ],
-        'oLanguage': {
-            'sLengthMenu': '_MENU_ records per page'
-        }
-    });
 };
 
 // Define two custom functions (asc and desc) for string sorting
@@ -596,11 +386,11 @@ function getConfidence(c) {
 	else if (c < 0.4) return "Unlikey";
 	else if (c < 0.6) return "Possible";
 	else if (c < 0.8) return "Likely";
-	else return "Certain";
+	else return "Very likely";
 }
 
 function populateLists(data){
-		$('#one').typeahead({
+	$('#one').typeahead({
 		local: Object.keys(data.nodes_names).sort()
 	});
 	$('#two').typeahead({
