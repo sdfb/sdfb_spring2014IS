@@ -4,7 +4,8 @@ var keys = {
 }
 
 var random = true;
-var addGraph;
+var addNodes;
+var addEdges;
 
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
@@ -23,8 +24,9 @@ function node() {
 	this.birth = null;
 	this.death = null;
 	this.label = null;
+	this.name = null;
 	this.occupation = null;
-	this.edges = null;
+	this.edges = [];
 }
 
 function group() {
@@ -35,7 +37,6 @@ function group() {
 
 // Create a dictionnary of nodes and groups
 function init(result) {
-	
 	var data = {
 		nodes: {},
 		groups: {},
@@ -52,13 +53,12 @@ function init(result) {
 		n.death = row.death; 
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last;
-		n.name = n.label + ' (' + row.birth + ')';
-		n.edges = [];
-		n.edges[0] = row.unlikely.split(', ');
-		n.edges[1] = row.possible.split(', ');
-		n.edges[2] = row.likely.split(', ');
+		n.name =  n.label + ' (' + row.birth + ')';
+		n.edges[0] = row.uncertain.split(', ');
+		n.edges[1] = row.unlikely.split(', ');
+		n.edges[2] = row.possible.split(', ');
 		n.edges[3] = row.likely.split(', ');
-		n.edges[4] = row.likely.split(', ');
+		n.edges[4] = row.certain.split(', ');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.name] = n.id;
 	});
@@ -129,20 +129,32 @@ function initGraph(data){
 	});
 
 	$('#submitnode').click(function(){
-		var node = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val() + ' (' + $('#entry_524366257').val() + ')';
+		Pace.restart();
+		var name = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val();
+		var date = $('#entry_524366257').val();
 		$('section').css('display','none');
 		$('#addedgeform').css('display','block');
-		$('#entry_768090773').val(node);
-		addGraph = new jsnx.Graph();
-		addGraph.add_node(node, { id: 0, radius: 25 });
-		jsnx.draw(addGraph, options, true);
+		$('#entry_768090773').val(name + ' (' + date + ')');
+		$('#graph').html('');
+		$("#results").html('');
+		addNodes = [];
+		addEdges = [];
+		addNodes.push({ "id": 0, "text": name, "size": 10, "cluster": getCluster(date) });
+		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+		var graph = new Insights($("#graph")[0], addNodes, [], options).render();
 	});
 
 	$('#submitedge').click(function(){
-		var source = $('#entry_768090773').val();
-		var target = $('#entry_1321382891').val();
-		addGraph.add_node(target);
-		addGraph.add_edge(source, target);
+		Pace.restart();
+		var target = data.nodes_names[$('#entry_1321382891').val()];
+		var node = data.nodes[target];
+		if (!node.id) { window.alert("Incorrect information. Please try again."); return;}
+		$('#graph').html('');
+		$("#results").html('');
+		addNodes.push({ "id": node.id, "text": node.label, "size": 10, "cluster": getCluster(node.birth) });
+		addEdges.push([0, node.id]);
+		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+		var graph = new Insights($("#graph")[0], addNodes, addEdges, options).render();
 	});
 }
 
@@ -159,8 +171,20 @@ function showRandomNode(data) {
 }
 
 function getCluster(year){
-	var cluster = Math.round((1800 - parseInt(year)) / 70);
-	return cluster;
+	if (parseInt(year) < 1550) {return 0}
+	if (parseInt(year) > 1700) {return 1}
+	var cluster = Math.round((parseInt(year) - 1550) / 5);
+	return (2 + cluster);
+}
+
+function getColors(){
+	return { 0:  "#9dedd4", 1:  "#0c55ad", 2:  "#79BD8F", 3:  "#00A287", 4:  "#99CD7D", 
+			 5:  "#349A98", 6:  "#558FCB", 7:  "#3A6BF9", 8:  "#6CDBE0", 9:  "#3C58A6",
+			 10: "#B8DDF5", 11: "#6566AD", 12: "#BA9DCA", 13: "#532E8A", 14: "#CC71E2",
+			 15: "#B53A83", 16: "#a573b1", 17: "#EF6097", 18: "#DE89B9", 19: "#F79484",
+			 20: "#F3805D", 21: "#EF4B39", 22: "#F1623E", 23: "#FCBD3F", 24: "#F9ED45",
+			 25: "#F79838", 26: "#FAF39A", 27: "#DADD45", 28: "#55C66D", 29: "#3EA8C1",
+			 30: "#9ae8da", 31: "#2D71D3", }
 }
 
 function showOneNode(id, confidence, data) {
@@ -187,12 +211,11 @@ function showOneNode(id, confidence, data) {
 			});
 		}
 	});
-	var el = document.getElementById("graph");
-	var options = { width: el.width, height: el.height };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
 	$("#results").html("Network of <b>" + p.name +"</b>");
-	var graph = new Insights(el, nodes, edges, options).render();
+	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
 	graph.on("node:click", function(d) {
 		random = false;
 		var clicked = data.nodes[d.id];
@@ -283,13 +306,11 @@ function showTwoNodes(id1, id2, confidence, data) {
 			}
 		});
 	});
-
-	var el = document.getElementById("graph");
-	var options = { width: el.width, height: el.height };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
 	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
-	var graph = new Insights(el, nodes, edges, options).render();
+	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
 	graph.on("node:click", function(d) {
 		var clicked = data.nodes[d.id];
 		showNodeInfo(clicked, findGroups(clicked, data));
@@ -299,12 +320,11 @@ function showTwoNodes(id1, id2, confidence, data) {
 function showOneGroup(group, data) {
 	var g = data.groups_names[group];
 	var results = [];
-	g.nodes.forEach(function (node) {	
-		results.push(data.nodes[node]);
+	g.nodes.forEach(function (n) {	
+		results.push(data.nodes[n]);
 	});
-	var title = "People who belong to the <b>" + group + "</b> group";
-	writeGroupTable(results, title);
-	$("#results").html(title);
+	writeGroupTable(results, "People who belong to the " + group + " group");
+	$("#results").html("People who belong to the <b>" + group + "</b> group");
 }
 
 // Display the intersections between two groups
@@ -317,9 +337,8 @@ function findInterGroup(group1, group2, data) {
 			common.push(data.nodes[node]);
 		}
 	});
-	var title = "Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>";
-	writeGroupTable(common, title);
-	$("#results").html(title);
+	writeGroupTable(common, "Intersection between " + group1 + " and " + group2);
+	$("#results").html("Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>");
 }
 
 // Create the table container
@@ -382,11 +401,11 @@ function getAnnotation(id1, id2,data) {
 }
 
 function getConfidence(c) {
-	if (c < 0.2) return "Very Unlikely";
-	else if (c < 0.4) return "Unlikey";
-	else if (c < 0.6) return "Possible";
-	else if (c < 0.8) return "Likely";
-	else return "Very likely";
+	if (c < 0.4) return "Very Unlikely";
+	else if (c < 0.5) return "Unlikey";
+	else if (c < 0.7) return "Possible";
+	else if (c < 0.9) return "Likely";
+	else return "Certain";
 }
 
 function populateLists(data){
@@ -405,6 +424,9 @@ function populateLists(data){
 	$('#entry_1321382891').typeahead({
 		local: Object.keys(data.nodes_names).sort()
 	});
+	$('#entry_1177061505').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
 	$('#four').typeahead({
 		local: Object.keys(data.groups_names).sort()
 	});
@@ -412,6 +434,9 @@ function populateLists(data){
 		local: Object.keys(data.groups_names).sort()
 	});
 	$('#six').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#entry_110233074').typeahead({
 		local: Object.keys(data.groups_names).sort()
 	});
 }

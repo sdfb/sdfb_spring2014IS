@@ -9727,7 +9727,7 @@ var defaults = {
   collisionAlpha: .5,
   forceAlphaLimit: 0.02,
   linkStrength: 1,
-  linkDistance: 60,
+  linkDistance: 100,
   graphCharge: -300,
   gravity: 0.1,
   zoomScaleExtent: [0.3, 2.3],

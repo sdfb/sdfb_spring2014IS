@@ -3,9 +3,14 @@ $(document).ready(function() {
 	$("#twonode").tooltip({placement: 	'right', title: 'Mutual connections between two individuals'});
 	$("#onegroup").tooltip({placement: 	'right', title: 'Members of one group'});
 	$("#twogroup").tooltip({placement: 	'right', title: 'Mutual members of two groups'});
+
+    $("#icon-tag").tooltip({placement:  'right', title: 'Tag group'});
+    $("#icon-link").tooltip({placement: 'right', title: 'Add a relationship'});
+    $("#icon-annotate").tooltip({placement: 'right', title: 'Annotate relationship'});
+
 	$('#onenodeform').css('display','block');
 
-	//clicking menu buttons to show search bars
+	// Shows search bars when click on side menu
 	$('.accordion_content ul li').click(function(e){
 		document.getElementById('googleaddnode').reset();
 		document.getElementById('googleaddedge').reset();
@@ -22,7 +27,17 @@ $(document).ready(function() {
 	$('#findtwogroup').click(function(e){
 		$('#twogroupsmenu').css('display','block');
 	});
-
+    $("button.icon").click(function(e){
+        console.log($(this));
+        $('.accordion_content ul li').removeClass('clicked');
+        $('section').css('display','none');
+        $('#add' + this.name).addClass('clicked');
+        $('#add'+ this.name + 'form').css('display','block');
+        $('#accordion h3').removeClass('on');
+        $('#accordion div').slideUp();
+        $('#contribute').prev().addClass('on');
+        $('#contribute').slideDown();
+    });
 	$(".slider").slider({
         animate: true,
         range: "min",
@@ -40,7 +55,7 @@ $(document).ready(function() {
         	} else if (ui.value == 3) {
         		result = "Likely";
         	} else if (ui.value == 4){
-                result = "Very likely"
+                result = "Certain"
             }
             $("#slider-result" + this.title).html( result + " relationships");
         },

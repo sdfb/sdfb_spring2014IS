@@ -1,16 +1,3 @@
-/*custom font for text*/
-@import url(http://fonts.googleapis.com/css?family=Nunito);
-/*CSS file for fontawesome - an iconfont we will be using. This CSS file imported contains the font-face declaration. More info: http://fortawesome.github.io/Font-Awesome/ */
-@import url(http://thecodeplayer.com/uploads/fonts/fontawesome/css/font-awesome.min.css);
-
-/*Basic reset*/
-* {margin: 0; padding: 0;}
-
-body {
-	background: #4EB889;
-	font-family: Nunito, arial, verdana;
-}
-
 aside {
     position: fixed;
     top: 0;
@@ -32,12 +19,12 @@ aside {
 	background: #196B94;
 }
 
-#accordion h3 .on {
+#accordion h3.on {
 	background-color: #185D80;
 }
 
 #accordion h3 span {
-	display: inline-block;
+    display: inline-block;
     background-repeat: no-repeat;
     background-size: 12px 12px;
     width: 12px;
@@ -66,6 +53,18 @@ aside {
 
 #icon-add {
 	background-image: url(../img/add.png);
+}
+
+#icon-annotate {
+    background-image: url(../img/annotate.png);
+}
+
+#icon-tag {
+    background-image: url(../img/tag.png);
+}
+
+#icon-link {
+    background-image: url(../img/link.png);
 }
 
 #nodeinfo {
@@ -107,6 +106,10 @@ aside {
     transition: all 0.2s;
 }
 
+#addedge {
+    width: calc(98% - 20px);
+}
+
 .accordion_content ul li:hover, .accordion_content ul li.clicked {
 	color: #fff;	
 	background-color: #185D80;
@@ -123,16 +126,16 @@ aside {
 	padding-bottom: 15px;
 }
 
-::-webkit-scrollbar {  
+aside ::-webkit-scrollbar {  
     width: 8px;  
 }  
-::-webkit-scrollbar-track {  
+aside ::-webkit-scrollbar-track {  
     background-color: #4281a0;
 }  
-::-webkit-scrollbar-thumb {  
+aside ::-webkit-scrollbar-thumb {  
     background-color: #555;  
 }  
-::-webkit-scrollbar-thumb:hover {  
+aside ::-webkit-scrollbar-thumb:hover {  
     background-color: #aaa;  
 }
 
@@ -141,9 +144,9 @@ aside {
     display: none;
 }
 
-.accordion_content section input, section select {
+section input, section select, section textarea {
     display: inline-block;
-    margin-bottom: 8%;
+    margin-bottom: 5px;
     border: 1px solid #ccc;
     background-color: #fff;
     padding: 6px 10px;
@@ -158,6 +161,10 @@ aside {
 
 form select {
     min-width: 235px;
+}
+
+section textarea {
+    height: 50px;
 }
 
 .tt-hint {
@@ -207,4 +214,15 @@ button:hover, button.active {
     background-image: -ms-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
     background-image: -o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
     background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+}
+
+button.icon {
+    background-repeat: no-repeat;
+    background-size: 15px;
+    width: 30px;
+    height: 30px;
+    opacity: .6;
+    background-position: center;
+    float: right;
+    background-color: transparent;
 }
