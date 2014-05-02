@@ -149,12 +149,18 @@ function initGraph(data){
 		var target = data.nodes_names[$('#entry_1321382891').val()];
 		var node = data.nodes[target];
 		if (!node.id) { window.alert("Incorrect information. Please try again."); return;}
+		if (addNodes.length == 0) {return;}
 		$('#graph').html('');
 		$("#results").html('');
 		addNodes.push({ "id": node.id, "text": node.label, "size": 10, "cluster": getCluster(node.birth) });
 		addEdges.push([0, node.id]);
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, addEdges, options).render();
+	});
+
+	$("button.icon").click(function(e){
+		addNodes = [];
+		addEdges = [];
 	});
 }
 
