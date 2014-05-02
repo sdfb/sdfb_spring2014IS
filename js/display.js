@@ -3,8 +3,9 @@ var keys = {
 	annot: "0AhtG6Yl2-hiRdGdjLVNKZmJkbkhhNDMzQm5BTzlHX0E"
 }
 
-var rand = true;
-var addGraph;
+var random = true;
+var addNodes;
+var addEdges;
 
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		callback: init
 	});
 	$("#accordion h3").click(function(){
-		rand = false;
+		random = false;
 	});
 });
 
@@ -23,9 +24,9 @@ function node() {
 	this.birth = null;
 	this.death = null;
 	this.label = null;
+	this.name = null;
 	this.occupation = null;
-	this.edges = null;
-	this.explored = false;
+	this.edges = [];
 }
 
 function group() {
@@ -36,7 +37,6 @@ function group() {
 
 // Create a dictionnary of nodes and groups
 function init(result) {
-	
 	var data = {
 		nodes: {},
 		groups: {},
@@ -53,12 +53,12 @@ function init(result) {
 		n.death = row.death; 
 		n.occupation = row.occupation;
 		n.label = row.first + ' ' + row.last;
-		n.name = n.label + ' (' + row.birth + ')';
-		n.edges = [];
-		n.edges[0] = row.unlikely.split(', ');
-		n.edges[1] = row.possible.split(', ');
-		n.edges[2] = row.likely.split(', ');
+		n.name =  n.label + ' (' + row.birth + ')';
+		n.edges[0] = row.uncertain.split(', ');
+		n.edges[1] = row.unlikely.split(', ');
+		n.edges[2] = row.possible.split(', ');
 		n.edges[3] = row.likely.split(', ');
+		n.edges[4] = row.certain.split(', ');
 		data.nodes[n.id] = n;
 		data.nodes_names[n.name] = n.id;
 	});
@@ -78,106 +78,29 @@ function init(result) {
 // Populate the suggested drop-down menus
 // Make the buttons in the search panel functional
 function initGraph(data){
-	$('#one').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#two').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#three').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#entry_768090773').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#entry_1321382891').typeahead({
-		local: Object.keys(data.nodes_names).sort()
-	});
-	$('#four').typeahead({
-		local: Object.keys(data.groups_names).sort()
-	});
-	$('#five').typeahead({
-		local: Object.keys(data.groups_names).sort()
-	});
-	$('#six').typeahead({
-		local: Object.keys(data.groups_names).sort()
-	});
-
-	//var color = d3.scale.category20();
-	//console.log(color);
-	var options = {
-		element: 'figure',
-		with_labels: true,
-		layout_attr: {
-			charge: -500,
-			linkDistance: 130
-		},
-		node_attr: {
-			id: function (d) {
-				return 'node-' + d.data.id;
-			},
-			r: function (d) {
-				if (!d.data.radius) {
-					return 18;
-				}
-				return d.data.radius;
-			},
-			title: function (d) {
-				return d.label;
-			}
-		},
-		node_style: {
-			fill: function (d) {
-				if (!d.data.radius) {
-					return '#CAE4E1';
-				}
-				if(d.data.group===0){
-					return '#eee';
-				}
-				return '#aac';
-
-			},
-			stroke: 'none'
-		},
-		edge_style: {
-			fill: '#555',
-			'stroke-width': 5,
-			cursor: 'pointer'
-		},
-		label_style: {
-			fill: '#222',
-			cursor: 'pointer',
-			'font-size': '0.6em'
-		},
-		pan_zoom:{
-			enabled: true,
-			scale: false
-		}
-	}
-
-	showRandomNode(data, options);
+	
+	populateLists(data);
+	
+	showRandomNode(data);
 
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
-			rand = false;
 			Pace.restart();
-			showOneNode(data.nodes_names[$("#one").val()], data, options, parseInt($('#confidence')[0].value));
+			showOneNode(data.nodes_names[$("#one").val()], parseInt($('#confidence1')[0].value), data);
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
 
 	$("#findtwonode").click(function () {
 		if ($("#two").val() && $("#three").val()) {
-			rand = false;
 			Pace.restart();
-			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], data, options, parseInt($('#confidence')[0].value),[]);			
+			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], parseInt($('#confidence2')[0].value), data);			
 			$('#twogroupsmenu').css('display','none');
 		}
 	});
 
 	$("#findonegroup").click(function () {
 		if ($("#four").val()) {
-			rand = false;
 			Pace.restart();
 			showOneGroup($("#four").val(), data);
 			$('#twogroupsmenu').css('display','none');
@@ -186,7 +109,6 @@ function initGraph(data){
 
 	$("#findtwogroup").click(function () {
 		if ($("#five").val() && $("#six").val()) {
-			rand = false;
 			Pace.restart();
 			$('#group1').html($("#five").val());
 			$('#group3').html($("#six").val());
@@ -207,103 +129,129 @@ function initGraph(data){
 	});
 
 	$('#submitnode').click(function(){
-		rand = false;
-		var node = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val() + ' (' + $('#entry_524366257').val() + ')';
+		Pace.restart();
+		var name = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val();
+		var date = $('#entry_524366257').val();
 		$('section').css('display','none');
 		$('#addedgeform').css('display','block');
-		$('#entry_768090773').val(node);
-		addGraph = new jsnx.Graph();
-		addGraph.add_node(node, { id: 0, radius: 25 });
-		jsnx.draw(addGraph, options, true);
+		$('#entry_768090773').val(name + ' (' + date + ')');
+		$('#graph').html('');
+		$("#results").html('');
+		addNodes = [];
+		addEdges = [];
+		addNodes.push({ "id": 0, "text": name, "size": 10, "cluster": getCluster(date) });
+		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+		var graph = new Insights($("#graph")[0], addNodes, [], options).render();
 	});
 
 	$('#submitedge').click(function(){
-		rand = false;
-		var source = $('#entry_768090773').val();
-		var target = $('#entry_1321382891').val();
-		addGraph.add_node(target);
-		addGraph.add_edge(source, target);
+		Pace.restart();
+		var target = data.nodes_names[$('#entry_1321382891').val()];
+		var node = data.nodes[target];
+		if (!node.id) { window.alert("Incorrect information. Please try again."); return;}
+		if (addNodes.length == 0) {return;}
+		$('#graph').html('');
+		$("#results").html('');
+		addNodes.push({ "id": node.id, "text": node.label, "size": 10, "cluster": getCluster(node.birth) });
+		addEdges.push([0, node.id]);
+		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+		var graph = new Insights($("#graph")[0], addNodes, addEdges, options).render();
+	});
+
+	$("button.icon").click(function(e){
+		addNodes = [];
+		addEdges = [];
 	});
 }
 
-function showRandomNode(data, options) {
-	if (!rand) return;
+function showRandomNode(data) {
+	if (!random) return;
 	var keys = Object.keys(data.nodes);
 	var id = data.nodes[keys[Math.floor(keys.length * Math.random())]].id;
-	showOneNode(id, data, options, 2);
-	if (rand) {
+	showOneNode(id, 2, data);
+	if (random) {
 		setTimeout(function(){
-			showRandomNode(data, options)
+			showRandomNode(data)
 		}, 15000);
 	}
 }
 
-function showOneNode(parent, data, options, confidence, graph) {
-	// console.log(confidence);
-	var isNew = false;
-	if (!graph) {
-		graph = new jsnx.Graph();
-		isNew = true;
-	}
-	var p = data.nodes[parent];
-	p.explored = true;
-	graph.add_node(p.label, { id: p.id, radius: 20 });
-	p.edges[confidence].forEach(function (edge){
-		if (edge != "")  {
-			var f = data.nodes[edge];
-			graph.add_node(f.label, { id: f.id });
-			graph.add_edge(p.label, f.label);
-			f.edges[confidence].forEach(function (e){
-				var s = data.nodes[e];
-				if (graph.nodes().indexOf(s.label) >= 0) {
-					graph.add_edge(f.label, s.label);
+function getCluster(year){
+	if (parseInt(year) < 1550) {return 0}
+	if (parseInt(year) > 1700) {return 1}
+	var cluster = Math.round((parseInt(year) - 1550) / 5);
+	return (2 + cluster);
+}
+
+function getColors(){
+	return { 0:  "#9dedd4", 1:  "#0c55ad", 2:  "#79BD8F", 3:  "#00A287", 4:  "#99CD7D", 
+			 5:  "#349A98", 6:  "#558FCB", 7:  "#3A6BF9", 8:  "#6CDBE0", 9:  "#3C58A6",
+			 10: "#B8DDF5", 11: "#6566AD", 12: "#BA9DCA", 13: "#532E8A", 14: "#CC71E2",
+			 15: "#B53A83", 16: "#a573b1", 17: "#EF6097", 18: "#DE89B9", 19: "#F79484",
+			 20: "#F3805D", 21: "#EF4B39", 22: "#F1623E", 23: "#FCBD3F", 24: "#F9ED45",
+			 25: "#F79838", 26: "#FAF39A", 27: "#DADD45", 28: "#55C66D", 29: "#3EA8C1",
+			 30: "#9ae8da", 31: "#2D71D3", }
+}
+
+function showOneNode(id, confidence, data) {
+	var p = data.nodes[id];
+	var keys = {};
+	var nodes = [];
+	var edges = [];
+	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": p.edges[confidence].length };
+	p.edges[confidence].forEach(function (i){
+		var f = data.nodes[i];
+		if (f) {
+			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+			if (notInArray(edges, [p.id, f.id])) { edges.push([p.id, f.id]); }
+			f.edges[confidence].forEach(function (j){
+				var s = data.nodes[j];
+				if (s) {
+					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": s.edges[confidence].length };
+					if (notInArray(edges, [f.id, s.id])) { edges.push([f.id, s.id]); }
+					s.edges[confidence].forEach(function (k){
+						var t = data.nodes[k];
+						if (t && t.id in keys && notInArray(edges, [s.id, t.id])) { edges.push([s.id, t.id]); }
+					});
 				}
 			});
 		}
 	});
-	if (isNew) {
-		$('figure').html('');
-		$("#results").html("Network of <b>" + p.name +"</b>");
-		jsnx.draw(graph, options, true);
-	}
-	$("#one").val('');
-	$("#one").typeahead('setQuery', '');
-	d3.selectAll('.node').on('click', function (d) {
-		rand = false;
+	for (n in keys) { nodes.push(keys[n]); }
+	$('#graph').html('');
+	$("#results").html("Network of <b>" + p.name +"</b>");
+	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
+	graph.on("node:click", function(d) {
+		random = false;
+		var clicked = data.nodes[d.id];
+		showNodeInfo(clicked, findGroups(clicked, data));
+	});
+	graph.on("edge:click", function(d) {
+		random = false;
 		Pace.restart();
-		if (!data.nodes[d.data.id].explored) {			
-			d3.select(this.firstChild).style('fill', '#aac');
-			showOneNode(d.data.id, data, options, confidence, graph);
-		}
+		var id1 = parseInt(d.source.id);
+		var id2 = parseInt(d.target.id);
+		getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);
 	});
-	d3.selectAll('.edge').on('click', function (d) {
-		rand = false;
-		Pace.restart();
-		var id1 = parseInt(d.source.data.id);
-		var id2 = parseInt(d.target.data.id);
-		getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);			
-	});
-	d3.selectAll('.edge').on('mouseover', function (d) {
-		d3.select(this.firstChild).style('fill', '#7FB2E6');
-		d3.select('#node-' + d.source.data.id).style('fill', '#7FB2E6');
-		d3.select('#node-' + d.target.data.id).style('fill', '#7FB2E6');
-	});
-	d3.selectAll('.edge').on('mouseout', function (d) {
-		d3.select(this.firstChild).style('fill', '#555');
-		d3.select('#node-' + d.source.data.id).style('fill', function (n) {
-			return data.nodes[d.source.data.id].explored ? '#aac' : '#CAE4E1';
-		});
-		d3.select('#node-' + d.target.data.id).style('fill', function (n) {
-			return data.nodes[d.target.data.id].explored ? '#aac' : '#CAE4E1';
-		});
-	});
-	var g = findGroups(p, data);
-	showNodeInfo(p, g);
+	showNodeInfo(p, findGroups(p, data));
 }
 
+function notInArray(arr, val) {
+	var i = arr.length;
+	while (i--) {
+		if (arr[i][0] == val[0] && arr[i][1] == val[1]) {
+			return false;
+		}
+		if (arr[i][1] == val[0] && arr[i][0] == val[1]) {
+			return false;
+		}
+	}
+	return true;
+}
 
-// takes in the node object and the data object, returns the groups that the node is in
-function findGroups(node,data){
+// Returns list of groups that a node belongs to
+function findGroups(node, data){
 	var groups = [];
 	for(var key in data.groups){
 		if ((data.groups[key].nodes).indexOf(node.id)>-1)
@@ -313,8 +261,7 @@ function findGroups(node,data){
 	return strgroups;
 }
 
-
-//displays the node information
+// Display node information
 function showNodeInfo(data, groups){
 	accordion("node");
 	$("#node-name").text(data.first+ " "+ data.last);
@@ -324,283 +271,69 @@ function showNodeInfo(data, groups){
 	$("#node-group").text(groups);
 	var d = new Date();
 	$("#node-cite").text( data.first+ " "+ data.last + " Network Visualization. \n Six Degrees of Francis Bacon: Reassembling the Early Modern Social Network. Gen. eds. Daniel Shore and Christopher Warren. "+d.getMonth()+"/"+d.getDate()+"/"+d.getFullYear()+" <http://sixdegreesoffrancisbacon.com/>");
-	
-	//"http://www.oxforddnb.com/search/refine/?lifeDateModifier=alive&startDate="+data.birth+"&lifeEventModifier=ANY&place=&aor=&search=Search"
 	$("#node-DNBlink").attr("href", "http://www.oxforddnb.com/search/quick/?quicksearch=quicksearch&docPos=1&searchTarget=people&simpleName="+data.first+"-"+data.last+"&imageField.x=0&imageField.y=0&imageField=Go");//"http://www.oxforddnb.com/view/article/"+data.id);
 	$("#node-GoogleLink").attr("href", "http://www.google.com/search?q="+data.first+"+"+ data.last);
 }
 
 
-// displays the network of two nodes
-function showTwoNodes(id1, id2, data, options, confidence, highlighted) {
-	
-	//if(confidence===3){
-		confidence=2
-	//}
-	
-
-	if (id1 === id2) {
-		alert("You have selected the same person twice. \n Please try again...");
-		return;
-	}
-
-	$('figure').html('');
-	var G = jsnx.Graph();
+// Display shared network of two nodes
+function showTwoNodes(id1, id2, confidence, data) {
+	if (id1 === id2) return;
+	var keys = {};
+	var nodes = [];
 	var edges = [];
 	var p1 = data.nodes[id1];
 	var p2 = data.nodes[id2];
-	var tableview = [];
-
-	// console.log(confidence);
-	// console.log(p1);
-	// console.log(p2);
-	var selected = highlighted; 
-	var highlight = false;
-	if (selected.length!==0){
-		//console.log("special selection");
-		var sedge = [];
-		highlight=true;
-	}
-	
-	
-
-	var p1_1 = [];	//nodes connection to p1 by one edge
-	var p2_1 = []; // nodes connecting to p2 by one edge
-	for (var i = 2; i >= confidence; i --) { // change confidence after db/bucket change
-		p1_1= p1_1.concat(p1.edges[i]);
-		p2_1= p2_1.concat(p2.edges[i]);	
-	}
-
-	p1_1 = nodupSort(p1_1);
-	p2_1 = nodupSort(p2_1);
-
-	var p1_2 = [];// nodes connected to p1_1 (all nodes 2 away from p1)
-	var p2_2 = [];// nodes connected to p2_1  (all nodes 2 away from p2)
-
-	for (var i = 0; i < p1_1.length; i ++) {
-		for(var j = 2; j >= confidence; j --){ // j is confidence
-			var p1edges = data.nodes[p1_1[i]].edges[j];
-			p1edges.forEach( function(p1edge){
-				//p1_2.push([p1_1[i], p1edge]);
-				p1_2.push({"source":p1_1[i], "edge":p1edge});
-			}); 
-		}		
-	}
-	for (var i = 0; i < p2_1.length; i ++) {
-		for(var j = 2; j >= confidence; j --){// j is confidence
-			var p2edges = data.nodes[p2_1[i]].edges[j];
-			p2edges.forEach( function(p2edge){
-				//p1_2.push([p2_1[i], p2edge]);
-				p2_2.push({"source":p2_1[i], "edge":p2edge});
-
-			}); 
-		}		
-	}
-
-
-	//one edge 
-	if(p2_1.indexOf(p2.id)>=0){
-		edges.push([p1.label, p2.label]);
-		tableview.push({ "network": p1.label+", "+ p2.label })
-	}
-	
-
-	//two edge
-	p1_1.forEach(function (edge){
-		if (p2_1.indexOf(edge) >= 0) {
-
-			var label = data.nodes[edge].label;
-			if(!highlight){
-				G.add_node(label);
-			
-				edges.push([p1.label, label]);
-				edges.push([p2.label, label]);
-				tableview.push({ "network": p1.label+", "+label+", "+ p2.label } )
-			}
-			else {
-				var allnodes=true;
-				selected.forEach(function (node){
-					//console.log(node+" " +label);
-					if (node!==label){
-						allnodes=false
-					}
-				});
-				if(allnodes){
-					if(!selected.indexOf(label)>=0){
-						G.add_node(label, {id: edge});
-					}
-					sedges.push([p1.label, label]);
-					sedges.push([p2.label, label]);
-				}
-		
-			}
+	keys[p1.id] = { "id": p1.id, "text": p1.label, "cluster": getCluster(p1.birth), "size": p1.edges[confidence].length };
+	keys[p2.id] = { "id": p2.id, "text": p2.label, "cluster": getCluster(p2.birth), "size": p2.edges[confidence].length };
+	p1.edges.forEach(function (list){
+		if (list.indexOf(p2.id) > -1) { edges.push([p1.id, p2.id]); return; }
+	});
+	p1.edges[confidence].forEach(function (e){
+		if (p2.edges[confidence].indexOf(e) > -1) {
+			var f = data.nodes[e];
+			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+			edges.push([p1.id, f.id]);
+			edges.push([p2.id, f.id]);
 		}
 	});
-
-	//three edge
-	p1_1.forEach(function (edge){
-		p2_2.forEach(function (pair2){
-			if (edge===pair2["edge"]) {
-
-				var label = data.nodes[edge].label;
-				var s2 = data.nodes[pair2["source"]].label;
-
-				if( (p1.label!=s2) && (p2.label!=label)){
-
-					if(!highlight){
-						G.add_node(label);
-					
-						edges.push([label, p1.label]);
-						edges.push([s2, label]);
-						edges.push([s2, p2.label]);
-						tableview.push({ "network":p1.label+", "+label+", "+s2+", "+ p2.label})
-					}
-					else {//&& (((selected.indexOf(label)>=0)) || (selected.indexOf(s2)>=0) )
-						var allnodes=true;
-		                selected.forEach(function (node){
-		                	//console.log(node+" " +label + " " + s2);
-		                    if (node!==label && node!==s2){
-		                        allnodes=false
-		                    }
-		                });
-		                if(allnodes){
-		                	if(!selected.indexOf(label)>=0){
-			               		G.add_node(label, {id: edge});
-			               	}
-							sedge.push([label, p1.label]);
-							sedge.push([s2, label]);
-							sedge.push([s2, p2.label]);
-		                }
-					
-					}
+	p1.edges[confidence].forEach(function (i){
+		var f = data.nodes[i];
+		f.edges[confidence].forEach(function (j){
+			if (p2.edges[confidence].indexOf(j) > -1) {
+				var s = data.nodes[j];
+				if (f.id != p2.id && s.id != p1.id) {
+					keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": s.edges[confidence].length };
+					if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
+					if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
+					if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
 				}
 			}
 		});
 	});
-
-	// four edge
-	p1_2.forEach(function (pair1){
-		p2_2.forEach(function (pair2){
-			if (pair1["edge"]===pair2["edge"]) {
-
-				var label = data.nodes[pair2["edge"]].label;
-				var s1 = data.nodes[pair1["source"]].label;
-				var s2 = data.nodes[pair2["source"]].label;
-
-				if((p1.label!=s2) && (p1.label!=label) &&(p2.label!=label) && (s1!=s2)&& (p2.label!=s1)){
-
-					if(!highlight){
-						G.add_node(label);
-						edges.push([s1, label]);
-						edges.push([s2, label]);
-						edges.push([s1, p1.label]);
-						edges.push([s2, p2.label]);
-						tableview.push({ "network":p1.label+", "+s1+", "+label+", "+s2+", "+ p2.label});
-					}
-					else{ //  && ( (selected.indexOf(label)>=0) || (selected.indexOf(s1)>=0) || (selected.indexOf(s2)>=0) )
-					    var allnodes=true;
-		                selected.forEach(function (node){
-		                	//console.log(node+" " +label + " " + s1 + " " + s2);
-		                    if (node!==label && node!==s1 && node!==s2){
-		                        allnodes=false
-		                    }
-		                });
-		                if(allnodes){
-		                	if(!selected.indexOf(label)>=0){
-		                		G.add_node(label, {id: pair1["edge"]});
-		                	}
-		       				sedge.push([s1, label]);
-							sedge.push([s2, label]);
-							sedge.push([s1, p1.label]);
-							sedge.push([s2, p2.label]);
-		                }
-					}
-				}
-			}
-		});
+	for (n in keys) { nodes.push(keys[n]); }
+	$('#graph').html('');
+	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
+	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
+	graph.on("node:click", function(d) {
+		var clicked = data.nodes[d.id];
+		showNodeInfo(clicked, findGroups(clicked, data));
 	});
-
-
-
-	if (highlight){
-		G.add_nodes_from([p1.label, p2.label], { data: "network", radius: 25 });
-		G.add_edges_from(sedge);
-		jsnx.draw(G, options);
-	}
-	else{
-		G.add_nodes_from(selected, {radius: 25, highlight: true, group: 0 });
-		G.add_nodes_from([p1.label, p2.label], { radius: 30 });
-		G.add_edges_from(edges);
-		jsnx.draw(G, options);	
-	}
-
-
-	d3.selectAll('.node').on('click', function (d) {
-		var nclick= $(this).children().eq(1).text();
-		if (nclick != p1.label && nclick != p2.label){
-			var index = selected.indexOf(nclick);
-			if(index>-1){			
-				selected.splice(index,1);
-			}
-			else{
-				selected.push(nclick);
-			}
-			console.log(selected);
-			showTwoNodes(id1, id2, data, options, confidence, selected); 
-		}
-		
-	});
-
-
-	d3.selectAll('.node').on('mouseover', function (d) {
-		d3.select(this.firstChild).style('fill', '#196B94');
-	});
-	d3.selectAll('.node').on('mouseout', function (d) {
-		d3.select(this.firstChild).style('fill', '#cae4e1');
-	});
-
-	if ($("#check-shared").is(":checked")){
-		var title = "Common network between " + p1.label + " and  " + p2.label ;
-		writeNodeTable(tableview, title);
-	}
-
-	$("#results").html("Common network between <b>" + p1.label  + "</b> and <b>" +  p2.label + "</b>");
-	// $("#two").val('');
-	// $("#two").typeahead('setQuery', '');
-	// $("#three").val('');
-	// $("#three").typeahead('setQuery', '');
-}
-
-function nodupSort(array){
-
-    var sorted_arr = array.sort(function(a,b){return a-b});
-    var no_dup=[];
-    for (var i = 0; i < array.length - 1; i++) {
-        if (sorted_arr[i + 1] != sorted_arr[i]) {
-            no_dup.push(sorted_arr[i]);
-        }
-    }
-    return no_dup;
 }
 
 function showOneGroup(group, data) {
 	var g = data.groups_names[group];
 	var results = [];
-	g.nodes.forEach(function (node) {	
-		results.push(data.nodes[node]);
+	g.nodes.forEach(function (n) {	
+		results.push(data.nodes[n]);
 	});
-	var title = "People who belong to the <b>" + group + "</b> group";
-	writeTableWith(results, title);
-	$("#results").html(title);
-	$("#four").val('');
-	$("#four").typeahead('setQuery', '');
-	$("#five").val('');
-	$("#five").typeahead('setQuery', '');
-	$("#six").val('');
-	$("#six").typeahead('setQuery', '');
+	writeGroupTable(results, "People who belong to the " + group + " group");
+	$("#results").html("People who belong to the <b>" + group + "</b> group");
 }
 
-// Display the intersections between group1 and group2
+// Display the intersections between two groups
 function findInterGroup(group1, group2, data) {
 	var g1 = data.groups_names[group1];
 	var g2 = data.groups_names[group2];
@@ -610,14 +343,13 @@ function findInterGroup(group1, group2, data) {
 			common.push(data.nodes[node]);
 		}
 	});
-	var title = "Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>";
-	writeTableWith(common, title);
-	$("#results").html(title);
+	writeGroupTable(common, "Intersection between " + group1 + " and " + group2);
+	$("#results").html("Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>");
 }
 
 // Create the table container
-function writeTableWith(dataSource, title){
-    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+function writeGroupTable(dataSource, title){
+    $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
 		'sPaginationType': 'bootstrap',
 		'iDisplayLength': 100,
@@ -636,23 +368,6 @@ function writeTableWith(dataSource, title){
     downloadData(dataSource, title);
 };
 
-function writeNodeTable(dataSource, title){
-	//console.log(dataSource);
-    $('figure').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
-    $('#data-table-container').dataTable({
-		'sPaginationType': 'bootstrap',
-		'iDisplayLength': 100,
-        'aaData': dataSource,
-        'aoColumns': [
-            {'mDataProp': 'network', 'sTitle': 'Network'},
-        ],
-        'oLanguage': {
-            'sLengthMenu': '_MENU_ records per page'
-        }
-    });
-    //downloadData(dataSource, title);
-};
-
 // Define two custom functions (asc and desc) for string sorting
 jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
 	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
@@ -668,7 +383,7 @@ function downloadData(data, title) {
 		result += cell["first"] + ',' + cell["last"] + ',' + cell["birth"] + ',' + cell["death"] + ',' + cell["occupation"] + "\n";
 	});
 	var dwnbtn = $('<a href="data:text/csv;charset=utf-8,' + encodeURIComponent(result) + ' "download="' + title + '.csv"><div id="download"></div></a>');
-	$(dwnbtn).appendTo('figure');
+	$(dwnbtn).appendTo('#graph');
 }
 
 function getAnnotation(id1, id2,data) {
@@ -682,8 +397,7 @@ function getAnnotation(id1, id2,data) {
 		callback: function(result) {
 			result.forEach(function (row){
 				accordion("edge");			
-				$("#edge-source").html(data.nodes[id1].first +" "+data.nodes[id1].last);
-				$("#edge-target").html(data.nodes[id2].first+" "+data.nodes[id2].last);
+				$("#edge-nodes").html(data.nodes[id1].first +" "+data.nodes[id1].last + " & " + data.nodes[id2].first+" "+data.nodes[id2].last);
 				$("#edge-confidence").html(getConfidence(row.confidence));
 				$("#edge-annotation").html(row.annotation);
 				return true;
@@ -693,9 +407,42 @@ function getAnnotation(id1, id2,data) {
 }
 
 function getConfidence(c) {
-	if (c<0.2) 		return "Very Unlikely";
-	else if(c<0.4) 	return "Unlikey";
-	else if(c<0.6) 	return "Possible";
-	else if(c<0.8) 	return "Likely";
-	else 			return "Certain";
+	if (c < 0.4) return "Very Unlikely";
+	else if (c < 0.5) return "Unlikey";
+	else if (c < 0.7) return "Possible";
+	else if (c < 0.9) return "Likely";
+	else return "Certain";
+}
+
+function populateLists(data){
+	$('#one').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#two').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#three').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#entry_768090773').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#entry_1321382891').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#entry_1177061505').typeahead({
+		local: Object.keys(data.nodes_names).sort()
+	});
+	$('#four').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#five').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#six').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
+	$('#entry_110233074').typeahead({
+		local: Object.keys(data.groups_names).sort()
+	});
 }

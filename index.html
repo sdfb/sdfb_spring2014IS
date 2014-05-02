@@ -1,17 +1,19 @@
 <html>
 
 <head>
-	<title>SDFB</title>
+	<title>Six Degrees of Francis Bacon</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 	<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,700'>
-	<link rel="shortcut icon" href="img/favicon_16x16.ico">
+	<link rel="shortcut icon" href="img/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/tooltip.css" >
-	<link rel="stylesheet" type="text/css" href="css/demo_table.css" />
+	<link rel="stylesheet" type="text/css" href="css/insights.standalone.css" />
+	<link rel="stylesheet" type="text/css" href="css/tooltip.css" />
+	<link rel="stylesheet" type="text/css" href="css/table.css" />
 	<link rel="stylesheet" type="text/css" href="css/accordion.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
-	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
@@ -19,35 +21,44 @@
 	<script type="text/javascript" src="js/data-tables-bootstrap.js"></script>
 	<script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="js/pace.min.js"></script>
-	<script type="text/javascript" src="js/jsnetworkx.js"></script>
+	<script type="text/javascript" src="js/insights.standalone.js"></script>
 	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/display.js"></script>
 	<script type="text/javascript" src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/typeahead.js"></script>
-	<script type="text/javascript" src="js/script.js"></script>	
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/display.js"></script>
 </head>
 
 <body>
 	<header>Six Degrees of Francis Bacon</header>
 
 	<div id="results"></div>
+	<div id="graph"></div>
+
 	<div id="twogroupsmenu">
 		<button type="button" class="toggle" id="group1" ></button>
 		<button type="button" class="toggle  active" id="group2" >Intersection</button>
 		<button type="button" class="toggle" id="group3" ></button>
 	</div>
 
-	<figure></figure>
-
 	<aside>
 		<div id="accordion">
+
+			<h3 class="accordion_btn"><span id="icon-about"></span>About</h3>
+			<div  class="accordion_content " id="about">
+				Six Degrees of Francis Bacon (SDFB) is a digital reconstruction of the early modern social network (EMSN) that scholars and students from all over the world will be able to collaboratively expand, revise, curate, and critique.
+				<a href="http://sixdegreesoffrancisbacon.com/overview" target="_blank" style="color:#aae"> Read more...</a><br><br>
+				<b>CREDITS</b><br>
+				User interface designed and implemented by Carnegie Mellon University Information Systems team members Angela Qui, Chanamon Ratanalert, Ivy Chung and Sama Kanbour, under the supervision of advisor Raja Sooriamurthi.
+
+			</div>
+
 			<h3 class="accordion_btn"><span id="icon-add"></span>Contribute</h3>
 			<div  class="accordion_content " id="contribute">
 				<ul>
-					<li id="addnode">Add person</li>	
-					<li id="addedge">Add relationship</li>
+					<li id="addnode">Add person</li>
 					<li id="addgroup">Add group</li>
-					<li id="addannot">Add annotation</li>
+					<li id="addedge">Add annotated relationship</li>
 				</ul>
 				
 				<section id="addnodeform">
@@ -57,9 +68,10 @@
 					<iframe name="hidden_iframe1" id="hidden_iframe1" style="display:none;" onload=""></iframe>
 					<form action="https://docs.google.com/forms/d/151VLJDd62rmg_elgMLsiRjwmN0ecuZZbWdFz1QazhtA/formResponse" id="googleaddnode" method="post" target="hidden_iframe1" onsubmit="submitted=true;">
 						<input type="text" name="entry.1804360896" id="entry_1804360896" placeholder="First Name">
-						<input type="text" name="entry.754797571" id="entry_754797571" placeholder="Last Name">
-						<input type="text" name="entry.524366257" id="entry_524366257" placeholder="Birth Date">
+						<input type="text" name="entry.754797571"  id="entry_754797571"  placeholder="Last Name">
+						<input type="text" name="entry.524366257"  id="entry_524366257"  placeholder="Birth Date">
 						<input type="text" name="entry.1810714929" id="entry_1810714929" placeholder="Death Date">
+						<input type="text" name="entry.2129738910" id="entry_2129738910" placeholder="Historical Significance">
 						<button type="submit" name="submit" id="submitnode">Submit</button>
 					</form>
 				</section>
@@ -70,47 +82,62 @@
 					</script>
 					<iframe name="hidden_iframe2" id="hidden_iframe2" style="display:none;" onload=""></iframe>
 					<form action="https://docs.google.com/forms/d/10Gfo4lX_iEArcffCxd5SqP9b-lEttdW5ymOTwX5-t5A/formResponse" id="googleaddedge" method="post" target="hidden_iframe2" onsubmit="submitted=true;">
-						<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Source">
-						<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Target">
+						<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Name 1">
+						<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Name 2">
 						<select name="entry.875203595" id="entry_875203595">
 							<option value="">Confidence</option>
-							<option value="0.2">Very unlikely</option>
+							<option value="0.3">Very unlikely</option>
 							<option value="0.4">Unlikely</option>
 							<option value="0.6">Possible</option>
 							<option value="0.8">Likely</option>
 							<option value="1.0">Certain</option>
 						</select>
-						<input type="text" name="entry.948502783" id="entry_948502783" placeholder="Annotation">
+						<textarea type="text" name="entry.837175332" id="entry_837175332" placeholder="Annotation"></textarea>
+						<input type="text" name="entry.484668707" id="entry_484668707" placeholder="Bibliographical Source(s)">
 						<button type="submit" name="submit" id="submitedge">Submit</button>
+					</form>
+				</section>
+
+				<section id="addgroupform">
+					<script type="text/javascript">
+						var submitted = false;
+					</script>
+					<iframe name="hidden_iframe3" id="hidden_iframe3" style="display:none;" onload=""></iframe>
+					<form action="https://docs.google.com/forms/d/1HbzCpwoLGMxEMVoRFiEA52SZdJa-8QpRO8cXVbe8_8Y/formResponse" id="googleaddgroup" method="post" target="hidden_iframe3" onsubmit="submitted=true;">
+						<input type="text" name="entry.110233074"  id="entry_110233074"  placeholder="Group Name">
+						<input type="text" name="entry.1177061505" id="entry_1177061505" placeholder="Person Name">
+						<button type="submit" name="submit" id="submitgroup">Submit</button>
 					</form>
 				</section>
 			</div>
 
 			<h3 class="accordion_btn"><span id="icon-edge"></span>Relationship</h3>
 			<div  class="accordion_content " id="edgeinfo">
-				Source:  		<a id="edge-source"></a><br>
-				Target: 		<a id="edge-target"></a><br>
-				Confidence: 	<a id="edge-confidence"></a><br>
-				Annotation: 	<a id="edge-annotation"></a><br>
+				<button class="icon" id="icon-annotate" name="edge"></button>
+				<a id="edge-nodes"></a><br><br>
+				<b>CONFIDENCE&nbsp;</b> 	<a id="edge-confidence"></a><br>
+				<b>ANNOTATION&nbsp;</b> 	<a id="edge-annotation"></a><br>
 			</div>
 
 			<h3 class="accordion_btn"><span id="icon-node"></span>Person</h3>
 			<div  class="accordion_content " id="nodeinfo">
+				<button class="icon" id="icon-tag"  name="group"></button>
+				<button class="icon" id="icon-link" name="edge"></button>
 				<p id="node-name"></p>
-				<b>Birth Date:</b> <a id="node-bdate"></a> <br>
-				<b>Death Date:</b> <a id="node-ddate"></a> <br>
-				<b>Historical Significance:</b> <a id="node-significance"></a> <br>
-				<b>Groups:</b> <a id="node-group"></a> <br>
-				<b>Citation:</b> <br><a id="node-cite"></a> <br> <br>
-				<b>Links: </b>
+				<b>BIRTH DATE&nbsp;</b> 				<a id="node-bdate"></a><br>
+				<b>DEATH DATE&nbsp;</b> 				<a id="node-ddate"></a><br>
+				<b>HISTORICAL SIGNIFICANCE</b><br>		<a id="node-significance"></a><br>
+				<b>GROUPS&nbsp;</b>						<a id="node-group"></a><br>
+				<b>CITATION</b><br>						<a id="node-cite"></a><br>
+				<b>LINKS&nbsp;</b>
 				<a id="node-DNBlink" target="_blank">Oxford DNB</a> &nbsp;
-				<a id="node-GoogleLink" target="_blank">Google</a> <br> <br>
+				<a id="node-GoogleLink" target="_blank">Google</a>
 			</div>
 
 			<h3 class="accordion_btn on"><span id="icon-search"></span>Search</h3>
 			<div class="accordion_content active" id="search">
 				<ul>
-					<li id="onenode">Network</li>		
+					<li id="onenode" class="clicked">Network</li>		
 					<li id="twonode">Shared network</li>
 					<li id="onegroup">Group</li>
 					<li id="twogroup">Shared groups</li>
@@ -119,21 +146,18 @@
 				<!-- NODE FORMS -->
 				<section id="onenodeform">
 					<input type="text" id="one" placeholder="Name">
-					<article class="slider"></article>
-					<article id="slider-result">Likely relationships</article>
-					<input id="confidence" type="hidden" value="2"/>
+					<article class="slider" title="1"></article>
+					<article class="slider-result" id="slider-result1">Likely relationships</article>
+					<input id="confidence1" type="hidden" value="3"/>
 					<button type="button" id="findonenode">Find</button>
 				</section>
 
 				<section id="twonodeform">
 					<input type="text" id="two" placeholder="Name 1"><br>
 					<input type="text" id="three" placeholder="Name 2"><br>
-
-					<article class="slider"></article>
-					<article id="slider-result">Likely relationships</article>
-					<input id="confidence" type="hidden" value="2"/>
-
-					<input type="checkbox" id="check-shared" value="table"> Show Table<br>
+					<article class="slider" title="2"></article>
+					<article class="slider-result" id="slider-result2">Likely relationships</article>
+					<input id="confidence2" type="hidden" value="3"/>
 					<button type="button" id="findtwonode">Find</button>
 				</section>
 

@@ -38,92 +38,13 @@ header {
     padding-top: 1%;
 }
 
-b {
-    font-weight: 700;
-}
-
-figure {
+#graph {
     margin-left: 300px;
     height: 93%;
 }
 
-canvas {
-    margin-left: 260px;
-}
-
-section {
-    margin: 10%;
-    width: 80%;
-    margin-top: 20px;
-    display: none;
-}
-
-section input, section select {
-    display: inline-block;
-    margin-bottom: 10%;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    padding: 6px 10px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    height: 35px;
-    width: 200px;
-    font-family: 'Open Sans',sans-serif;
-    font-size: 12px;
-}
-
-form select {
-    min-width: 200px;
-}
-
-.tt-hint {
-    color: #999;
-    padding: 6px 10px;
-    height: 35px;
-    width: 200px;
-}
-
-.tt-suggestion {
-    padding: 6px 10px;
-}
-
-.tt-suggestion.tt-is-under-cursor {
-    color: #0097cf;
-    background-color: #ccc;
-}
-
-.tt-dropdown-menu {
-    width: 198px;
-    margin-top: -7%;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-button {
-    font-family: 'Open Sans',sans-serif;
-    font-size: 12px;
-    height: 35px;
-    width: 200px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    background-color: #CAE4E1;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover, button.active {
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#1a000000', GradientType=0);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(40%,rgba(0,0,0,.05)),to(rgba(0,0,0,.1)));
-    background-image: -webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-    background-image: -moz-linear-gradient(top,rgba(0,0,0,.05) 0,rgba(0,0,0,.1));
-    background-image: -ms-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-    background-image: -o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-    background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+b {
+    font-weight: 700;
 }
 
 /*TABLE FORMAT*/
@@ -265,12 +186,12 @@ select {
 /*the slider background*/
 .slider {
   display: inline-block;
-  width:180px;
+  width:215px;
   height:11px;
   background:url(../img/slider-bg.png);
   background-repeat:no-repeat; 
   position:relative;
-  margin-bottom: 5%;
+  margin: 15px 0;
   padding:0 10px;
 }
 
@@ -288,11 +209,11 @@ select {
 }
 
 /*Result div where the slider value is displayed*/
-#slider-result {
+.slider-result {
   display: inline-block;
   text-align:center;
   height: 35px;
-  width: 200px;
+  width: 235px;
   font-family: 'Open Sans',sans-serif;
   font-size: 12px;
   padding-bottom: 5%;
@@ -301,13 +222,4 @@ select {
 a {
   outline:none;
   -moz-outline-style:none;
-}
-
-#check-shared[type="checkbox"]{
-   display:inline;
-   margin:0;
-   padding:0;
-   margin-right:5px;
-   height:15px;
-   width:15px;
 }
