@@ -89,6 +89,7 @@ function initGraph(data){
 			showOneNode(data.nodes_names[$("#one").val()], parseInt($('#confidence1')[0].value), data);
 			$('#twogroupsmenu').css('display','none');
 		}
+		resetInputs();
 	});
 
 	$("#findtwonode").click(function () {
@@ -97,6 +98,7 @@ function initGraph(data){
 			showTwoNodes(data.nodes_names[$("#two").val()], data.nodes_names[$("#three").val()], parseInt($('#confidence2')[0].value), data);			
 			$('#twogroupsmenu').css('display','none');
 		}
+		resetInputs();
 	});
 
 	$("#findonegroup").click(function () {
@@ -105,6 +107,7 @@ function initGraph(data){
 			showOneGroup($("#four").val(), data);
 			$('#twogroupsmenu').css('display','none');
 		}
+		resetInputs();
 	});
 
 	$("#findtwogroup").click(function () {
@@ -114,6 +117,7 @@ function initGraph(data){
 			$('#group3').html($("#six").val());
 			findInterGroup($("#group1").html(), $("#group3").html(), data);
 		}
+		resetInputs();
 	});
 
 	$("#group1").click(function () {
@@ -142,6 +146,8 @@ function initGraph(data){
 		addNodes.push({ "id": 0, "text": name, "size": 10, "cluster": getCluster(date) });
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, [], options).render();
+		var link = 'https://docs.google.com/spreadsheets/d/1-faviCW5k2v7DVOHpSQT-grRqNU1lBVkUjJEVfOvSs8/edit#gid=688870062';
+		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
 	$('#submitedge').click(function(){
@@ -156,11 +162,19 @@ function initGraph(data){
 		addEdges.push([0, node.id]);
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, addEdges, options).render();
+		var link = 'https://docs.google.com/spreadsheets/d/1cu7hpYQMWTO8C7F8V34BEbdB2NrUe1xsslWKoai3BWE/edit#gid=51712082';
+		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
-	$("button.icon").click(function(e){
+	$('#submitgroup').click(function(){
+		var link = 'https://docs.google.com/spreadsheet/ccc?key=0AhtG6Yl2-hiRdFFQS2hybWRXRVNkNVJXR2FENnhMM0E&usp=drive_web#gid=0';
+		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
+	});
+
+	$("button.icon").click(function(){
 		addNodes = [];
 		addEdges = [];
+		resetInputs();
 	});
 }
 
@@ -329,6 +343,7 @@ function showOneGroup(group, data) {
 	g.nodes.forEach(function (n) {	
 		results.push(data.nodes[n]);
 	});
+	if (results.length == 0) { return }
 	writeGroupTable(results, "People who belong to the " + group + " group");
 	$("#results").html("People who belong to the <b>" + group + "</b> group");
 }
@@ -407,8 +422,8 @@ function getAnnotation(id1, id2,data) {
 }
 
 function getConfidence(c) {
-	if (c < 0.4) return "Very Unlikely";
-	else if (c < 0.5) return "Unlikey";
+	if (c < 0.4) return "Very unlikely";
+	else if (c < 0.5) return "Unlikely";
 	else if (c < 0.7) return "Possible";
 	else if (c < 0.9) return "Likely";
 	else return "Certain";
@@ -445,4 +460,23 @@ function populateLists(data){
 	$('#entry_110233074').typeahead({
 		local: Object.keys(data.groups_names).sort()
 	});
+}
+
+function resetInputs(){
+	$("#one").val('');
+	$("#one").typeahead('setQuery', '');
+	$("#two").val('');
+	$("#two").typeahead('setQuery', '');
+	$("#three").val('');
+	$("#three").typeahead('setQuery', '');
+	$("#four").val('');
+	$("#four").typeahead('setQuery', '');
+	$("#five").val('');
+	$("#five").typeahead('setQuery', '');
+	$("#six").val('');
+	$("#six").typeahead('setQuery', '');
+
+	document.getElementById('googleaddnode').reset();
+	document.getElementById('googleaddedge').reset();
+    document.getElementById('googleaddgroup').reset();
 }

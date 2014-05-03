@@ -75,10 +75,10 @@ aside {
 	display: none;
 	color:#222;
 	font-size:12px;
-	padding: 10%;
+	padding: 5% 10%;
 	line-height: 25px;
 	text-align:left;
-	height: calc(100% - 230px);
+	height: calc(90% - 140px);
 }
 
 .accordion_content .active {
@@ -96,9 +96,9 @@ aside {
 	background-color: #fff;
 	float: left;
 	cursor: pointer;
-    margin: 1%;
-    padding: 10px;
-    width: calc(48% - 20px);
+    margin: 2px;
+    padding: 5px;
+    width: calc(48% - 10px);
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
     -ms-transition: all 0.2s;
@@ -107,7 +107,7 @@ aside {
 }
 
 #addedge {
-    width: calc(98% - 20px);
+    width: calc(98% - 11px);
 }
 
 .accordion_content ul li:hover, .accordion_content ul li.clicked {
@@ -140,7 +140,7 @@ aside ::-webkit-scrollbar-thumb:hover {
 }
 
 .accordion_content section {
-    margin: 50% 0 0 2px;
+    margin: 40% 0 0 2px;
     display: none;
 }
 
@@ -193,7 +193,7 @@ section textarea {
     border-radius: 5px;
 }
 
-button {
+aside button {
     font-family: 'Open Sans',sans-serif;
     font-size: 12px;
     height: 35px;
@@ -206,7 +206,7 @@ button {
     cursor: pointer;
 }
 
-button:hover, button.active {
+aside button:hover, aside button.active {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#1a000000', GradientType=0);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(40%,rgba(0,0,0,.05)),to(rgba(0,0,0,.1)));
     background-image: -webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
@@ -216,7 +216,7 @@ button:hover, button.active {
     background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
 }
 
-button.icon {
+aside button.icon {
     background-repeat: no-repeat;
     background-size: 15px;
     width: 30px;
