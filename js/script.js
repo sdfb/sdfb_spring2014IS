@@ -4,6 +4,11 @@ $(document).ready(function() {
 	$("#onegroup").tooltip({placement: 	'right', title: 'Members of one group'});
 	$("#twogroup").tooltip({placement: 	'right', title: 'Mutual members of two groups'});
 
+
+    $("#addnode").tooltip({placement:   'right', title: 'Add a new individual to the database'});
+    $("#addgroup").tooltip({placement:  'right', title: 'Add a member to an existing or new group'});
+    $("#addedge").tooltip({placement:   'right', title: 'Add and annotate a relationship between two individuals'});
+
     $("#icon-tag").tooltip({placement:  'right', title: 'Tag group'});
     $("#icon-link").tooltip({placement: 'right', title: 'Add a relationship'});
     $("#icon-annotate").tooltip({placement: 'right', title: 'Annotate relationship'});
@@ -14,6 +19,7 @@ $(document).ready(function() {
 	$('.accordion_content ul li').click(function(e){
 		document.getElementById('googleaddnode').reset();
 		document.getElementById('googleaddedge').reset();
+        document.getElementById('googleaddgroup').reset();
         $('.accordion_content ul li').removeClass('clicked');
         $(this).addClass('clicked');
 		$('section').css('display','none');	
@@ -28,7 +34,6 @@ $(document).ready(function() {
 		$('#twogroupsmenu').css('display','block');
 	});
     $("button.icon").click(function(e){
-        console.log($(this));
         $('.accordion_content ul li').removeClass('clicked');
         $('section').css('display','none');
         $('#add' + this.name).addClass('clicked');
