@@ -14,6 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="css/table.css" />
 	<link rel="stylesheet" type="text/css" href="css/accordion.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/landing.css" />
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
@@ -29,9 +30,11 @@
 	<script type="text/javascript" src="js/typeahead.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/display.js"></script>
+	<script type="text/javascript" src="js/landing.js"></script>
 </head>
 
 <body>
+	<div id="everything">
 	<header>Six Degrees of Francis Bacon</header>
 
 	<div id="results"></div>
@@ -203,6 +206,84 @@
 			</div>
 		</div>
 	</aside>
+	</div> <!-- closing everything that's not landing page -->
+	<div id="landing">
+		<div id="landing-open">
+			<img src="img/net.png" height="40%">
+			<div id="wel">Welcome to</div>
+			<div id="title"> Six Degrees of Francis Bacon </div>
+			<img id="arrow1" src="img/landing/arrow-down.png" width="40px">
+		</div>
+		<div id="landing-def">
+			<div id="def-info">
+				<b>Six Degrees of Francis Bacon</b> (SDFB) is a collaborative 
+				reconstruction of the social network of early modern 
+				Britain (1550-1700). SDFB shows who likely knew whom 
+				in the age of Elizabeth, Bacon, Shakespeare, and Hobbes.  
+				<br><br>
+				First, the SDFB team mined the history of scholarship 
+				to estimate and visualize roughly 115,000 relationships. 
+				On this site, scholars, students, and citizen humanists
+				 are expanding, curating, and revising early modern 
+				 British history.  
+			</div>
+		</div>
+		<div id="landing-what">
+			<div id="threecircles">
+				<h5>What can you do with Six Degrees of Francis Bacon?</h5>
+				<table id="threetable">
+					<tr>
+						<td><img src="img/landing/learn.png" width="120px"></td>
+						<td><img src="img/landing/query.png" width="120px"></td>
+						<td><img src="img/landing/contribute.png" width="120px"></td>
+					</tr>
+					<tr>
+						<td>Explore relationships and see early modern networks </td>
+						<td>Ask how individuals or groups were connected</td>
+						<td>Add names, annotate relationships, flag errors, share knowledge </td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="landing-features">
+			<h5>Search Feature</h5>
+			<table id="searches">
+				<tr>
+					<td>
+						<img src="img/landing/f1.png" width="140px">
+						<br><br>
+						The connections of one individual
+					</td>
+					<td>
+						<img src="img/landing/f2.png" width="140px">
+						<br><br>
+						The mutual connections between two individuals
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img src="img/landing/f3.png" width="140px">
+						<br><br>
+						The members of one group
+					</td>
+					<td>
+						<img src="img/landing/f4.png" width="140px">
+						<br><br>
+						The members of two groups
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="landing-sidebar">
+			<h5>Research</h5>
+			<img src="img/landing/sidebar.png" height="70%">
+		</div>
+		<div id="arrows">
+			<img id="arrow-up" src="img/landing/arrow-up.png" width="40px">
+			<img id="arrow-down" src="img/landing/arrow-down.png" width="40px">
+		</div>
+		<div id="skip">Skip Intro</div>
+	</div> <!-- closing landing -->
 </body>
 
 </html>
