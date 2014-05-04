@@ -207,6 +207,7 @@ function getColors(){
 			 30: "#9ae8da", 31: "#2D71D3", }
 }
 
+var firstRandom = true; //if first time generating randomly
 function showOneNode(id, confidence, data) {
 	var p = data.nodes[id];
 	var keys = {};
@@ -234,7 +235,14 @@ function showOneNode(id, confidence, data) {
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
 	$("#results").html("Network of <b>" + p.name +"</b>");
-	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+	if (firstRandom){ //first time generating random node
+		console.log("first time");
+		var options = { width: $("#graph").width(), height: '800', colors: getColors() };
+		firstRandom = false;
+	} else {
+		console.log("not first time");
+		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
+	}
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
 	graph.on("node:click", function(d) {
 		random = false;
