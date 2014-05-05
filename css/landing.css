@@ -4,6 +4,9 @@
 
 #landing{
   background: #4281a0;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -11,16 +14,21 @@
   z-index: 1000;
 }
 
-#landing-open{
-  width: 40%;
+#landing-open {
+  width: 50%;
   margin: auto;
-  padding-top: 7%;
+  padding-top: 5%;
   text-align: center;
   background: #4281a0;
 }
 
-#landing-open img{
-  margin: 15px;
+#landing-open img {
+  margin: 5%;
+}
+
+#net {
+  max-width: 300px; 
+  width: 90%;
 }
 
 #wel{
@@ -34,10 +42,6 @@
   font-size: 35px;
   padding: 5px;
   color: white;
-}
-
-#arrow1{
-
 }
 
 #arrows{
@@ -91,13 +95,13 @@
 }
 
 #def-info{
-  height: 130px;
   background: #4281a0;
   margin: 0 auto;
   padding: 30px;
   padding-left: 20%;
   padding-right: 20%;
-  font-size: 17px;
+  font-size: 14px;
+  line-height: 25px;
   color: white;
 }
 
@@ -136,7 +140,8 @@ h5{
 #threetable td{
   width: 120px;
   color: white;
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 25px;
   padding: 25px;
   padding-bottom: 10px;
 }
@@ -162,6 +167,8 @@ h5{
   padding: 30px;
   padding-top: 25px;
   padding-bottom: 10px;
+  font-size: 14px;
+  line-height: 25px;
 }
 
 #landing-sidebar img{

@@ -143,7 +143,7 @@ function initGraph(data){
 		$("#results").html('');
 		addNodes = [];
 		addEdges = [];
-		addNodes.push({ "id": 0, "text": name, "size": 10, "cluster": getCluster(date) });
+		addNodes.push({ "id": 0, "text": name, "size": 14, "cluster": getCluster(date) });
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, [], options).render();
 		var link = 'https://docs.google.com/spreadsheets/d/1-faviCW5k2v7DVOHpSQT-grRqNU1lBVkUjJEVfOvSs8/edit#gid=688870062';
@@ -158,7 +158,7 @@ function initGraph(data){
 		if (addNodes.length == 0) {return;}
 		$('#graph').html('');
 		$("#results").html('');
-		addNodes.push({ "id": node.id, "text": node.label, "size": 10, "cluster": getCluster(node.birth) });
+		addNodes.push({ "id": node.id, "text": node.label, "size": 4, "cluster": getCluster(node.birth) });
 		addEdges.push([0, node.id]);
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, addEdges, options).render();
@@ -180,13 +180,15 @@ function initGraph(data){
 
 function showRandomNode(data) {
 	if (!random) return;
-	var keys = Object.keys(data.nodes);
-	var id = data.nodes[keys[Math.floor(keys.length * Math.random())]].id;
-	showOneNode(id, 2, data);
-	if (random) {
-		setTimeout(function(){
-			showRandomNode(data)
-		}, 15000);
+	if ($("#graph").is(":visible")){
+		var keys = Object.keys(data.nodes);
+		var id = data.nodes[keys[Math.floor(keys.length * Math.random())]].id;
+		showOneNode(id, 2, data);
+		if (random) {
+			setTimeout(function(){ showRandomNode(data) }, 15000);
+		}
+	} else {
+		setTimeout(function(){ showRandomNode(data) }, 1000);
 	}
 }
 
@@ -207,22 +209,20 @@ function getColors(){
 			 30: "#9ae8da", 31: "#2D71D3", }
 }
 
-var firstRandom = true; //if first time generating randomly
 function showOneNode(id, confidence, data) {
 	var p = data.nodes[id];
 	var keys = {};
 	var nodes = [];
 	var edges = [];
-	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": p.edges[confidence].length };
 	p.edges[confidence].forEach(function (i){
 		var f = data.nodes[i];
 		if (f) {
-			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
 			if (notInArray(edges, [p.id, f.id])) { edges.push([p.id, f.id]); }
 			f.edges[confidence].forEach(function (j){
 				var s = data.nodes[j];
 				if (s) {
-					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": s.edges[confidence].length };
+					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
 					if (notInArray(edges, [f.id, s.id])) { edges.push([f.id, s.id]); }
 					s.edges[confidence].forEach(function (k){
 						var t = data.nodes[k];
@@ -232,17 +232,11 @@ function showOneNode(id, confidence, data) {
 			});
 		}
 	});
+	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
 	$("#results").html("Network of <b>" + p.name +"</b>");
-	if (firstRandom){ //first time generating random node
-		console.log("first time");
-		var options = { width: $("#graph").width(), height: '800', colors: getColors() };
-		firstRandom = false;
-	} else {
-		console.log("not first time");
-		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
-	}
+	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
 	graph.on("node:click", function(d) {
 		random = false;
@@ -306,15 +300,13 @@ function showTwoNodes(id1, id2, confidence, data) {
 	var edges = [];
 	var p1 = data.nodes[id1];
 	var p2 = data.nodes[id2];
-	keys[p1.id] = { "id": p1.id, "text": p1.label, "cluster": getCluster(p1.birth), "size": p1.edges[confidence].length };
-	keys[p2.id] = { "id": p2.id, "text": p2.label, "cluster": getCluster(p2.birth), "size": p2.edges[confidence].length };
 	p1.edges.forEach(function (list){
 		if (list.indexOf(p2.id) > -1) { edges.push([p1.id, p2.id]); return; }
 	});
 	p1.edges[confidence].forEach(function (e){
 		if (p2.edges[confidence].indexOf(e) > -1) {
 			var f = data.nodes[e];
-			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
+			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
 			edges.push([p1.id, f.id]);
 			edges.push([p2.id, f.id]);
 		}
@@ -325,8 +317,8 @@ function showTwoNodes(id1, id2, confidence, data) {
 			if (p2.edges[confidence].indexOf(j) > -1) {
 				var s = data.nodes[j];
 				if (f.id != p2.id && s.id != p1.id) {
-					keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": f.edges[confidence].length };
-					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": s.edges[confidence].length };
+					keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
 					if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
 					if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
 					if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
@@ -334,6 +326,8 @@ function showTwoNodes(id1, id2, confidence, data) {
 			}
 		});
 	});
+	keys[p1.id] = { "id": p1.id, "text": p1.label, "cluster": getCluster(p1.birth), "size": 14 };
+	keys[p2.id] = { "id": p2.id, "text": p2.label, "cluster": getCluster(p2.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
 	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");

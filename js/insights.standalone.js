@@ -9717,7 +9717,7 @@ var PATH_STROKE_WIDTH = .8;
 var SELECTED_PATH_STROKE_WIDTH = 2;
 var CIRCLE_STROKE = "#FFF";
 var BASE_ELEMENT_CLASS = "insights-graph";
-var RADIUS_RANGE = [6, 10];
+var RADIUS_RANGE = [4, 14];
 var TITLE_RANGE = [0, 1];
 
 // Defaults
@@ -10151,7 +10151,7 @@ Graph.prototype = {
       .attr("stroke", bind(this, this.pathStroke))
       .attr("stroke-width", PATH_STROKE_WIDTH)
       .attr("fill", "none")
-      .on("click", bind(this, this.onPathClick));
+      .on("dblclick", bind(this, this.onPathClick));
     
     var node = this.d3Nodes = this.parent.selectAll(".node")
       .data(force.nodes())
@@ -10159,7 +10159,7 @@ Graph.prototype = {
       .attr("class", "node")
       .on("mouseover", bind(this, this.onMouseOver))
       .on("mouseout", bind(this, this.onMouseOut))
-      .on("click", bind(this, this.onCircleClick));
+      .on("dblclick", bind(this, this.onCircleClick));
 
     this.d3Circles = node.append("circle")
       .style("fill", bind(this, this.getClusterColor))

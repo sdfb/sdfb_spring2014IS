@@ -1,9 +1,9 @@
 aside {
     position: fixed;
-    top: 0;
+    left: 0;
+    top: 34px;
     bottom: 0;
     width: 300px;
-    margin-top: 34px;
 }
 
 #accordion {

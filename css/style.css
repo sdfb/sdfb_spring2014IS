@@ -13,6 +13,8 @@ body {
 
 header {
     position: fixed;
+    left: 0;
+    top: 0;
     line-height: 34px;
     color: #CAE4E1;
     background: #555 repeat-x top left;
@@ -179,7 +181,6 @@ select {
 /*SLIDER*/
 #container{
   display: inline-block;
-  background:url(../img/bg.jpg)!important;
   padding:100px 50px 0px 50px;
 }
 
@@ -222,4 +223,8 @@ select {
 a {
   outline:none;
   -moz-outline-style:none;
+}
+
+#jqi_state0_buttonOk {
+  cursor: pointer;
 }
