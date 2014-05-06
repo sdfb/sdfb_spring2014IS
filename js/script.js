@@ -12,6 +12,7 @@ $(document).ready(function() {
     $("#icon-tag").tooltip({placement:  'right', title: 'Tag group'});
     $("#icon-link").tooltip({placement: 'right', title: 'Add a relationship'});
     $("#icon-annotate").tooltip({placement: 'right', title: 'Annotate relationship'});
+    $("#icon-info").tooltip({placement: 'left', title: 'Use mouse weel to zoom and double click for more information'});
 
 	$('#onenodeform').css('display','block');
 
