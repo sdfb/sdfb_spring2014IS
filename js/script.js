@@ -33,7 +33,14 @@ $(document).ready(function() {
 	$('#findtwogroup').click(function(e){
 		$('#twogroupsmenu').css('display','block');
 	});
-    $("button.icon").click(function(e){
+    $('section button').click(function(e){
+        if (this.name == "node") {
+            $('#zoom').css('display','block');
+        } else if (this.name == "group") {
+            $('#zoom').css('display','none');
+        }
+    });
+    $("aside button.icon").click(function(e){
         $('.accordion_content ul li').removeClass('clicked');
         $('section').css('display','none');
         $('#add' + this.name).addClass('clicked');

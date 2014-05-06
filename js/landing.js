@@ -5,7 +5,7 @@ $(document).ready(function(){
 	})
 
 	var i = 0;
-	$('#arrow1').click(function(){
+	$('#arrow').click(function(){
 		$('#landing-open').slideUp();
 		$('#landing-def').fadeIn();
 		$('#arrows').fadeIn();
@@ -49,7 +49,7 @@ $(document).ready(function(){
 		if (i > 0 && i <= 4){ i-- };
 	});
 
-	$('#arrow1').mouseover(function(){
+	$('#arrow').mouseover(function(){
 		document.body.style.cursor = 'pointer';
 	}).mouseout(function(){
 		document.body.style.cursor = 'auto';

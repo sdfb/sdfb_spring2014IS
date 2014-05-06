@@ -13,6 +13,8 @@ body {
 
 header {
     position: fixed;
+    left: 0;
+    top: 0;
     line-height: 34px;
     color: #CAE4E1;
     background: #555 repeat-x top left;
@@ -41,6 +43,13 @@ header {
 #graph {
     margin-left: 300px;
     height: 93%;
+}
+
+#zoom {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 30px;
 }
 
 b {
@@ -179,7 +188,6 @@ select {
 /*SLIDER*/
 #container{
   display: inline-block;
-  background:url(../img/bg.jpg)!important;
   padding:100px 50px 0px 50px;
 }
 
@@ -222,4 +230,8 @@ select {
 a {
   outline:none;
   -moz-outline-style:none;
+}
+
+#jqi_state0_buttonOk {
+  cursor: pointer;
 }
