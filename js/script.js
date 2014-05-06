@@ -34,9 +34,9 @@ $(document).ready(function() {
 		$('#twogroupsmenu').css('display','block');
 	});
     $('section button').click(function(e){
-        if (e.name == "node") {
+        if (this.name == "node") {
             $('#zoom').css('display','block');
-        } else if (e.name == "group") {
+        } else if (this.name == "group") {
             $('#zoom').css('display','none');
         }
     });
