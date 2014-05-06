@@ -171,7 +171,7 @@ function initGraph(data){
 		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
-	$("button.icon").click(function(){
+	$("aside button.icon").click(function(){
 		addNodes = [];
 		addEdges = [];
 		resetInputs();
@@ -251,6 +251,13 @@ function showOneNode(id, confidence, data) {
 		getAnnotation(id1 < id2 ? id1 : id2, id1 > id2 ? id1 : id2, data);
 	});
 	showNodeInfo(p, findGroups(p, data));
+	$('#zoom button.icon').click(function(e){
+		if (this.name == 'in') {
+			graph.zoomIn();
+		} else {
+			graph.zoomOut();
+		}
+	});
 }
 
 function notInArray(arr, val) {
@@ -336,6 +343,13 @@ function showTwoNodes(id1, id2, confidence, data) {
 	graph.on("node:click", function(d) {
 		var clicked = data.nodes[d.id];
 		showNodeInfo(clicked, findGroups(clicked, data));
+	});
+	$('#zoom button.icon').click(function(e){
+		if (this.name == 'in') {
+			graph.zoomIn();
+		} else {
+			graph.zoomOut();
+		}
 	});
 }
 

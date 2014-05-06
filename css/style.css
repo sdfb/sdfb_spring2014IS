@@ -45,6 +45,13 @@ header {
     height: 93%;
 }
 
+#zoom {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+}
+
 b {
     font-weight: 700;
 }

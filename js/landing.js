@@ -2,7 +2,6 @@ $(document).ready(function(){
 	$('#skip').click(function(){
 		$('#landing').fadeOut();
 		$('#everything').fadeIn();
-		$.prompt("Use mouse weel to zoom! <br> Double click on nodes and edges to view more information!");
 	})
 
 	var i = 0;
@@ -28,7 +27,6 @@ $(document).ready(function(){
 		} else if (i==4){ //sidebar
 			$('#landing').fadeOut();
 			$('#everything').fadeIn();
-			$.prompt("You can zoom using your mouse wheel. You can view node or edge information by double-clicking on them!");
 		}
 		if (i >= 0 && i < 4){ i++ };
 	});

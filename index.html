@@ -36,18 +36,19 @@
 <body>
 	<div id="everything">
 	<header>Six Degrees of Francis Bacon</header>
-
 	<div id="results"></div>
 	<div id="graph"></div>
+	<div id="zoom">
+		<button class="icon" id="icon-zoomin" name="in"></button>
+		<button class="icon" id="icon-zoomout" name="out"></button>	
+	</div>
 	<div id="twogroupsmenu">
 		<button type="button" class="toggle" id="group1" ></button>
 		<button type="button" class="toggle  active" id="group2" >Intersection</button>
 		<button type="button" class="toggle" id="group3" ></button>
 	</div>
-
 	<aside>
 		<div id="accordion">
-
 			<h3 class="accordion_btn"><span id="icon-about"></span>About</h3>
 			<div  class="accordion_content " id="about">
 				Six Degrees of Francis Bacon (SDFB) is a digital reconstruction of the early modern social network (EMSN) that scholars and students from all over the world will be able to collaboratively expand, revise, curate, and critique.
@@ -71,7 +72,7 @@
 					<article class="slider" title="1"></article>
 					<article class="slider-result" id="slider-result1">Likely relationships</article>
 					<input id="confidence1" type="hidden" value="3"/>
-					<button type="button" id="findonenode">Find</button>
+					<button type="button" id="findonenode" name="node">Find</button>
 				</section>
 
 				<section id="twonodeform">
@@ -80,19 +81,19 @@
 					<article class="slider" title="2"></article>
 					<article class="slider-result" id="slider-result2">Likely relationships</article>
 					<input id="confidence2" type="hidden" value="3"/>
-					<button type="button" id="findtwonode">Find</button>
+					<button type="button" id="findtwonode" name="node">Find</button>
 				</section>
 
 				<!-- GROUP FORMS -->
 				<section id="onegroupform">
 					<input type="text" id="four" placeholder="Group">
-					<button type="button" id="findonegroup">Find</button>
+					<button type="button" id="findonegroup" name="group">Find</button>
 				</section>
 
 				<section id="twogroupform">
 					<input type="text" id="five" placeholder="Group 1"><br>
 					<input type="text" id="six" placeholder="Group 2"><br>
-					<button type="button" id="findtwogroup">Find</button>
+					<button type="button" id="findtwogroup" name="group">Find</button>
 				</section>
 			</div>
 
