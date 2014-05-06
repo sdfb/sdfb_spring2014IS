@@ -75,6 +75,10 @@ aside {
     background-image: url(../img/zoomout.png);
 }
 
+#icon-info {
+    background-image: url(../img/info.png);
+}
+
 #nodeinfo {
 	overflow: auto;
 }

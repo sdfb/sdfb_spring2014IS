@@ -175,6 +175,12 @@ function initGraph(data){
 		addNodes = [];
 		addEdges = [];
 		resetInputs();
+		var name = $('#node-name').html() + " (" + $('#node-bdate').html() + ")";
+        if (this.id == "icon-tag") {
+        	$("#entry_1177061505").val(name);
+        } else if (this.id == "icon-link") {
+        	$("#entry_768090773").val(name);
+        }
 	});
 }
 
@@ -235,7 +241,7 @@ function showOneNode(id, confidence, data) {
 	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
-	$("#results").html("Network of <b>" + p.name +"</b>");
+	$("#results").html("Two degrees of <b>" + p.name +"</b>");
 	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
 	graph.on("node:click", function(d) {
@@ -254,7 +260,7 @@ function showOneNode(id, confidence, data) {
 	$('#zoom button.icon').click(function(e){
 		if (this.name == 'in') {
 			graph.zoomIn();
-		} else {
+		} else if (this.name == 'out') {
 			graph.zoomOut();
 		}
 	});
@@ -417,32 +423,43 @@ function downloadData(data, title) {
 	$(dwnbtn).appendTo('#graph');
 }
 
-function getAnnotation(id1, id2,data) {
-	// var k = Math.ceil((p.id + 1) / 250) / 10;
-	// var key = keys['edges' + Math.ceil(k)];
-	console.log(id1 + ' ' + id2);
+function getAnnotation(id1, id2, data) {
+	var confidence = findConfidence(id1, id2, data);
+	console.log(id1 + ' ' + id2 + ' ' + confidence);
 	Tabletop.init({
 		key: keys.annot,
 		query: 'source= ' + id1 + ' and target= ' + id2,
+		wanted: [confidence],
 		simpleSheet: true,
 		callback: function(result) {
 			result.forEach(function (row){
-				accordion("edge");			
+				accordion("edge");
 				$("#edge-nodes").html(data.nodes[id1].first +" "+data.nodes[id1].last + " & " + data.nodes[id2].first+" "+data.nodes[id2].last);
-				$("#edge-confidence").html(getConfidence(row.confidence));
+				$("#edge-confidence").html(confidence);
 				$("#edge-annotation").html(row.annotation);
 				return true;
 			});
 		}
 	});
+	$("#icon-annotate").click(function(){
+		resetInputs();
+		$("#entry_768090773").val(data.nodes[id1].name);
+		$("#entry_1321382891").val(data.nodes[id2].name);
+	});
 }
 
-function getConfidence(c) {
-	if (c < 0.4) return "Very unlikely";
-	else if (c < 0.5) return "Unlikely";
-	else if (c < 0.7) return "Possible";
-	else if (c < 0.9) return "Likely";
-	else return "Certain";
+function findConfidence(id1, id2, data) {
+	var p1 = data.nodes[id1];
+	var p2 = data.nodes[id2];
+	var i = -1;
+	p1.edges.forEach(function (list, index){
+		if (list.indexOf(p2.id) > -1) { i = index; return; }
+	});
+	if (i == 0) return "uncertain";
+	else if (i == 1) return "unlikely";
+	else if (i == 2) return "possible";
+	else if (i == 3) return "likely";
+	else return "certain";
 }
 
 function populateLists(data){
