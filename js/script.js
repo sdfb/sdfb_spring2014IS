@@ -12,7 +12,7 @@ $(document).ready(function() {
     $("#icon-tag").tooltip({placement:  'right', title: 'Tag group'});
     $("#icon-link").tooltip({placement: 'right', title: 'Add a relationship'});
     $("#icon-annotate").tooltip({placement: 'right', title: 'Annotate relationship'});
-    $("#icon-info").tooltip({placement: 'left', title: 'Use mouse weel to zoom and double click for more information'});
+    $("#icon-info").tooltip({placement: 'left', title: 'Scroll to zoom, double click on an node or edge for more information and single click to reset view'});
     $("#color-info").tooltip({placement: 'left', title: 'Click to view more information about the colors'});
 
 	$('#onenodeform').css('display','block');

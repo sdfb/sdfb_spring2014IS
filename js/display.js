@@ -148,7 +148,7 @@ function initGraph(data){
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, [], options).render();
 		var link = 'https://docs.google.com/spreadsheets/d/1-faviCW5k2v7DVOHpSQT-grRqNU1lBVkUjJEVfOvSs8/edit#gid=688870062';
-		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
+		$.prompt("Thank you for your person contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
 	$('#submitedge').click(function(){
@@ -164,12 +164,12 @@ function initGraph(data){
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, addEdges, options).render();
 		var link = 'https://docs.google.com/spreadsheets/d/1cu7hpYQMWTO8C7F8V34BEbdB2NrUe1xsslWKoai3BWE/edit#gid=51712082';
-		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
+		$.prompt("Thank you for your annotated relationship contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
 	$('#submitgroup').click(function(){
 		var link = 'https://docs.google.com/spreadsheet/ccc?key=0AhtG6Yl2-hiRdFFQS2hybWRXRVNkNVJXR2FENnhMM0E&usp=drive_web#gid=0';
-		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
+		$.prompt("Thank you for your group contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
 	$("aside button.icon").click(function(){
@@ -352,7 +352,7 @@ function showTwoNodes(id1, id2, confidence, data) {
 				}
 			});
 		});
-		
+
 		conf++;
 		
 	} while (conf <5);	

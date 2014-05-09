@@ -139,7 +139,7 @@ aside {
 	color: #fff;
 }
 
-#nodeinfo p {
+#nodeinfo p, #edgeinfo p {
 	color: #fff;
 	text-align: center;
 	font-size:14px;
