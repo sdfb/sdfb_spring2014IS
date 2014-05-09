@@ -28,7 +28,7 @@ header {
 }
 
 #results {
-    height: 4%;
+    height: 25px;
     line-height: 20px;
     color: #555;
     background: none;
@@ -234,4 +234,37 @@ a {
 
 #jqi_state0_buttonOk {
   cursor: pointer;
+}
+
+#guide {
+  display:none;
+  z-index:500;
+  position:absolute;
+  top:20%;
+  background-color: #ddd;
+  border:0px solid;
+  border-radius:25px;
+  opacity:0.98;
+  padding:20px;
+  left: 50%;
+  margin-left: -200px;
+
+}
+#guide-pic {
+
+    height:300px;
+    width:600px;
+    padding-top:20px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#cancel {
+    background-image: url(../img/cancel.png);
+    width: 25px;
+    height: 25px;
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }

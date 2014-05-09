@@ -80,8 +80,8 @@ function init(result) {
 function initGraph(data){
 	
 	populateLists(data);
-	
-	showRandomNode(data);
+	//console.log(data);
+	showOneNode(968, 1, data);
 
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
@@ -206,13 +206,14 @@ function getCluster(year){
 }
 
 function getColors(){
-	return { 0:  "#9dedd4", 1:  "#0c55ad", 2:  "#79BD8F", 3:  "#00A287", 4:  "#99CD7D", 
-			 5:  "#349A98", 6:  "#558FCB", 7:  "#3A6BF9", 8:  "#6CDBE0", 9:  "#3C58A6",
-			 10: "#B8DDF5", 11: "#6566AD", 12: "#BA9DCA", 13: "#532E8A", 14: "#CC71E2",
-			 15: "#B53A83", 16: "#a573b1", 17: "#EF6097", 18: "#DE89B9", 19: "#F79484",
-			 20: "#F3805D", 21: "#EF4B39", 22: "#F1623E", 23: "#FCBD3F", 24: "#F9ED45",
-			 25: "#F79838", 26: "#FAF39A", 27: "#DADD45", 28: "#55C66D", 29: "#3EA8C1",
-			 30: "#9ae8da", 31: "#2D71D3", }
+	 return { 0:  "#A6D9CA", 1:  "#F0623E", 2:  "#B99CCA", 3:  "#B8DCF4", 
+             4:  "#F9F39C", 5:  "#339998", 6:  "#6566AD", 7:  "#F89939", 
+             8:  "#558FCB", 9:  "#04A287", 10: "#B53C84", 11: "#F2805C",
+             12: "#79BD90", 13: "#654B9E", 14: "#DD88B8", 15: "#3D58A6",
+             16: "#EF4C3A", 17: "#99CC7D", 18: "#4D6AB2", 19: "#A1D7D0",
+             20: "#FABC3E", 21: "#EE6096", 22: "#DADC44", 23: "#B177B3",
+             24: "#A573B1", 25: "#78CDD6", 26: "#60BD6D", 27: "#3EA7C0",
+             28: "#F59485", 29: "#3F6FB6", 30: "#F8EC49", 31: "#1C57A7", }
 }
 
 function showOneNode(id, confidence, data) {

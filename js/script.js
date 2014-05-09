@@ -13,8 +13,21 @@ $(document).ready(function() {
     $("#icon-link").tooltip({placement: 'right', title: 'Add a relationship'});
     $("#icon-annotate").tooltip({placement: 'right', title: 'Annotate relationship'});
     $("#icon-info").tooltip({placement: 'left', title: 'Use mouse weel to zoom and double click for more information'});
+    $("#color-info").tooltip({placement: 'left', title: 'Click to view more information about the colors'});
 
 	$('#onenodeform').css('display','block');
+    $("#color-info").click(function(){
+        if( $('#guide').css('display') == 'none' ){
+            $("#guide").css('display','block');
+        }
+        else{
+            $("#guide").css('display','none');
+        }        
+    });
+    $("#guide").click(function(){
+          $("#guide").css('display','none');
+    });
+
 
 	// Shows search bars when click on side menu
 	$('.accordion_content ul li').click(function(e){

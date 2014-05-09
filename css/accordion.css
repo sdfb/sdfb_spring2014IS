@@ -4,6 +4,7 @@ aside {
     top: 34px;
     bottom: 0;
     width: 300px;
+    height:100%;
 }
 
 #accordion {
@@ -79,7 +80,14 @@ aside {
     background-image: url(../img/info.png);
 }
 
-#nodeinfo {
+#color-info {
+    background-image: url(../img/question.png);
+}
+
+
+
+
+#nodeinfo, #contribute, #about{
 	overflow: auto;
 }
 

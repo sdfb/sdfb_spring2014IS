@@ -41,13 +41,28 @@
 	<div id="zoom">
 		<button class="icon" id="icon-zoomin" name="in"></button>
 		<button class="icon" id="icon-zoomout" name="out"></button>	
-		<button class="icon" id="icon-info"></button>	
+		<button class="icon" id="icon-info"></button>
+		<button class="icon" id="color-info"></button>		
 	</div>
 	<div id="twogroupsmenu">
 		<button type="button" class="toggle" id="group1" ></button>
 		<button type="button" class="toggle  active" id="group2" >Intersection</button>
 		<button type="button" class="toggle" id="group3" ></button>
 	</div>
+
+<!-- 	<div id="instructions">
+		<p> Instructions on how to use: </p>
+		<div class="icon" id="cancel"></div>
+		<img id="guide-pic" src="img/coloryearlegend.png" alt="Color Legend">
+	</div> -->
+	<div id="guide">
+		<p> Node Color By Birth Year: </p>
+		<div class="icon" id="cancel"></div>
+		<img id="guide-pic" src="img/coloryearlegend.png" alt="Color Legend">
+	</div>
+	
+
+
 	<aside>
 		<div id="accordion">
 			<h3 class="accordion_btn"><span id="icon-about"></span>About</h3>
@@ -103,7 +118,7 @@
 				<ul>
 					<li id="addnode">Add person</li>
 					<li id="addgroup">Add group</li>
-					<li id="addedge">Add annotated relationship</li>
+					<li id="addedge">Annotate relationship</li>
 				</ul>
 				
 				<section id="addnodeform">
@@ -117,6 +132,8 @@
 						<input type="text" name="entry.524366257"  id="entry_524366257"  placeholder="Birth Date">
 						<input type="text" name="entry.1810714929" id="entry_1810714929" placeholder="Death Date">
 						<input type="text" name="entry.2129738910" id="entry_2129738910" placeholder="Historical Significance">
+
+						<input type="text" name="entry.1201727393" id="entry_1201727393" placeholder="Contributor (Your Name) ">
 						<button type="submit" name="submit" id="submitnode">Submit</button>
 					</form>
 				</section>
@@ -166,6 +183,8 @@
 						</select>
 						<textarea type="text" name="entry.837175332" id="entry_837175332" placeholder="Annotation"></textarea>
 						<input type="text" name="entry.484668707" id="entry_484668707" placeholder="Bibliographical Source(s)">
+
+						<input type="text" name="entry.1767559421" id="entry_1767559421" placeholder="Contributor (Your Name) ">
 						<button type="submit" name="submit" id="submitedge">Submit</button>
 					</form>
 				</section>
@@ -178,6 +197,7 @@
 					<form action="https://docs.google.com/forms/d/1HbzCpwoLGMxEMVoRFiEA52SZdJa-8QpRO8cXVbe8_8Y/formResponse" id="googleaddgroup" method="post" target="hidden_iframe3" onsubmit="submitted=true;">
 						<input type="text" name="entry.110233074"  id="entry_110233074"  placeholder="Group Name">
 						<input type="text" name="entry.1177061505" id="entry_1177061505" placeholder="Person Name">
+						<input type="text" name="entry.370499701" id="entry_370499701" placeholder="Contributor (Your Name) ">
 						<button type="submit" name="submit" id="submitgroup">Submit</button>
 					</form>
 				</section>
