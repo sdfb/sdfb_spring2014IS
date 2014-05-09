@@ -16,6 +16,8 @@ $(document).ready(function() {
     $("#icon-info").tooltip({placement: 'left', title: 'Scroll to zoom, double click on an node or edge for more information and single click to reset view'});
     $("#color-info").tooltip({placement: 'left', title: 'Click to view more information about the colors'});
 
+    $("#slide1").tooltip({placement: 'right', title: 'Choose the certainty of relationship'});
+    $("#slide2").tooltip({placement: 'right', title: 'Choose the certainty of relationship'});
 	$('#onenodeform').css('display','block');
 
     //click functionality for color guide
