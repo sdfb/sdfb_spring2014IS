@@ -261,13 +261,13 @@ function showOneNode(id, confidence, data) {
 	} while (conf <5); 
 	
         	var result = "Very unlikely";
-        	if (conf.value == 2) {
+        	if (conf == 2) {
         		result = "Unlikely";
-        	} else if (conf.value == 3) {
+        	} else if (conf == 3) {
         		result = "Possible";
-        	} else if (conf.value == 4) {
+        	} else if (conf == 4) {
         		result = "Likely";
-        	} else if (conf.value == 5){
+        	} else if (conf == 5){
                 result = "Certain"
         	}
         	
