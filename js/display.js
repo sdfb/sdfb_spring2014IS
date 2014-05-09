@@ -259,6 +259,16 @@ function showOneNode(id, confidence, data) {
 		conf++;
 		
 	} while (conf <5); 
+	
+        	var result = "Very unlikely";
+        	if (conf.value == 2) {
+        		result = "Unlikely";
+        	} else if (ui.value == 3) {
+        		result = "Possible";
+        	} else if (ui.value == 4) {
+        		result = "Likely";
+        	} else if (ui.value == 5){
+                result = "Certain"
 
 	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
