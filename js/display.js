@@ -80,8 +80,9 @@ function init(result) {
 function initGraph(data){
 	
 	populateLists(data);
-	//console.log(data);
-	showOneNode(968, 1, data);
+
+	//shows francis bacon
+	showOneNode(968, 3, data);
 
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
@@ -221,24 +222,31 @@ function showOneNode(id, confidence, data) {
 	var keys = {};
 	var nodes = [];
 	var edges = [];
-	p.edges[confidence].forEach(function (i){
-		var f = data.nodes[i];
-		if (f) {
-			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-			if (notInArray(edges, [p.id, f.id])) { edges.push([p.id, f.id]); }
-			f.edges[confidence].forEach(function (j){
-				var s = data.nodes[j];
-				if (s) {
-					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
-					if (notInArray(edges, [f.id, s.id])) { edges.push([f.id, s.id]); }
-					s.edges[confidence].forEach(function (k){
-						var t = data.nodes[k];
-						if (t && t.id in keys && notInArray(edges, [s.id, t.id])) { edges.push([s.id, t.id]); }
-					});
-				}
-			});
-		}
-	});
+
+	var conf = confidence;
+	do {
+		p.edges[conf].forEach(function (i){
+			var f = data.nodes[i];
+			if (f) {
+				keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+				if (notInArray(edges, [p.id, f.id])) { edges.push([p.id, f.id]); }
+				f.edges[conf].forEach(function (j){
+					var s = data.nodes[j];
+					if (s) {
+						keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
+						if (notInArray(edges, [f.id, s.id])) { edges.push([f.id, s.id]); }
+						s.edges[conf].forEach(function (k){
+							var t = data.nodes[k];
+							if (t && t.id in keys && notInArray(edges, [s.id, t.id])) { edges.push([s.id, t.id]); }
+						});
+					}
+				});
+			}
+		});
+		conf++;
+		
+	} while (conf <5);
+
 	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
@@ -317,29 +325,41 @@ function showTwoNodes(id1, id2, confidence, data) {
 	p1.edges.forEach(function (list){
 		if (list.indexOf(p2.id) > -1) { edges.push([p1.id, p2.id]); return; }
 	});
-	p1.edges[confidence].forEach(function (e){
-		if (p2.edges[confidence].indexOf(e) > -1) {
-			var f = data.nodes[e];
-			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-			edges.push([p1.id, f.id]);
-			edges.push([p2.id, f.id]);
-		}
-	});
-	p1.edges[confidence].forEach(function (i){
-		var f = data.nodes[i];
-		f.edges[confidence].forEach(function (j){
-			if (p2.edges[confidence].indexOf(j) > -1) {
-				var s = data.nodes[j];
-				if (f.id != p2.id && s.id != p1.id) {
-					keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
-					if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
-					if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
-					if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
-				}
+
+	var conf = confidence;
+	do {
+		
+		p1.edges[conf].forEach(function (e){
+			if (p2.edges[conf].indexOf(e) > -1) {
+				var f = data.nodes[e];
+				keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+				edges.push([p1.id, f.id]);
+				edges.push([p2.id, f.id]);
 			}
 		});
-	});
+		p1.edges[conf].forEach(function (i){
+			var f = data.nodes[i];
+			f.edges[conf].forEach(function (j){
+				if (p2.edges[conf].indexOf(j) > -1) {
+					var s = data.nodes[j];
+					if (f.id != p2.id && s.id != p1.id) {
+						keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+						keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
+						if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
+						if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
+						if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
+					}
+				}
+			});
+		});
+		
+		conf++;
+		
+	} while (conf <5);	
+
+
+
+
 	keys[p1.id] = { "id": p1.id, "text": p1.label, "cluster": getCluster(p1.birth), "size": 14 };
 	keys[p2.id] = { "id": p2.id, "text": p2.label, "cluster": getCluster(p2.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
@@ -359,6 +379,7 @@ function showTwoNodes(id1, id2, confidence, data) {
 		}
 	});
 }
+
 
 function showOneGroup(group, data) {
 	var g = data.groups_names[group];
