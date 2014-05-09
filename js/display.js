@@ -260,21 +260,12 @@ function showOneNode(id, confidence, data) {
 		
 	} while (conf <5); 
 	
-        	var result = "Very unlikely";
-        	if (conf == 2) {
-        		result = "Unlikely";
-        	} else if (conf == 3) {
-        		result = "Possible";
-        	} else if (conf == 4) {
-        		result = "Likely";
-        	} else if (conf == 5){
-                result = "Certain"
-        	}
         	
 	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
-	$("#results").html("Two degrees of <b>" + p.name +"</b> at " + result);
+	$("#results").html("Two degrees of <b>" + p.name +"</b>" );
+	console.log(conf);
 
 	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
