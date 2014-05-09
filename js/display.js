@@ -269,11 +269,12 @@ function showOneNode(id, confidence, data) {
         		result = "Likely";
         	} else if (ui.value == 5){
                 result = "Certain"
-
+        	}
+        	
 	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
-	$("#results").html("Two degrees of <b>" + p.name +"</b> at " + conf);
+	$("#results").html("Two degrees of <b>" + p.name +"</b> at " + result);
 
 	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
