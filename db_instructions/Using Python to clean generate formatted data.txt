@@ -1,0 +1,23 @@
+These are a serise of python programs that allows a person to format new data into data that is ready for the google database
+
+
+1_node csv cleaner.py
+Cleans nodes: removes nodes with no edges, finds birth and death date, separate name into first name and last name
+Takes in a file "nodes_matrix.csv" and "edges_matrix"
+Generates "nodes_clean.csv"
+
+
+2_edge txt.py
+Cleans edges: orders edges in the following matter > small id, big id, confidence
+Takes in a file "nodes_clean.csv" and "edges_matrix"
+Generates "edges.csv"
+
+3_node txt.py
+Puts Nodes and Edges in correct database format {first, last, birth, death, occupation, edges1, edges2, edges3, edges4, edges5}
+Takes in a file "nodes_clean.csv" and "edges.csv"
+Generates "nodes.txt"
+
+4_annotation csv.py
+Generates 5 separate csv files according to confidence (uncertain, unlikely, possible, likely, certain) in database format {source, target, confidence}
+Takes in a file "edges.csv"
+Generates  "uncertain.csv" "unlikely.csv" "possible.csv" "likely.csv" "certain.csv"

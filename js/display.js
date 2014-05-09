@@ -357,30 +357,41 @@ function showTwoNodes(id1, id2, confidence, data) {
 	do {		
 		p1.edges[conf].forEach(function (e){
 			if (p2.edges[conf].indexOf(e) > -1) {
-				var f = data.nodes[e];
-				keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-				edges.push([p1.id, f.id]);
-				edges.push([p2.id, f.id]);
 
-				nodetable.push({"network":p1.label +" -> " + f.label +" -> " + p2.label});
+				var f = data.nodes[e];
+				if(f){
+					keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+					edges.push([p1.id, f.id]);
+					edges.push([p2.id, f.id]);
+
+					nodetable.push({"network":p1.label +" -> " + f.label +" -> " + p2.label});
+				}
+				
 			}
 		});
 		p1.edges[conf].forEach(function (i){
 			var f = data.nodes[i];
-			f.edges[conf].forEach(function (j){
-				if (p2.edges[conf].indexOf(j) > -1) {
-					var s = data.nodes[j];
-					if (f.id != p2.id && s.id != p1.id) {
-						keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-						keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
-						if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
-						if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
-						if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
-						
-						nodetable.push({"network":p1.label +" -> " + f.label+ " -> "+ s.label +" -> "+ p2.label});
+			if (f){
+				f.edges[conf].forEach(function (j){
+					if (p2.edges[conf].indexOf(j) > -1) {
+					
+						var s = data.nodes[j];
+						if (s){
+							if (f.id != p2.id && s.id != p1.id) {
+								keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+								keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
+								if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
+								if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
+								if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
+								
+								nodetable.push({"network":p1.label +" -> " + f.label+ " -> "+ s.label +" -> "+ p2.label});
+							}
+						}					
 					}
-				}
-			});
+				});
+
+			}
+			
 		});
 
 		conf++;
