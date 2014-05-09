@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    //populating tooltips
 	$("#onenode").tooltip({placement: 	'right', title: 'Connections of one individual'});
 	$("#twonode").tooltip({placement: 	'right', title: 'Mutual connections between two individuals'});
 	$("#onegroup").tooltip({placement: 	'right', title: 'Members of one group'});
@@ -16,6 +17,8 @@ $(document).ready(function() {
     $("#color-info").tooltip({placement: 'left', title: 'Click to view more information about the colors'});
 
 	$('#onenodeform').css('display','block');
+
+    //click functionality for color guide
     $("#color-info").click(function(){
         if( $('#guide').css('display') == 'none' ){
             $("#guide").css('display','block');
@@ -64,6 +67,8 @@ $(document).ready(function() {
         $('#contribute').prev().addClass('on');
         $('#contribute').slideDown();
     });
+
+    //sliding animation
 	$(".slider").slider({
         animate: true,
         range: "min",
