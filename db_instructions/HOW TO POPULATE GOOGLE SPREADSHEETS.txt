@@ -1,0 +1,27 @@
+HOW TO POPULATE GOOGLE SPREADSHEETS
+
+METHOD 1
+Copy row by row
+
+METHOD 2
+Let's assume json = [{source, target, confidence}]
+Open a google spreadsheet (make sure it's the old version, I can't extract the data from the new version).
+Go to Tools > Script Manager
+Click "new" > "Blank Project"
+Type this:
+function run() {
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+var sheets = ss.getSheets();
+var sheet = ss.getActiveSheet();
+var json = [];
+var rows = [];
+for (i = 0; i < json.length; i++) {
+rows.push([json[i].source, json[i].target, json[i].confidence]);
+}
+dataRange = sheet.getRange(2, 1, rows.length, 3);
+dataRange.setValues(rows);
+}
+Copy your json data, and past it after "var json =" (remove the []).
+
+METHOD 3
+File > Import
