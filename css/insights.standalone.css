@@ -24,7 +24,7 @@
 }
 
 .insights-graph text {
-  fill: #444;
+  fill: #111;
   font: 8px sans-serif;
   pointer-events: none;
 }

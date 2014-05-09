@@ -7,6 +7,7 @@ var random = true;
 var addNodes;
 var addEdges;
 
+//stops the randomization (exploration) upon clicking on the sidebar
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
 		key: keys.nodes,
@@ -35,7 +36,7 @@ function group() {
 	this.nodes = null;
 }
 
-// Create a dictionnary of nodes and groups
+// Create a dictionnary of nodes and groups, splits it up based on our database
 function init(result) {
 	var data = {
 		nodes: {},
@@ -80,9 +81,11 @@ function init(result) {
 function initGraph(data){
 	
 	populateLists(data);
-	
-	showRandomNode(data);
 
+	//shows francis bacon
+	showOneNode(968, 3, data);
+
+	//click methods for all the 'find' buttons in the search bar
 	$("#findonenode").click(function () {
 		if ($("#one").val()) {
 			Pace.restart();
@@ -120,6 +123,7 @@ function initGraph(data){
 		resetInputs();
 	});
 
+	//click functions for the buttons inside shared groups
 	$("#group1").click(function () {
 		showOneGroup($("#group1").html(), data);
 	});
@@ -132,6 +136,8 @@ function initGraph(data){
 		findInterGroup($("#group1").html(), $("#group3").html(), data);
 	});
 
+
+	//submission buttons for contributions
 	$('#submitnode').click(function(){
 		Pace.restart();
 		var name = $('#entry_1804360896').val() + ' ' + $('#entry_754797571').val();
@@ -147,7 +153,7 @@ function initGraph(data){
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, [], options).render();
 		var link = 'https://docs.google.com/spreadsheets/d/1-faviCW5k2v7DVOHpSQT-grRqNU1lBVkUjJEVfOvSs8/edit#gid=688870062';
-		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
+		$.prompt("Thank you for your person contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
 	$('#submitedge').click(function(){
@@ -163,12 +169,12 @@ function initGraph(data){
 		var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 		var graph = new Insights($("#graph")[0], addNodes, addEdges, options).render();
 		var link = 'https://docs.google.com/spreadsheets/d/1cu7hpYQMWTO8C7F8V34BEbdB2NrUe1xsslWKoai3BWE/edit#gid=51712082';
-		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
+		$.prompt("Thank you for your annotated relationship contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
 	$('#submitgroup').click(function(){
 		var link = 'https://docs.google.com/spreadsheet/ccc?key=0AhtG6Yl2-hiRdFFQS2hybWRXRVNkNVJXR2FENnhMM0E&usp=drive_web#gid=0';
-		$.prompt("Thank you for your contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
+		$.prompt("Thank you for your group contribution! You can review your submission by going to <a href='"+link+"' target='_blank'>link</a>");
 	});
 
 	$("aside button.icon").click(function(){
@@ -184,6 +190,8 @@ function initGraph(data){
 	});
 }
 
+
+//the 'explore' method - shows a random node every n seconds. was not implemented in the end
 function showRandomNode(data) {
 	if (!random) return;
 	if ($("#graph").is(":visible")){
@@ -198,6 +206,7 @@ function showRandomNode(data) {
 	}
 }
 
+//checking for years outside the bounds of hardcoded colors
 function getCluster(year){
 	if (parseInt(year) < 1550) {return 0}
 	if (parseInt(year) > 1700) {return 1}
@@ -205,45 +214,62 @@ function getCluster(year){
 	return (2 + cluster);
 }
 
+// hardcoding picked colors of the nodes
+// returns node color
 function getColors(){
-	return { 0:  "#9dedd4", 1:  "#0c55ad", 2:  "#79BD8F", 3:  "#00A287", 4:  "#99CD7D", 
-			 5:  "#349A98", 6:  "#558FCB", 7:  "#3A6BF9", 8:  "#6CDBE0", 9:  "#3C58A6",
-			 10: "#B8DDF5", 11: "#6566AD", 12: "#BA9DCA", 13: "#532E8A", 14: "#CC71E2",
-			 15: "#B53A83", 16: "#a573b1", 17: "#EF6097", 18: "#DE89B9", 19: "#F79484",
-			 20: "#F3805D", 21: "#EF4B39", 22: "#F1623E", 23: "#FCBD3F", 24: "#F9ED45",
-			 25: "#F79838", 26: "#FAF39A", 27: "#DADD45", 28: "#55C66D", 29: "#3EA8C1",
-			 30: "#9ae8da", 31: "#2D71D3", }
+	 return { 0:  "#A6D9CA", 1:  "#F0623E", 2:  "#B99CCA", 3:  "#B8DCF4", 
+             4:  "#F9F39C", 5:  "#339998", 6:  "#6566AD", 7:  "#F89939", 
+             8:  "#558FCB", 9:  "#04A287", 10: "#B53C84", 11: "#F2805C",
+             12: "#79BD90", 13: "#654B9E", 14: "#DD88B8", 15: "#3D58A6",
+             16: "#EF4C3A", 17: "#99CC7D", 18: "#4D6AB2", 19: "#A1D7D0",
+             20: "#FABC3E", 21: "#EE6096", 22: "#DADC44", 23: "#B177B3",
+             24: "#A573B1", 25: "#78CDD6", 26: "#60BD6D", 27: "#3EA7C0",
+             28: "#F59485", 29: "#3F6FB6", 30: "#F8EC49", 31: "#1C57A7", }
 }
 
+//shows all the network of a node
 function showOneNode(id, confidence, data) {
 	var p = data.nodes[id];
 	var keys = {};
 	var nodes = [];
 	var edges = [];
-	p.edges[confidence].forEach(function (i){
-		var f = data.nodes[i];
-		if (f) {
-			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-			if (notInArray(edges, [p.id, f.id])) { edges.push([p.id, f.id]); }
-			f.edges[confidence].forEach(function (j){
-				var s = data.nodes[j];
-				if (s) {
-					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
-					if (notInArray(edges, [f.id, s.id])) { edges.push([f.id, s.id]); }
-					s.edges[confidence].forEach(function (k){
-						var t = data.nodes[k];
-						if (t && t.id in keys && notInArray(edges, [s.id, t.id])) { edges.push([s.id, t.id]); }
-					});
-				}
-			});
-		}
-	});
+
+
+	var conf = confidence;
+	//makes sure that this is inclusive
+	do {
+		p.edges[conf].forEach(function (i){
+			var f = data.nodes[i];
+			if (f) {
+				keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+				if (notInArray(edges, [p.id, f.id])) { edges.push([p.id, f.id]); }
+				f.edges[conf].forEach(function (j){
+					var s = data.nodes[j];
+					if (s) {
+						keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
+						if (notInArray(edges, [f.id, s.id])) { edges.push([f.id, s.id]); }
+						s.edges[conf].forEach(function (k){
+							var t = data.nodes[k];
+							if (t && t.id in keys && notInArray(edges, [s.id, t.id])) { edges.push([s.id, t.id]); }
+						});
+					}
+				});
+			}
+		});
+		conf++;
+		
+	} while (conf <5); 
+
 	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
 	$("#results").html("Two degrees of <b>" + p.name +"</b>");
+
 	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
+
+
+	//adding functionality to node and edge clicks
 	graph.on("node:click", function(d) {
 		random = false;
 		var clicked = data.nodes[d.id];
@@ -266,6 +292,7 @@ function showOneNode(id, confidence, data) {
 	});
 }
 
+//checks if a value is in an array
 function notInArray(arr, val) {
 	var i = arr.length;
 	while (i--) {
@@ -307,38 +334,62 @@ function showNodeInfo(data, groups){
 
 // Display shared network of two nodes
 function showTwoNodes(id1, id2, confidence, data) {
+
 	if (id1 === id2) return;
 	var keys = {};
 	var nodes = [];
 	var edges = [];
 	var p1 = data.nodes[id1];
 	var p2 = data.nodes[id2];
+	var nodetable = [];
+
 	p1.edges.forEach(function (list){
-		if (list.indexOf(p2.id) > -1) { edges.push([p1.id, p2.id]); return; }
-	});
-	p1.edges[confidence].forEach(function (e){
-		if (p2.edges[confidence].indexOf(e) > -1) {
-			var f = data.nodes[e];
-			keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-			edges.push([p1.id, f.id]);
-			edges.push([p2.id, f.id]);
+		if (list.indexOf(p2.id) > -1) {
+			edges.push([p1.id, p2.id]); 
+			nodetable.push({"network":p1.label +" -> " + p2.label});
+			return; 
 		}
+		
 	});
-	p1.edges[confidence].forEach(function (i){
-		var f = data.nodes[i];
-		f.edges[confidence].forEach(function (j){
-			if (p2.edges[confidence].indexOf(j) > -1) {
-				var s = data.nodes[j];
-				if (f.id != p2.id && s.id != p1.id) {
-					keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
-					keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
-					if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
-					if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
-					if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
-				}
+	
+	//second and third degree connections
+	var conf = confidence; //counter for inclusivity
+	do {		
+		p1.edges[conf].forEach(function (e){
+			if (p2.edges[conf].indexOf(e) > -1) {
+				var f = data.nodes[e];
+				keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+				edges.push([p1.id, f.id]);
+				edges.push([p2.id, f.id]);
+
+				nodetable.push({"network":p1.label +" -> " + f.label +" -> " + p2.label});
 			}
 		});
-	});
+		p1.edges[conf].forEach(function (i){
+			var f = data.nodes[i];
+			f.edges[conf].forEach(function (j){
+				if (p2.edges[conf].indexOf(j) > -1) {
+					var s = data.nodes[j];
+					if (f.id != p2.id && s.id != p1.id) {
+						keys[f.id] = { "id": f.id, "text": f.label, "cluster": getCluster(f.birth), "size": 4 };
+						keys[s.id] = { "id": s.id, "text": s.label, "cluster": getCluster(s.birth), "size": 4 };
+						if (notInArray(edges, [p1.id, f.id])) { edges.push([p1.id, f.id]); }
+						if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
+						if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
+						
+						nodetable.push({"network":p1.label +" -> " + f.label+ " -> "+ s.label +" -> "+ p2.label});
+					}
+				}
+			});
+		});
+
+		conf++;
+		
+	} while (conf <5);	
+
+
+	
+
 	keys[p1.id] = { "id": p1.id, "text": p1.label, "cluster": getCluster(p1.birth), "size": 14 };
 	keys[p2.id] = { "id": p2.id, "text": p2.label, "cluster": getCluster(p2.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
@@ -346,10 +397,12 @@ function showTwoNodes(id1, id2, confidence, data) {
 	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
 	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
+
 	graph.on("node:click", function(d) {
 		var clicked = data.nodes[d.id];
 		showNodeInfo(clicked, findGroups(clicked, data));
 	});
+
 	$('#zoom button.icon').click(function(e){
 		if (this.name == 'in') {
 			graph.zoomIn();
@@ -357,14 +410,23 @@ function showTwoNodes(id1, id2, confidence, data) {
 			graph.zoomOut();
 		}
 	});
+
+	if($("#check-shared").is(":checked")){
+		writeNetworkTable(nodetable, "Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
+		$('#zoom').css('display','none');
+	}
+	
 }
 
+
+//displays the members within a group
 function showOneGroup(group, data) {
 	var g = data.groups_names[group];
 	var results = [];
 	g.nodes.forEach(function (n) {	
 		results.push(data.nodes[n]);
 	});
+
 	if (results.length == 0) { return }
 	writeGroupTable(results, "People who belong to the " + group + " group");
 	$("#results").html("People who belong to the <b>" + group + "</b> group");
@@ -384,7 +446,7 @@ function findInterGroup(group1, group2, data) {
 	$("#results").html("Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>");
 }
 
-// Create the table container
+// Create the table container, used for group and shared group
 function writeGroupTable(dataSource, title){
     $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
@@ -405,6 +467,23 @@ function writeGroupTable(dataSource, title){
     downloadData(dataSource, title);
 };
 
+
+function writeNetworkTable(dataSource, title){
+    $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
+    $('#data-table-container').dataTable({
+		'sPaginationType': 'bootstrap',
+		'iDisplayLength': 100,
+        'aaData': dataSource,
+        'aoColumns': [
+            {'mDataProp': 'network', 'sTitle': 'Network'},
+        ],
+        'oLanguage': {
+            'sLengthMenu': '_MENU_ records per page'
+        }
+    });
+    //downloadData(dataSource, title);
+};
+
 // Define two custom functions (asc and desc) for string sorting
 jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
 	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
@@ -414,6 +493,7 @@ jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
 	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
 };
 
+//takes in the title and data, allows users to download the data
 function downloadData(data, title) {
 	var result = title + " \n" + 'First Name,Last Name,Birth Date,Death Date,Historical Significance' + "\n";
 	data.forEach(function (cell) {
@@ -423,6 +503,8 @@ function downloadData(data, title) {
 	$(dwnbtn).appendTo('#graph');
 }
 
+
+//gets annotation from an edge click
 function getAnnotation(id1, id2, data) {
 	var confidence = findConfidence(id1, id2, data);
 	console.log(id1 + ' ' + id2 + ' ' + confidence);
@@ -448,6 +530,7 @@ function getAnnotation(id1, id2, data) {
 	});
 }
 
+//finds and returns correct confidence on the 0-4 scale
 function findConfidence(id1, id2, data) {
 	var p1 = data.nodes[id1];
 	var p2 = data.nodes[id2];
@@ -462,6 +545,8 @@ function findConfidence(id1, id2, data) {
 	else return "certain";
 }
 
+
+//populates dropdowns
 function populateLists(data){
 	$('#one').typeahead({
 		local: Object.keys(data.nodes_names).sort()
@@ -495,6 +580,8 @@ function populateLists(data){
 	});
 }
 
+
+//resets all input values
 function resetInputs(){
 	$("#one").val('');
 	$("#one").typeahead('setQuery', '');
