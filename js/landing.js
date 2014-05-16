@@ -2,8 +2,7 @@ $(document).ready(function(){
 	$('#skip').click(function(){
 		$('#landing').fadeOut();
 		$('#everything').fadeIn();
-	})
-
+	});
 	var i = 0;
 	$('#arrow').click(function(){
 		$('#landing-open').slideUp();

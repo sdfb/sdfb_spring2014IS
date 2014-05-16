@@ -4,7 +4,6 @@
 	<title>Six Degrees of Francis Bacon</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-	<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,700'>
 	<link rel="shortcut icon" href="img/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" />
@@ -41,8 +40,8 @@
 	<div id="zoom">
 		<button class="icon" id="icon-zoomin" name="in"></button>
 		<button class="icon" id="icon-zoomout" name="out"></button>	
+		<button class="icon" id="icon-color"></button>
 		<button class="icon" id="icon-info"></button>
-		<button class="icon" id="color-info"></button>		
 	</div>
 	<div id="twogroupsmenu">
 		<button type="button" class="toggle" id="group1" ></button>
@@ -55,8 +54,6 @@
 		<div class="icon" id="cancel"></div>
 		<img id="guide-pic" src="img/coloryearlegend.png" alt="Color Legend">
 	</div>
-	
-
 
 	<aside>
 		<div id="accordion">
@@ -67,7 +64,7 @@
 				Six Degrees of Francis Bacon (SDFB) is a digital reconstruction of the early modern social network (EMSN) that scholars and students from all over the world will be able to collaboratively expand, revise, curate, and critique.
 				<a href="http://sixdegreesoffrancisbacon.com/overview" target="_blank" style="color:#aae"> Read blog...</a><br><br>
 				<b>CREDITS</b><br>
-				User interface designed and implemented by Carnegie Mellon University Information Systems team members Angela Qiu, Chanamon Ratanalert, Ivy Chung and Sama Kanbour, under the supervision of advisor Raja Sooriamurthi. © 2014
+				User interface designed and implemented by Carnegie Mellon University Information Systems team members Ivy Chung, Sama Kanbour, Angela Qiu and Chanamon Ratanalert, under the supervision of advisor Raja Sooriamurthi. © 2014
 			</div>
 
 			<!-- search bar -->
@@ -83,7 +80,7 @@
 				<!-- NODE FORMS -->
 				<section id="onenodeform">
 					<input type="text" id="one" placeholder="Name">
-					<a id="slide1" ><article class="slider" title="1"></article></a>
+					<a id="slide1" ><article class="slider" name="1"></article></a>
 					<article class="slider-result" id="slider-result1">Likely relationships</article>
 					<input id="confidence1" type="hidden" value="3"/>
 					<button type="button" id="findonenode" name="node">Find</button>
@@ -92,7 +89,7 @@
 				<section id="twonodeform">
 					<input type="text" id="two" placeholder="Name 1"><br>
 					<input type="text" id="three" placeholder="Name 2"><br>
-					<a id="slide2" ><article class="slider" title="2"></article></a>
+					<a id="slide2" ><article class="slider" name="2"></article></a>
 					<article class="slider-result" id="slider-result2">Likely relationships</article>
 					<input id="confidence2" type="hidden" value="3"/>
 					<input type="checkbox" id="check-shared" value="table"> Show Table<br>
@@ -210,6 +207,7 @@
 				<p id="edge-nodes"></p>
 				<b>CONFIDENCE&nbsp;</b> 	<a id="edge-confidence"></a><br>
 				<b>ANNOTATION&nbsp;</b> 	<a id="edge-annotation"></a><br>
+				<b>CONTRIBUTOR&nbsp;</b> 	<a id="edge-contributor"></a><br>
 			</div>
 
 			<!-- person information bar -->

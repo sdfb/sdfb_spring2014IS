@@ -3,18 +3,13 @@ var keys = {
 	annot: "0AhtG6Yl2-hiRdGdjLVNKZmJkbkhhNDMzQm5BTzlHX0E"
 }
 
-var random = true;
 var addNodes;
 var addEdges;
 
-//stops the randomization (exploration) upon clicking on the sidebar
 document.addEventListener('DOMContentLoaded', function () {
 	Tabletop.init({
 		key: keys.nodes,
 		callback: init
-	});
-	$("#accordion h3").click(function(){
-		random = false;
 	});
 });
 
@@ -36,7 +31,7 @@ function group() {
 	this.nodes = null;
 }
 
-// Create a dictionnary of nodes and groups, splits it up based on our database
+// Creates a hash of nodes and groups, splits it up based on our database
 function init(result) {
 	var data = {
 		nodes: {},
@@ -76,14 +71,11 @@ function init(result) {
 	initGraph(data);
 }
 
-// Populate the suggested drop-down menus
+// Populates the suggested drop-down menus
 // Make the buttons in the search panel functional
 function initGraph(data){
 	
 	populateLists(data);
-
-	//shows francis bacon
-	showOneNode(968, 3, data);
 
 	//click methods for all the 'find' buttons in the search bar
 	$("#findonenode").click(function () {
@@ -136,7 +128,6 @@ function initGraph(data){
 		findInterGroup($("#group1").html(), $("#group3").html(), data);
 	});
 
-
 	//submission buttons for contributions
 	$('#submitnode').click(function(){
 		Pace.restart();
@@ -188,25 +179,20 @@ function initGraph(data){
         	$("#entry_768090773").val(name);
         }
 	});
+	showFrancis(data);
+	
 }
 
-
-//the 'explore' method - shows a random node every n seconds. was not implemented in the end
-function showRandomNode(data) {
-	if (!random) return;
-	if ($("#graph").is(":visible")){
-		var keys = Object.keys(data.nodes);
-		var id = data.nodes[keys[Math.floor(keys.length * Math.random())]].id;
-		showOneNode(id, 2, data);
-		if (random) {
-			setTimeout(function(){ showRandomNode(data) }, 15000);
-		}
+// Displays Francis Bacon's network
+function showFrancis(data){
+	if ( $("#graph").is(":visible") ){
+		showOneNode(968, 3, data);		
 	} else {
-		setTimeout(function(){ showRandomNode(data) }, 1000);
+		setTimeout(function(){ showFrancis(data) }, 1000);
 	}
 }
 
-//checking for years outside the bounds of hardcoded colors
+// Returns the color id based on birth year
 function getCluster(year){
 	if (parseInt(year) < 1550) {return 0}
 	if (parseInt(year) > 1700) {return 1}
@@ -214,8 +200,7 @@ function getCluster(year){
 	return (2 + cluster);
 }
 
-// hardcoding picked colors of the nodes
-// returns node color
+// Returns hash of colors for nodes
 function getColors(){
 	 return { 0:  "#A6D9CA", 1:  "#F0623E", 2:  "#B99CCA", 3:  "#B8DCF4", 
              4:  "#F9F39C", 5:  "#339998", 6:  "#6566AD", 7:  "#F89939", 
@@ -227,7 +212,7 @@ function getColors(){
              28: "#F59485", 29: "#3F6FB6", 30: "#F8EC49", 31: "#1C57A7", }
 }
 
-//shows all the network of a node
+// Shows the network of a node
 function showOneNode(id, confidence, data) {
 	var p = data.nodes[id];
 	var keys = {};
@@ -236,7 +221,7 @@ function showOneNode(id, confidence, data) {
 
 
 	var conf = confidence;
-	//makes sure that this is inclusive
+	// Makes sure that this is inclusive
 	do {
 		p.edges[conf].forEach(function (i){
 			var f = data.nodes[i];
@@ -258,27 +243,23 @@ function showOneNode(id, confidence, data) {
 		});
 		conf++;
 		
-	} while (conf <5); 
+	} while (conf < 5); 
 	
         	
 	keys[p.id] = { "id": p.id, "text": p.label, "cluster": getCluster(p.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
-	$("#results").html("Two degrees of <b>" + p.name +"</b>" );
-	console.log(conf);
+	$("#results").html("Two degrees of <b>" + p.name +"</b> " + getConfidence(confidence));
 
 	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
 
-
 	//adding functionality to node and edge clicks
 	graph.on("node:click", function(d) {
-		random = false;
 		var clicked = data.nodes[d.id];
 		showNodeInfo(clicked, findGroups(clicked, data));
 	});
 	graph.on("edge:click", function(d) {
-		random = false;
 		Pace.restart();
 		var id1 = parseInt(d.source.id);
 		var id2 = parseInt(d.target.id);
@@ -294,7 +275,7 @@ function showOneNode(id, confidence, data) {
 	});
 }
 
-//checks if a value is in an array
+// Checks if a value is in an array
 function notInArray(arr, val) {
 	var i = arr.length;
 	while (i--) {
@@ -319,7 +300,7 @@ function findGroups(node, data){
 	return strgroups;
 }
 
-// Display node information
+// Displays node information
 function showNodeInfo(data, groups){
 	accordion("node");
 	$("#node-name").text(data.first+ " "+ data.last);
@@ -398,16 +379,13 @@ function showTwoNodes(id1, id2, confidence, data) {
 
 		conf++;
 		
-	} while (conf <5);	
-
-
-	
+	} while (conf <5);
 
 	keys[p1.id] = { "id": p1.id, "text": p1.label, "cluster": getCluster(p1.birth), "size": 14 };
 	keys[p2.id] = { "id": p2.id, "text": p2.label, "cluster": getCluster(p2.birth), "size": 14 };
 	for (n in keys) { nodes.push(keys[n]); }
 	$('#graph').html('');
-	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b>");
+	$("#results").html("Common network between <b>" + p1.label + "</b> and <b>" + p2.label + "</b> " + getConfidence(confidence));
 	var options = { width: $("#graph").width(), height: $("#graph").height(), colors: getColors() };
 	var graph = new Insights($("#graph")[0], nodes, edges, options).render();
 
@@ -431,8 +409,7 @@ function showTwoNodes(id1, id2, confidence, data) {
 	
 }
 
-
-//displays the members within a group
+// Displays the members within a group
 function showOneGroup(group, data) {
 	var g = data.groups_names[group];
 	var results = [];
@@ -445,7 +422,7 @@ function showOneGroup(group, data) {
 	$("#results").html("People who belong to the <b>" + group + "</b> group");
 }
 
-// Display the intersections between two groups
+// Displays the intersections between two groups
 function findInterGroup(group1, group2, data) {
 	var g1 = data.groups_names[group1];
 	var g2 = data.groups_names[group2];
@@ -459,7 +436,7 @@ function findInterGroup(group1, group2, data) {
 	$("#results").html("Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>");
 }
 
-// Create the table container, used for group and shared group
+// Creates the table container, used for group and shared group
 function writeGroupTable(dataSource, title){
     $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
@@ -480,7 +457,6 @@ function writeGroupTable(dataSource, title){
     downloadData(dataSource, title);
 };
 
-
 function writeNetworkTable(dataSource, title){
     $('#graph').html('<table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered table-striped" id="data-table-container"></table>');
     $('#data-table-container').dataTable({
@@ -494,10 +470,9 @@ function writeNetworkTable(dataSource, title){
             'sLengthMenu': '_MENU_ records per page'
         }
     });
-    //downloadData(dataSource, title);
 };
 
-// Define two custom functions (asc and desc) for string sorting
+// Defines two custom functions (asc and desc) for string sorting
 jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
 	return ((x < y) ? -1 : ((x > y) ?  0 : 0));
 };
@@ -506,7 +481,7 @@ jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
 	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
 };
 
-//takes in the title and data, allows users to download the data
+// Takes in the title and data, allows users to download the data
 function downloadData(data, title) {
 	var result = title + " \n" + 'First Name,Last Name,Birth Date,Death Date,Historical Significance' + "\n";
 	data.forEach(function (cell) {
@@ -517,7 +492,7 @@ function downloadData(data, title) {
 }
 
 
-//gets annotation from an edge click
+// Displays edge information 
 function getAnnotation(id1, id2, data) {
 	var confidence = findConfidence(id1, id2, data);
 	console.log(id1 + ' ' + id2 + ' ' + confidence);
@@ -532,6 +507,7 @@ function getAnnotation(id1, id2, data) {
 				$("#edge-nodes").html(data.nodes[id1].first +" "+data.nodes[id1].last + " & " + data.nodes[id2].first+" "+data.nodes[id2].last);
 				$("#edge-confidence").html(confidence);
 				$("#edge-annotation").html(row.annotation);
+				$("#edge-contributor").html(row.contributor);
 				return true;
 			});
 		}
@@ -543,7 +519,7 @@ function getAnnotation(id1, id2, data) {
 	});
 }
 
-//finds and returns correct confidence on the 0-4 scale
+// Finds and returns correct confidence on the 0-4 scale
 function findConfidence(id1, id2, data) {
 	var p1 = data.nodes[id1];
 	var p2 = data.nodes[id2];
@@ -551,15 +527,22 @@ function findConfidence(id1, id2, data) {
 	p1.edges.forEach(function (list, index){
 		if (list.indexOf(p2.id) > -1) { i = index; return; }
 	});
-	if (i == 0) return "uncertain";
+	if (i == 0) return "very unlikely";
 	else if (i == 1) return "unlikely";
 	else if (i == 2) return "possible";
 	else if (i == 3) return "likely";
 	else return "certain";
 }
 
+function getConfidence(n) {
+	if (n == 0) return "at very unlikely to certain confidence";
+	else if (n == 1) return "at unlikely to certain confidence";
+	else if (n == 2) return "at possible to certain confidence";
+	else if (n == 3) return "at likely to certain confidence";
+	else return "at certain confidence";
+}
 
-//populates dropdowns
+// Populates dropdowns
 function populateLists(data){
 	$('#one').typeahead({
 		local: Object.keys(data.nodes_names).sort()
@@ -594,7 +577,7 @@ function populateLists(data){
 }
 
 
-//resets all input values
+// Resets all input values and forms
 function resetInputs(){
 	$("#one").val('');
 	$("#one").typeahead('setQuery', '');
