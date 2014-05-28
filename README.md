@@ -65,9 +65,11 @@ http://trentrichardson.com/Impromptu
 
 AUTHORS
 --------------
-Angela Qiu , 
-Chanamon Ratanalert , 
-Ivy Chung , 
-Sama Kanbour
+
+Ivy Chung, 
+Sama Kanbour,
+Angela Qiu,
+Chanamon Ratanalert
+
 
 (c) 2014
