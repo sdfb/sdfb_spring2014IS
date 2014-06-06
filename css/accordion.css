@@ -10,7 +10,7 @@ aside {
 }
 
 #accordion {
-	background: #4281a0;
+	background: #78A7BF;
 }
 
 #accordion h3 {
@@ -38,24 +38,165 @@ aside {
     top: 5px;
 }
 
+#nodeinfo, #contribute, #about{
+	overflow: auto;
+}
+
+.accordion_content {
+	display: none;
+	color:#222;
+	font-size:12px;
+	padding: 25px 22px;
+	line-height: 25px;
+	text-align:left;
+	height: calc(90% - 140px);
+}
+
+.accordion_content .active {
+    display: block;
+}
+
+.accordion_content section {
+    margin-top: 100px;
+    display: none;
+}
+
+.accordion_content section input, 
+.accordion_content section button, 
+.accordion_content section select,
+.accordion_content section textarea {
+    width: 246px;
+    height: 30px;
+    margin-bottom: 5px;
+    margin-left: 4px;
+    font-size: 11px;
+}
+
+.accordion_content section textarea {
+    height: 60px;
+}
+
+.form-control {
+    display: block;
+    padding: 6px 10px;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.accordion_content ul {
+    text-align: center;
+    display: inline;
+    margin: 0;
+    list-style: none;
+}
+
+.accordion_content ul li {
+	background-color: #fff;
+	float: left;
+	cursor: pointer;
+    width: 125px;
+    height: 40px;
+    line-height: 45px;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+    -moz-box-shadow: inset #78A7BF 4px 4px 0 0;
+    -webkit-box-shadow: inset #78A7BF 4px 4px 0 0;
+    box-shadow: inset #78A7BF 4px 4px 0 0;
+}
+
+.accordion_content ul li:hover, .accordion_content ul li.clicked {
+	color: #fff;	
+	background-color: #185D80;
+}
+
+#addedge {
+    width: 250px;
+}
+
+#nodeinfo a, #edgeinfo a {
+	color: #fff;
+}
+
+#nodeinfo p, #edgeinfo p {
+	color: #fff;
+	text-align: center;
+	font-size:14px;
+	padding-bottom: 15px;
+}
+
+aside ::-webkit-scrollbar {  
+    width: 6px; 
+}  
+aside ::-webkit-scrollbar-track {  
+    background-color: #78A7BF;
+}  
+aside ::-webkit-scrollbar-thumb {  
+    background-color: #555;
+}  
+aside ::-webkit-scrollbar-thumb:hover {  
+    background-color: #aaa;  
+}
+
+.tt-hint {
+    display: none;
+}
+
+.tt-suggestion {
+    padding: 3px 10px;
+    font-size: 11px;
+}
+
+.tt-dropdown-menu {
+    width: 246px;
+    margin-bottom: 5px;
+    margin-left: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    color: #0097cf;
+    background-color: #ccc;
+}
+
+button.icon {
+    background-repeat: no-repeat;
+    background-size: 15px;
+    width: 30px;
+    height: 30px;
+    opacity: .6;
+    float: right;
+    border: none;
+    background-position: center;
+    background-color: transparent;
+}
+
 #icon-about {
-	background-image: url(../img/us.png);
+    background-image: url(../img/us.png);
 }
 
 #icon-search {
-	background-image: url(../img/search.png);
+    background-image: url(../img/search.png);
 }
 
 #icon-node {
-	background-image: url(../img/node.png);
+    background-image: url(../img/node.png);
 }
 
 #icon-edge {
-	background-image: url(../img/edge.png);
+    background-image: url(../img/edge.png);
 }
 
 #icon-add {
-	background-image: url(../img/add.png);
+    background-image: url(../img/add.png);
 }
 
 #icon-annotate {
@@ -84,164 +225,4 @@ aside {
 
 #icon-color {
     background-image: url(../img/colors.png);
-}
-
-#nodeinfo, #contribute, #about{
-	overflow: auto;
-}
-
-.accordion_content {
-	display: none;
-	color:#222;
-	font-size:12px;
-	padding: 5% 10%;
-	line-height: 25px;
-	text-align:left;
-	height: calc(90% - 140px);
-}
-
-.accordion_content .active {
-	display: block;
-}
-
-.accordion_content ul {
-    text-align: center;
-    display: inline;
-    margin: 0;
-    list-style: none;
-}
-
-.accordion_content ul li {
-	background-color: #fff;
-	float: left;
-	cursor: pointer;
-    margin: 2px;
-    padding: 5px;
-    width: calc(48% - 10px);
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -ms-transition: all 0.2s;
-    -o-transition: all 0.2s;
-    transition: all 0.2s;
-}
-
-#addedge {
-    width: calc(98% - 11px);
-}
-
-.accordion_content ul li:hover, .accordion_content ul li.clicked {
-	color: #fff;	
-	background-color: #185D80;
-}
-
-#nodeinfo a, #edgeinfo a {
-	color: #fff;
-}
-
-#nodeinfo p, #edgeinfo p {
-	color: #fff;
-	text-align: center;
-	font-size:14px;
-	padding-bottom: 15px;
-}
-
-aside ::-webkit-scrollbar {  
-    width: 8px;  
-}  
-aside ::-webkit-scrollbar-track {  
-    background-color: #4281a0;
-}  
-aside ::-webkit-scrollbar-thumb {  
-    background-color: #555;  
-}  
-aside ::-webkit-scrollbar-thumb:hover {  
-    background-color: #aaa;  
-}
-
-.accordion_content section {
-    margin: 40% 0 0 2px;
-    display: none;
-}
-
-section input, section select, section textarea {
-    display: inline-block;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    padding: 6px 10px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    height: 35px;
-    width: 235px;
-    font-family: 'Open Sans',sans-serif;
-    font-size: 12px;
-}
-
-form select {
-    min-width: 235px;
-}
-
-section textarea {
-    height: 50px;
-}
-
-.tt-hint {
-    color: #999;
-    padding: 6px 10px;
-    height: 35px;
-    width: 235px;
-}
-
-.tt-suggestion {
-    padding: 6px 10px;
-}
-
-.tt-suggestion.tt-is-under-cursor {
-    color: #0097cf;
-    background-color: #ccc;
-}
-
-.tt-dropdown-menu {
-    width: 233px;
-    margin-top: -7%;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-aside button, #zoom button {
-    font-family: 'Open Sans',sans-serif;
-    font-size: 12px;
-    height: 35px;
-    width: 235px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    background-color: #CAE4E1;
-    border: none;
-    cursor: pointer;
-}
-
-aside button:hover, aside button.active {
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#1a000000', GradientType=0);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(40%,rgba(0,0,0,.05)),to(rgba(0,0,0,.1)));
-    background-image: -webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-    background-image: -moz-linear-gradient(top,rgba(0,0,0,.05) 0,rgba(0,0,0,.1));
-    background-image: -ms-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-    background-image: -o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-    background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
-}
-
-aside button.icon, #zoom button.icon {
-    background-repeat: no-repeat;
-    background-size: 15px;
-    width: 30px;
-    height: 30px;
-    opacity: .6;
-    background-position: center;
-    float: right;
-    background-color: transparent;
 }

@@ -329,7 +329,7 @@ function showTwoNodes(id1, id2, confidence, data) {
 	p1.edges.forEach(function (list){
 		if (list.indexOf(p2.id) > -1) {
 			edges.push([p1.id, p2.id]); 
-			nodetable.push({"network":p1.label +" -> " + p2.label});
+			nodetable.push({"network":p1.label +" → " + p2.label});
 			return; 
 		}
 		
@@ -347,7 +347,7 @@ function showTwoNodes(id1, id2, confidence, data) {
 					edges.push([p1.id, f.id]);
 					edges.push([p2.id, f.id]);
 
-					nodetable.push({"network":p1.label +" -> " + f.label +" -> " + p2.label});
+					nodetable.push({"network":p1.label +" → " + f.label +" → " + p2.label});
 				}
 				
 			}
@@ -367,7 +367,7 @@ function showTwoNodes(id1, id2, confidence, data) {
 								if (notInArray(edges, [p2.id, s.id])) { edges.push([p2.id, s.id]); }
 								if (notInArray(edges, [f.id,  s.id])) { edges.push([f.id,  s.id]); }
 								
-								nodetable.push({"network":p1.label +" -> " + f.label+ " -> "+ s.label +" -> "+ p2.label});
+								nodetable.push({"network":p1.label +" → " + f.label+ " → "+ s.label +" → "+ p2.label});
 							}
 						}					
 					}
@@ -416,8 +416,7 @@ function showOneGroup(group, data) {
 	g.nodes.forEach(function (n) {	
 		results.push(data.nodes[n]);
 	});
-
-	if (results.length == 0) { return }
+	if (results.length == 0 || !results[0]) { results = [] }
 	writeGroupTable(results, "People who belong to the " + group + " group");
 	$("#results").html("People who belong to the <b>" + group + "</b> group");
 }
@@ -432,6 +431,7 @@ function findInterGroup(group1, group2, data) {
 			common.push(data.nodes[node]);
 		}
 	});
+	if (common.length == 0 || !common[0]) { common = [] }
 	writeGroupTable(common, "Intersection between " + group1 + " and " + group2);
 	$("#results").html("Intersection between <b>" + group1 + "</b> and <b>" + group2 + "</b>");
 }

@@ -1,15 +1,26 @@
 @charset "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
-body {
+html, body {
     margin: 0;
     color: #323236;
     background-color: #ecebe9;
-    font-family: 'Open Sans',sans-serif;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
     position: relative;
     width: 100%;
     height: 100%;
     overflow-x: hidden;
+}
+
+a, button, select {
+  outline: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+b {
+    font-weight: 700;
 }
 
 header {
@@ -18,19 +29,17 @@ header {
     top: 0;
     line-height: 34px;
     color: #CAE4E1;
-    background: #555 repeat-x top left;
+    background: #555;
     width: 300px;
     text-align: center;
     font-weight: lighter;
     text-transform: uppercase;
     letter-spacing: 4px;
-    font-size: 11px;
     float: left;
 }
 
 #results {
-    height: 25px;
-    line-height: 20px;
+    line-height: 40px;
     color: #555;
     background: none;
     margin-left: 260px;
@@ -38,12 +47,12 @@ header {
     font-weight: lighter;
     text-transform: uppercase;
     letter-spacing: 2px;
-    padding-top: 1%;
+    font-size: 14px;
 }
 
 #graph {
     margin-left: 300px;
-    height: 93%;
+    height: calc(100% - 40px);
 }
 
 #zoom {
@@ -53,76 +62,32 @@ header {
   width: 30px;
 }
 
-b {
-    font-weight: 700;
-}
-
 /*TABLE FORMAT*/
 #twogroupsmenu {
     position: absolute;
     z-index: 1000;
     display: none;
     top: 80px;
-    margin-left: 300px;
+    left: 300px;
     width: calc(100% - 300px);
-    padding: 0 10%;
+    margin: 0 18%;
 }
 
 #twogroupsmenu button {
-  width: 25%;
-  color: #fff;
-  background-color: #196B94;
+  vertical-align: top;
+  width: 20%;
 }
 
 #twogroupsmenu button.active {
   background-color: #185D80;
 }
 
-.toggle {
-    vertical-align: top;
-    width: auto;
-}
-
-#data-table-container_wrapper {
-    margin: 120px 10px 10px 10px;
-}
-
-tr.odd {
-    background-color: #e8e8e8;
-}
-
-tr.even {
-    background-color: #fff;
-}
-
-tr.odd td.sorting_1 {
-    background-color: #D3D6FF;
-}
-
-select {
-    cursor: pointer;
-    width: 75px;
-}
-
-.dataTables_length {
-    padding-left: 10px;
-}
-
-.dataTables_filter {
-    padding-right: 10px;
-}
-
-.table-striped tbody>tr:nth-child(odd)>th>td.sorting_1 {
-    background-color: #D3D6FF;
-}
-
-#data-table-container_info {
-    margin: 20px 0;
-    padding-top: 5px;
-}
-
-#data-table-container_filter, #data-table-container_length {
-    display: none;
+#check-shared[type="checkbox"]{
+    display:inline;
+    padding:0;
+    margin:10px 5px;
+    height:15px;
+    width:15px;
 }
 
 #download {
@@ -186,25 +151,22 @@ select {
   display: none;
 }
 
-/*SLIDER*/
-#container{
+/*CONFIDENCE SLIDER*/
+#container {
   display: inline-block;
-  padding:100px 50px 0px 50px;
+  padding: 100px 50px 0px 50px;
 }
 
-/*the slider background*/
 .slider {
   display: inline-block;
-  width:215px;
-  height:11px;
-  background:url(../img/slider-bg.png);
-  background-repeat:no-repeat; 
-  position:relative;
-  margin: 15px 0;
-  padding:0 10px;
+  width: 246px;
+  height: 11px;
+  background: url(../img/slider-bg.png);
+  background-repeat: no-repeat; 
+  position: relative;
+  margin: 15px 4px;
 }
 
-/*Style for the slider button*/
 .ui-slider-handle {
   display: inline-block;
   width:24px;
@@ -217,26 +179,21 @@ select {
   background-repeat:no-repeat; 
 }
 
-/*Result div where the slider value is displayed*/
 .slider-result {
   display: inline-block;
   text-align:center;
   height: 35px;
-  width: 235px;
+  width: 250px;
   font-family: 'Open Sans',sans-serif;
-  font-size: 12px;
-  padding-bottom: 5%;
-}
-
-a {
-  outline:none;
-  -moz-outline-style:none;
+  padding-bottom: 10px;
 }
 
 #jqi_state0_buttonOk {
   cursor: pointer;
 }
 
+
+/*COLOR GUIDE*/
 #guide {
   display:none;
   z-index:500;
@@ -251,8 +208,8 @@ a {
   margin-left: -200px;
 
 }
-#guide-pic {
 
+#guide-pic {
     height:300px;
     width:600px;
     padding-top:20px;
@@ -268,13 +225,4 @@ a {
     position: absolute;
     right: 10px;
     top: 10px;
-}
-
-#check-shared[type="checkbox"]{
-    display:inline;
-    margin:0;
-    padding:0;
-    margin-right:5px;
-    height:15px;
-    width:15px;
 }

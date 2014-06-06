@@ -1,15 +1,16 @@
 <html>
 
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>Six Degrees of Francis Bacon</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
 	<link rel="shortcut icon" href="img/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-impromptu.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/insights.standalone.css" />
-	<link rel="stylesheet" type="text/css" href="css/tooltip.css" />
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/table.css" />
 	<link rel="stylesheet" type="text/css" href="css/accordion.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -21,11 +22,10 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.1.0/tabletop.min.js"></script>
 	<script type="text/javascript" src="js/jquery-impromptu.min.js"></script>
 	<script type="text/javascript" src="js/data-tables-bootstrap.js"></script>
-	<script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="js/pace.min.js"></script>
 	<script type="text/javascript" src="js/insights.standalone.js"></script>
 	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/typeahead.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/display.js"></script>
@@ -44,9 +44,9 @@
 		<button class="icon" id="icon-info"></button>
 	</div>
 	<div id="twogroupsmenu">
-		<button type="button" class="toggle" id="group1" ></button>
-		<button type="button" class="toggle  active" id="group2" >Intersection</button>
-		<button type="button" class="toggle" id="group3" ></button>
+		<button type="button" class="btn btn-primary" id="group1" ></button>
+		<button type="button" class="btn btn-primary active" id="group2" >Intersection</button>
+		<button type="button" class="btn btn-primary" id="group3" ></button>
 	</div>
 
 	<div id="guide">
@@ -79,39 +79,39 @@
 
 				<!-- NODE FORMS -->
 				<section id="onenodeform">
-					<input type="text" id="one" placeholder="Name">
+					<input class="form-control" type="text" id="one" placeholder="Name">
 					<a id="slide1" ><article class="slider" name="1"></article></a>
 					<article class="slider-result" id="slider-result1">Likely relationships</article>
 					<input id="confidence1" type="hidden" value="3"/>
-					<button type="button" id="findonenode" name="node">Find</button>
+					<button class="btn btn-primary" type="button" id="findonenode" name="node">Find</button>
 				</section>
 
 				<section id="twonodeform">
-					<input type="text" id="two" placeholder="Name 1"><br>
-					<input type="text" id="three" placeholder="Name 2"><br>
+					<input class="form-control" type="text" id="two" placeholder="Name 1"><br>
+					<input class="form-control" type="text" id="three" placeholder="Name 2"><br>
 					<a id="slide2" ><article class="slider" name="2"></article></a>
 					<article class="slider-result" id="slider-result2">Likely relationships</article>
 					<input id="confidence2" type="hidden" value="3"/>
-					<input type="checkbox" id="check-shared" value="table"> Show Table<br>
-					<button type="button" id="findtwonode" name="node">Find</button>
+					<input type="checkbox" id="check-shared" value="table">Show table<br>
+					<button class="btn btn-primary" type="button" id="findtwonode" name="node">Find</button>
 				</section>
 
 				<!-- GROUP FORMS -->
 				<section id="onegroupform">
-					<input type="text" id="four" placeholder="Group">
-					<button type="button" id="findonegroup" name="group">Find</button>
+					<input 	class="form-control" type="text" id="four" placeholder="Group">
+					<button class="btn btn-primary" type="button" id="findonegroup" name="group">Find</button>
 				</section>
 
 				<section id="twogroupform">
-					<input type="text" id="five" placeholder="Group 1"><br>
-					<input type="text" id="six" placeholder="Group 2"><br>
-					<button type="button" id="findtwogroup" name="group">Find</button>
+					<input 	class="form-control" type="text" id="five" placeholder="Group 1"><br>
+					<input 	class="form-control" type="text" id="six" placeholder="Group 2"><br>
+					<button class="btn btn-primary" type="button" id="findtwogroup" name="group">Find</button>
 				</section>
 			</div>
 
 			<!-- contribution bar -->
 			<h3 class="accordion_btn"><span id="icon-add"></span>Contribute</h3>
-			<div  class="accordion_content " id="contribute">
+			<div  class="accordion_content" id="contribute">
 				<ul>
 					<li id="addnode">Add person</li>
 					<li id="addgroup">Add group</li>
@@ -124,14 +124,13 @@
 					</script>
 					<iframe name="hidden_iframe1" id="hidden_iframe1" style="display:none;" onload=""></iframe>
 					<form action="https://docs.google.com/forms/d/151VLJDd62rmg_elgMLsiRjwmN0ecuZZbWdFz1QazhtA/formResponse" id="googleaddnode" method="post" target="hidden_iframe1" onsubmit="submitted=true;">
-						<input type="text" name="entry.1804360896" id="entry_1804360896" placeholder="First Name">
-						<input type="text" name="entry.754797571"  id="entry_754797571"  placeholder="Last Name">
-						<input type="text" name="entry.524366257"  id="entry_524366257"  placeholder="Birth Date">
-						<input type="text" name="entry.1810714929" id="entry_1810714929" placeholder="Death Date">
-						<input type="text" name="entry.2129738910" id="entry_2129738910" placeholder="Historical Significance">
-
-						<input type="text" name="entry.1201727393" id="entry_1201727393" placeholder="Contributor (Your Name) ">
-						<button type="submit" name="submit" id="submitnode">Submit</button>
+						<input 	class="form-control" type="text" name="entry.1804360896" id="entry_1804360896" placeholder="First Name">
+						<input 	class="form-control" type="text" name="entry.754797571"  id="entry_754797571"  placeholder="Last Name">
+						<input 	class="form-control" type="text" name="entry.524366257"  id="entry_524366257"  placeholder="Birth Date">
+						<input 	class="form-control" type="text" name="entry.1810714929" id="entry_1810714929" placeholder="Death Date">
+						<input 	class="form-control" type="text" name="entry.2129738910" id="entry_2129738910" placeholder="Historical Significance">
+						<input 	class="form-control" type="text" name="entry.1201727393" id="entry_1201727393" placeholder="Contributor (Your Name)">
+						<button class="btn btn-primary" type="submit" name="submit" id="submitnode">Submit</button>
 					</form>
 				</section>
 
@@ -141,9 +140,9 @@
 					</script>
 					<iframe name="hidden_iframe2" id="hidden_iframe2" style="display:none;" onload=""></iframe>
 					<form action="https://docs.google.com/forms/d/10Gfo4lX_iEArcffCxd5SqP9b-lEttdW5ymOTwX5-t5A/formResponse" id="googleaddedge" method="post" target="hidden_iframe2" onsubmit="submitted=true;">
-						<input type="text" name="entry.768090773" id="entry_768090773" placeholder="Name 1">
-						<input type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Name 2">
-						<select name="entry.1695736706" id="entry_1695736706">
+						<input class="form-control" type="text" name="entry.768090773" id="entry_768090773" placeholder="Name 1">
+						<input class="form-control" type="text" name="entry.1321382891" id="entry_1321382891" placeholder="Name 2">
+						<select class="form-control" name="entry.1695736706" id="entry_1695736706">
 							<option value="">Relationship type</option>
 							<option value="No relationship exists">No relationship exists</option>
 							<option value="Acquaintances">Acquaintances</option>
@@ -170,7 +169,7 @@
 							<option value="Spouses">Spouses</option>
 							<option value="Coworkers">Coworkers</option>
 						</select>
-						<select name="entry.875203595" id="entry_875203595">
+						<select class="form-control" name="entry.875203595" id="entry_875203595">
 							<option value="">Confidence</option>
 							<option value="Very unlikely">Very unlikely</option>
 							<option value="Unlikely">Unlikely</option>
@@ -178,11 +177,10 @@
 							<option value="Likely">Likely</option>
 							<option value="Certain">Certain</option>
 						</select>
-						<textarea type="text" name="entry.837175332" id="entry_837175332" placeholder="Annotation"></textarea>
-						<input type="text" name="entry.484668707" id="entry_484668707" placeholder="Bibliographical Source(s)">
-
-						<input type="text" name="entry.1767559421" id="entry_1767559421" placeholder="Contributor (Your Name) ">
-						<button type="submit" name="submit" id="submitedge">Submit</button>
+						<textarea 	class="form-control" type="text" name="entry.837175332" id="entry_837175332" placeholder="Annotation"></textarea>
+						<input		class="form-control" type="text" name="entry.484668707" id="entry_484668707" placeholder="Bibliographical Source(s)">
+						<input 		class="form-control" type="text" name="entry.1767559421" id="entry_1767559421" placeholder="Contributor (Your Name) ">
+						<button 	class="btn btn-primary" type="submit" name="submit" id="submitedge">Submit</button>
 					</form>
 				</section>
 
@@ -192,10 +190,10 @@
 					</script>
 					<iframe name="hidden_iframe3" id="hidden_iframe3" style="display:none;" onload=""></iframe>
 					<form action="https://docs.google.com/forms/d/1HbzCpwoLGMxEMVoRFiEA52SZdJa-8QpRO8cXVbe8_8Y/formResponse" id="googleaddgroup" method="post" target="hidden_iframe3" onsubmit="submitted=true;">
-						<input type="text" name="entry.110233074"  id="entry_110233074"  placeholder="Group Name">
-						<input type="text" name="entry.1177061505" id="entry_1177061505" placeholder="Person Name">
-						<input type="text" name="entry.370499701" id="entry_370499701" placeholder="Contributor (Your Name) ">
-						<button type="submit" name="submit" id="submitgroup">Submit</button>
+						<input 	class="form-control" type="text" name="entry.110233074"  id="entry_110233074"  placeholder="Group Name">
+						<input 	class="form-control" type="text" name="entry.1177061505" id="entry_1177061505" placeholder="Person Name">
+						<input 	class="form-control" type="text" name="entry.370499701" id="entry_370499701" placeholder="Contributor (Your Name) ">
+						<button class="btn btn-primary" type="submit" name="submit" id="submitgroup">Submit</button>
 					</form>
 				</section>
 			</div>
